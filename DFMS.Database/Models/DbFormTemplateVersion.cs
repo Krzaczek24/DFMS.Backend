@@ -1,11 +1,11 @@
-﻿using DFMS.Database.Models.Base;
+using DFMS.Database.Base;
 
-namespace DFMS.Database.Models
+namespace DFMS.Database
 {
-    public class DbFormTemplateVersion : DbBaseModel
-    {
-        public virtual int Version { get; set; }
-        public virtual int? Columns { get; set; }
-        public virtual DbFormTemplate Template { get; set; }
-    }
+	public class DbFormTemplateVersion : DbTableCommonModel
+	{
+		public virtual int Version { get; set; }
+		public virtual int Columns { get; set; }
+		public virtual DbFormTemplate Template { get; set; }
+	}
 }

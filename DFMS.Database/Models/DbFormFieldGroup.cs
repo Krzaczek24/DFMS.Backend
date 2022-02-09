@@ -2,9 +2,9 @@ using DFMS.Database.Base;
 
 namespace DFMS.Database
 {
-	public class DbFormFavourite : DbTableCommonModel
+	public class DbFormFieldGroup : DbTableCommonModel
 	{
-		public virtual int Sequence { get; set; }
+		public virtual string Name { get; set; }
 		public virtual DbFormTemplate Template { get; set; }
 	}
 }

@@ -1,9 +1,9 @@
-﻿using DFMS.Database.Models.Base;
+using DFMS.Database.Base;
 
-namespace DFMS.Database.Models
+namespace DFMS.Database
 {
-    public class DbUserGroup : DbBaseModel
-    {
-        public virtual string Name { get; set; }
-    }
+	public class DbUserGroup : DbTableCommonModel
+	{
+		public virtual string Name { get; set; }
+	}
 }

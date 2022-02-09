@@ -1,4 +1,4 @@
-﻿namespace DFMS.Database.Enums
+﻿namespace DFMS.Database.Base
 {
     public enum DbPrivacyLevel
     {
