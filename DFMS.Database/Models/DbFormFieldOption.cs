@@ -1,6 +1,6 @@
-using DFMS.Database.Base;
+using DFMS.Database.Models.Base;
 
-namespace DFMS.Database
+namespace DFMS.Database.Models
 {
 	public class DbFormFieldOption : DbTableCommonModel
 	{
@@ -8,6 +8,7 @@ namespace DFMS.Database
 		public virtual string String { get; set; }
 		public virtual bool? Boolean { get; set; }
 		public virtual int? Integer { get; set; }
+		public virtual decimal? Decimal { get; set; }
 		public virtual DbFormTemplateField TemplateField { get; set; }
 	}
 }

@@ -1,4 +1,4 @@
-namespace DFMS.Database.Base
+namespace DFMS.Database.Models.Base
 {
 	public abstract class DbTableCommonModel
 	{
@@ -7,6 +7,6 @@ namespace DFMS.Database.Base
 		public virtual System.DateTime AddDate { get; set; }
 		public virtual string ModifLogin { get; set; }
 		public virtual System.DateTime? ModifDate { get; set; }
-		public virtual bool Active { get; set; }
+		public virtual bool? Active { get; set; }
 	}
 }

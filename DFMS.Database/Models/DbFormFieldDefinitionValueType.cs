@@ -1,10 +1,10 @@
-using DFMS.Database.Base;
+using DFMS.Database.Models.Base;
 
-namespace DFMS.Database
+namespace DFMS.Database.Models
 {
 	public class DbFormFieldDefinitionValueType : DbTableCommonModel
 	{
-		public virtual DbFormValueType ValueType { get; set; }
+		public virtual DbFormFieldValueType ValueType { get; set; }
 		public virtual DbFormFieldDefinition FieldDefinition { get; set; }
 	}
 }

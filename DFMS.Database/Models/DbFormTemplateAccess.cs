@@ -1,6 +1,6 @@
-using DFMS.Database.Base;
+using DFMS.Database.Models.Base;
 
-namespace DFMS.Database
+namespace DFMS.Database.Models
 {
 	public class DbFormTemplateAccess : DbTableCommonModel
 	{

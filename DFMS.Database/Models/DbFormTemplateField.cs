@@ -1,6 +1,6 @@
-using DFMS.Database.Base;
+using DFMS.Database.Models.Base;
 
-namespace DFMS.Database
+namespace DFMS.Database.Models
 {
 	public class DbFormTemplateField : DbTableCommonModel
 	{
@@ -11,6 +11,6 @@ namespace DFMS.Database
 		public virtual DbFormFieldDefinition FieldDefinition { get; set; }
 		public virtual DbFormTemplateSection TemplateSection { get; set; }
 		public virtual DbFormFieldGroup FieldGroup { get; set; }
-		public virtual DbFormValueType ValueType { get; set; }
+		public virtual DbFormFieldValueType ValueType { get; set; }
 	}
 }
