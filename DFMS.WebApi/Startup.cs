@@ -5,19 +5,22 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using NLog.Extensions.Logging;
 using System.Text.Json.Serialization;
 
 namespace DFMS.WebApi
 {
     public class Startup
     {
+        private static readonly LoggerFactory LoggerFactory = new LoggerFactory(new[] { new NLogLoggerProvider() });
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -28,7 +31,7 @@ namespace DFMS.WebApi
             {
                 options.UseMySQL(Configuration.GetConnectionString("DFMSdatabase"));
 #if DEBUG
-                options.AddInterceptors(new Interceptor());
+                options.UseLoggerFactory(LoggerFactory);
 #endif
             });
 
@@ -37,6 +40,7 @@ namespace DFMS.WebApi
                 opts.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 opts.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
             });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DFMS.WebApi", Version = "v1" });
