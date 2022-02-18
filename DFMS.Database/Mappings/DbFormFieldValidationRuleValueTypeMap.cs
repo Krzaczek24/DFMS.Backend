@@ -16,11 +16,13 @@ namespace DFMS.Database.Mappings
             builder.HasOne(e => e.ValueType)
                 .WithMany()
                 .HasForeignKey("value_type_id")
+                .HasConstraintName("fk_ffvrvt_value_type")
                 .IsRequired();
 
             builder.HasOne(e => e.ValidationDefinition)
                 .WithMany()
                 .HasForeignKey("validation_definition_id")
+                .HasConstraintName("fk_ffvrvt_validation_definition")
                 .IsRequired();
         }
     }

@@ -14,16 +14,16 @@ namespace DFMS.Database.Mappings
             builder.ToTable("form_field_visibility_rule_operator");
 
             builder.Property(e => e.Title)
-                .HasColumnName("name")
+                .HasColumnName("title")
                 .IsRequired()
                 .HasMaxLength(32);
 
             builder.Property(e => e.Description)
-               .HasColumnName("name")
+               .HasColumnName("description")
                .HasMaxLength(256);
 
             builder.Property(e => e.Value)
-               .HasColumnName("name")
+               .HasColumnName("value")
                .IsRequired()
                .HasMaxLength(16);
         }

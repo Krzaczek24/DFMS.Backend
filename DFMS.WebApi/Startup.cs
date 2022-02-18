@@ -28,12 +28,15 @@ namespace DFMS.WebApi
             {
                 options.UseMySQL(Configuration.GetConnectionString("DFMSdatabase"));
 #if DEBUG
-                options.AddInterceptors();       
+                options.AddInterceptors(new Interceptor());
 #endif
             });
 
-            // `AddJsonOptions` helps to handle cyclic references in entity framework core database models
-            services.AddControllers().AddJsonOptions(opts => opts.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+            // `ReferenceHandler.IgnoreCycles` helps to handle cyclic references in entity framework core database models
+            services.AddControllers().AddJsonOptions(opts => {
+                opts.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                opts.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DFMS.WebApi", Version = "v1" });

@@ -15,15 +15,18 @@ namespace DFMS.Database.Mappings
 
             builder.HasOne(e => e.TemplateGroup)
                 .WithMany()
-                .HasForeignKey("template_group_id");
+                .HasForeignKey("template_group_id")
+                .HasConstraintName("fk_fta_template_group");
 
             builder.HasOne(e => e.Template)
                 .WithMany()
-                .HasForeignKey("template_id");
+                .HasForeignKey("template_id")
+                .HasConstraintName("fk_fta_template");
 
             builder.HasOne(e => e.UserGroup)
                 .WithMany()
-                .HasForeignKey("user_group_id");
+                .HasForeignKey("user_group_id")
+                .HasConstraintName("fk_fta_user_group");
 
             builder.Property(e => e.UserLogin)
                 .HasColumnName("user_login")

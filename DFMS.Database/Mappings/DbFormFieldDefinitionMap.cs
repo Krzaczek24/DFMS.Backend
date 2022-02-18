@@ -22,7 +22,7 @@ namespace DFMS.Database.Mappings
                 .IsRequired();
 
             builder.Property(e => e.Visible)
-                .HasColumnName("title")
+                .HasColumnName("visible")
                 .IsRequired()
                 .HasDefaultValue(true);
         }

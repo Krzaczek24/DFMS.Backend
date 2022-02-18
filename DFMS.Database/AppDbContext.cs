@@ -17,7 +17,7 @@ namespace DFMS.Database
         public virtual DbSet<DbFormFieldDefinitionValueType> FormFieldDefinitionValueTypes { get; set; }
         public virtual DbSet<DbFormFieldGroup> FormFieldGroups { get; set; }
         public virtual DbSet<DbFormFieldOption> FormFieldOptions { get; set; }
-        public virtual DbSet<DbFormFieldValidationRule> FomrFieldValidationRules { get; set; }
+        public virtual DbSet<DbFormFieldValidationRule> FormFieldValidationRules { get; set; }
         public virtual DbSet<DbFormFieldValidationRuleDefinition> FormFieldValidationRuleDefinitions { get; set; }
         public virtual DbSet<DbFormFieldValidationRuleType> FormFieldValidationRuleTypes { get; set; }
         public virtual DbSet<DbFormFieldValidationRuleValueType> FormFieldValidationRuleValueTypes { get; set; }

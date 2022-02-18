@@ -2,6 +2,7 @@
 using DFMS.Shared.Tools;
 using DFMS.WebApi.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -28,29 +29,49 @@ namespace DFMS.WebApi.Controllers
         [HttpGet("check-db-connection")]
         public IActionResult CheckDbConnection()
         {
-            var result = new List<object>();
             var entities = Database.GetType().GetProperties().Where(p => p.PropertyType.IsGenericType).Select(p => p.Name).ToList();
+            var result = new List<Entity>();
 
             foreach (var entity in entities)
             {
                 try
                 {
                     var records = ReflectionToolbox.GetObjectPropertyValue<IEnumerable<object>>(Database, entity);
-                    result.Add(new { entity, success = true, count = records.Count() });
+                    result.Add(new Entity () { Name = entity, Rows = records.Count(), Success = true });
                 }
                 catch (Exception ex)
                 {
-                    result.Add(new { entity, success = false, error = ex.Message });
+                    result.Add(new Entity() { Name = entity, ErrorMessage = ex.Message });                    
                     Logger.LogError(ex, $"Wystąpił błąd podczas próby sprawdzenia tabeli [{entity}]");
                 }
             }
 
-            return new JsonResult(new
-            {
+            var badEntities = result.Where(x => !x.Success);
+            bool success = badEntities.Count() == 0;
+            badEntities = success ? null : badEntities;
+
+            return new JsonResult(new {
                 entitiesCount = result.Count,
-                success = result.All(x => ((dynamic)x).success),
+                recordsCount = result.Sum(x => x.Rows),
+                success,
+                badEntities,
                 entities = result
             });
+        }
+
+        [HttpGet("check-relations")]
+        public IActionResult CheckDbRelations()
+        {
+            var relatedData = Database.FormFieldValidationRuleDefinitions.Include(x => x.ValidationType).ToList();
+            return new JsonResult(relatedData);
+        }
+
+        private class Entity
+        {
+            public string Name { get; set; }
+            public int? Rows { get; set; }
+            public bool Success { get; set; }
+            public string ErrorMessage { get; set; }
         }
     }
 #endif

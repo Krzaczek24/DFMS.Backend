@@ -16,19 +16,21 @@ namespace DFMS.Database.Mappings
             builder.HasOne(e => e.Field)
                 .WithMany()
                 .HasForeignKey("field_id")
+                .HasConstraintName("fk_ffvr_field")
                 .IsRequired();
 
             builder.HasOne(e => e.ValidationRule)
                 .WithMany()
                 .HasForeignKey("validation_rule_id")
+                .HasConstraintName("fk_ffvr_validation_rule")
                 .IsRequired();
 
             builder.Property(e => e.Value)
-                .HasColumnName("default_value")
+                .HasColumnName("value")
                 .HasMaxLength(256);
 
             builder.Property(e => e.Message)
-                .HasColumnName("default_message")
+                .HasColumnName("message")
                 .IsRequired()
                 .HasMaxLength(256);
         }

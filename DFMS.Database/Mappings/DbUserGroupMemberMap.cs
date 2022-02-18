@@ -11,11 +11,12 @@ namespace DFMS.Database.Mappings
 
         public override void Configure(EntityTypeBuilder<DbUserGroupMember> builder)
         {
-            builder.ToTable("form_field_definition");
+            builder.ToTable("user_group_member");
 
             builder.HasOne(e => e.Group)
                 .WithMany()
                 .HasForeignKey("group_id")
+                .HasConstraintName("fk_ugm_group")
                 .IsRequired();
 
             builder.Property(e => e.UserLogin)

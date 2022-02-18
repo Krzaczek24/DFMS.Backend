@@ -11,11 +11,12 @@ namespace DFMS.Database.Mappings
 
         public override void Configure(EntityTypeBuilder<DbFormTemplateVersion> builder)
         {
-            builder.ToTable("form_template_section");
+            builder.ToTable("form_template_version");
 
             builder.HasOne(e => e.Template)
                 .WithMany()
                 .HasForeignKey("template_id")
+                .HasConstraintName("fk_fts_template")
                 .IsRequired();
 
             builder.Property(e => e.Version)

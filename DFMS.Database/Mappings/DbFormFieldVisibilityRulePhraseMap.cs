@@ -16,21 +16,25 @@ namespace DFMS.Database.Mappings
             builder.HasOne(e => e.Expression)
                 .WithMany()
                 .HasForeignKey("expression_id")
+                .HasConstraintName("fk_ffvrp_expression")
                 .IsRequired();
 
             builder.HasOne(e => e.Field)
                 .WithMany()
                 .HasForeignKey("field_id")
+                .HasConstraintName("fk_ffvrp_field")
                 .IsRequired();
 
             builder.HasOne(e => e.Operator)
                 .WithMany()
                 .HasForeignKey("operator_id")
+                .HasConstraintName("fk_ffvrp_operator")
                 .IsRequired();
 
             builder.HasOne(e => e.Option)
                 .WithMany()
-                .HasForeignKey("option_id");
+                .HasForeignKey("option_id")
+                .HasConstraintName("fk_ffvrp_option");
 
             builder.Property(e => e.Value)
                 .HasColumnName("value")

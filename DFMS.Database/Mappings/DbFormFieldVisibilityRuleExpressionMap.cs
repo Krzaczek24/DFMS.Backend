@@ -15,11 +15,13 @@ namespace DFMS.Database.Mappings
 
             builder.HasOne(e => e.Parent)
                 .WithMany(e => e.Children)
-                .HasForeignKey("parent_id");
+                .HasForeignKey("parent_id")
+                .HasConstraintName("fk_ffvre_visibility_rule_expresion");
 
             builder.HasOne(e => e.Type)
                 .WithMany()
                 .HasForeignKey("type_id")
+                .HasConstraintName("fk_ffvre_visibility_rule_expression_type")
                 .IsRequired();
         }
     }

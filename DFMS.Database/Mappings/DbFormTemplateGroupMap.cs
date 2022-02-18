@@ -30,7 +30,8 @@ namespace DFMS.Database.Mappings
 
             builder.HasOne(e => e.Parent)
                 .WithMany(e => e.Children)
-                .HasForeignKey("parent_id");
+                .HasForeignKey("parent_id")
+                .HasConstraintName("fk_ftg_parent");
         }
     }
 }

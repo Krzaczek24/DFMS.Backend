@@ -20,7 +20,8 @@ namespace DFMS.Database.Mappings
 
             builder.HasOne(e => e.ValidationType)
                 .WithMany()
-                .HasForeignKey("validation_type_id");
+                .HasForeignKey("validation_type_id")
+                .HasConstraintName("fk_ffvrd_validation_rule_type");
 
             builder.Property(e => e.DefaultValue)
                 .HasColumnName("default_value")

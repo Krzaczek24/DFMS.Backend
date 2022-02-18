@@ -16,6 +16,7 @@ namespace DFMS.Database.Mappings
             builder.HasOne(e => e.Group)
                 .WithMany()
                 .HasForeignKey("group_id")
+                .HasConstraintName("fk_ft_group")
                 .IsRequired();
 
             builder.Property(e => e.Title)

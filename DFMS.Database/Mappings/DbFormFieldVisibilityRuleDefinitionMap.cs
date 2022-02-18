@@ -21,6 +21,7 @@ namespace DFMS.Database.Mappings
             builder.HasOne(e => e.Expression)
                 .WithMany()
                 .HasForeignKey("expression_id")
+                .HasConstraintName("fk_ffvrd_expression")
                 .IsRequired();
         }
     }

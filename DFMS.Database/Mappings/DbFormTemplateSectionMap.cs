@@ -16,6 +16,7 @@ namespace DFMS.Database.Mappings
             builder.HasOne(e => e.Template)
                 .WithMany()
                 .HasForeignKey("template_id")
+                .HasConstraintName("fk_ftc_template")
                 .IsRequired();
 
             builder.Property(e => e.Title)

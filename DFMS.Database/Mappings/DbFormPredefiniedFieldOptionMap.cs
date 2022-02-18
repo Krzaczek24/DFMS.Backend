@@ -15,7 +15,8 @@ namespace DFMS.Database.Mappings
 
             builder.HasOne(e => e.PredefiniedField)
                 .WithMany()
-                .HasForeignKey("predefinied_field_id");
+                .HasForeignKey("predefinied_field_id")
+                .HasConstraintName("fk_fpfo_predefinied_field");
 
             builder.Property(e => e.Date)
                 .HasColumnName("date");

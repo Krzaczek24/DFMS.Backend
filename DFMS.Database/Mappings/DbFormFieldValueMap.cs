@@ -15,11 +15,13 @@ namespace DFMS.Database.Mappings
 
             builder.HasOne(e => e.Form)
                 .WithMany()
-                .HasForeignKey("form_id");
+                .HasForeignKey("form_id")
+                .HasConstraintName("fk_ffv_form");
 
             builder.HasOne(e => e.Field)
                 .WithMany()
-                .HasForeignKey("field_id");
+                .HasForeignKey("field_id")
+                .HasConstraintName("fk_ffv_field");
 
             builder.Property(e => e.Date)
                 .HasColumnName("date");

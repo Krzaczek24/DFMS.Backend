@@ -15,15 +15,18 @@ namespace DFMS.Database.Mappings
 
             builder.HasOne(e => e.Field)
                 .WithMany()
-                .HasForeignKey("field_id");
+                .HasForeignKey("field_id")
+                .HasConstraintName("fk_ffvr_field");
 
             builder.HasOne(e => e.Section)
                 .WithMany()
-                .HasForeignKey("section_id");
+                .HasForeignKey("section_id")
+                .HasConstraintName("fk_ffvr_section");
 
             builder.HasOne(e => e.Rule)
                 .WithMany()
                 .HasForeignKey("rule_id")
+                .HasConstraintName("fk_ffvr_rule")
                 .IsRequired();
         }
     }
