@@ -17,8 +17,8 @@ namespace DFMS.Database.Mappings
                 .HasColumnName("title")
                 .IsRequired();
 
-            builder.Property(e => e.Code)
-                .HasColumnName("code")
+            builder.Property(e => e.Type)
+                .HasColumnName("type")
                 .IsRequired();
 
             builder.Property(e => e.Visible)

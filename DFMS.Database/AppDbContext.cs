@@ -59,21 +59,21 @@ namespace DFMS.Database
                             throw new InvalidOperationException("Cannot modify inactive records");
                         entity.ModifDate = DateTime.Now;
                         break;
-                    case EntityState.Deleted:
-                        entity.Active = false;
-                        entity.ModifDate = DateTime.Now;
-                        entityEntry.State = EntityState.Modified;
-                        break;
+                    //case EntityState.Deleted:
+                    //    entity.Active = false;
+                    //    entity.ModifDate = DateTime.Now;
+                    //    entityEntry.State = EntityState.Modified;
+                    //    break;
                 }                
             }
 
             return base.SaveChanges();
         }
 
-        public override EntityEntry Remove(object entity)
-        {
-            return base.Remove(entity);
-        }
+        //public override EntityEntry Remove(object entity)
+        //{
+        //    return base.Remove(entity);
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

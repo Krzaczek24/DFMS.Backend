@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using NLog.Extensions.Logging;
+using System;
 using System.Text.Json.Serialization;
 
 namespace DFMS.WebApi
@@ -25,6 +26,8 @@ namespace DFMS.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             // dotnet user-secrets init
             // dotnet user-secrets set ConnectionStrings:DFMSdatabase "server=<server_address;port=<server_port>;user id=<username>;password=<pasword>;database=<scheme>"
             services.AddDbContext<AppDbContext>(options =>

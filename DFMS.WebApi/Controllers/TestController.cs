@@ -1,4 +1,5 @@
-﻿using DFMS.Database;
+﻿using AutoMapper;
+using DFMS.Database;
 using DFMS.Shared.Tools;
 using DFMS.WebApi.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
@@ -15,18 +16,15 @@ namespace DFMS.WebApi.Controllers
     [Route("[controller]")]
     public class TestController : BaseController<TestController>
     {
-        public TestController(ILogger<TestController> logger, AppDbContext database) : base(logger, database)
-        {
+        public TestController(ILogger<TestController> logger, IMapper mapper, AppDbContext database) : base(logger, mapper, database) { }
 
-        }
-
-        [HttpGet("check-api-connection")]
+        [HttpGet("CheckApiConnection")]
         public IActionResult CheckApiConnection()
         {
             return Ok(new { message = "Test połączenia zakończony pomyślnie" });
         }
 
-        [HttpGet("check-db-connection")]
+        [HttpGet("CheckDbConnection")]
         public IActionResult CheckDbConnection()
         {
             var entities = Database.GetType().GetProperties().Where(p => p.PropertyType.IsGenericType).Select(p => p.Name).ToList();
@@ -57,13 +55,6 @@ namespace DFMS.WebApi.Controllers
                 badEntities,
                 entities = result
             });
-        }
-
-        [HttpGet("check-relations")]
-        public IActionResult CheckDbRelations()
-        {
-            var relatedData = Database.FormFieldValidationRuleDefinitions.Include(x => x.ValidationType).ToList();
-            return new JsonResult(relatedData);
         }
 
         private class Entity

@@ -1,4 +1,5 @@
-﻿using DFMS.Database;
+﻿using AutoMapper;
+using DFMS.Database;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -8,10 +9,12 @@ namespace DFMS.WebApi.Controllers.Base
     {
         protected AppDbContext Database { get; }
         protected ILogger<T> Logger { get; }
+        protected IMapper Mapper { get; }
 
-        public BaseController(ILogger<T> logger, AppDbContext database)
+        public BaseController(ILogger<T> logger, IMapper mapper, AppDbContext database)
         {
             Logger = logger;
+            Mapper = mapper;
             Database = database;
         }
     }
