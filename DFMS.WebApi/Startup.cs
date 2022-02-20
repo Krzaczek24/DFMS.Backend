@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using NLog.Extensions.Logging;
 using System;
 using System.Text.Json.Serialization;
+using WebApiMiddlewares;
 
 namespace DFMS.WebApi
 {
@@ -59,15 +60,12 @@ namespace DFMS.WebApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DFMS.WebApi v1"));
             }
-
+            
+            app.UseMiddleware<ExceptionMiddleware>();
+            app.UseMiddleware<LoggingMiddleware>();
             app.UseRouting();
-
             app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
 }

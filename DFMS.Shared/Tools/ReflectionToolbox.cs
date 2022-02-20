@@ -27,14 +27,16 @@ namespace DFMS.Shared.Tools
 
         public static object GetObjectPropertyValue(object obj, string propertyName)
         {
-            var property = obj.GetType().GetProperty(propertyName);
+            var type = obj.GetType();
+            var property = type.GetProperty(propertyName);
+            if (property == null)
+                throw new MissingMemberException($"Type [{type.Name}] does not have [{propertyName}] property");
             return property.GetValue(obj);
         }
 
         public static T GetObjectPropertyValue<T>(object obj, string propertyName)
         {
-            var property = obj.GetType().GetProperty(propertyName);
-            return (T)property.GetValue(obj);
+            return (T)GetObjectPropertyValue(obj, propertyName);
         }
 
         public static object GetEnumAsJsonObject<T>() where T : Enum

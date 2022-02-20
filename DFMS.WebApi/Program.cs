@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Web;
 using System;
@@ -32,6 +33,7 @@ namespace DFMS.WebApi
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.ConfigureLogging(config => config.ClearProviders());
                     webBuilder.UseStartup<Startup>();
                     webBuilder.UseNLog();
                 });
