@@ -61,8 +61,7 @@ namespace DFMS.WebApi
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DFMS.WebApi v1"));
             }
             
-            app.UseMiddleware<ExceptionMiddleware>();
-            app.UseMiddleware<LoggingMiddleware>();
+            app.UseMiddleware<Middleware>();
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => endpoints.MapControllers());

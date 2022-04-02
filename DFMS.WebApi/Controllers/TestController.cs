@@ -1,9 +1,9 @@
-﻿using AutoMapper;
+﻿#if DEBUG
+using AutoMapper;
 using DFMS.Database;
 using DFMS.Shared.Tools;
 using DFMS.WebApi.Controllers.Base;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -11,9 +11,8 @@ using System.Linq;
 
 namespace DFMS.WebApi.Controllers
 {
-#if DEBUG
     [ApiController]
-    [Route("[controller]")]
+    [Route("test")]
     public class TestController : BaseController<TestController>
     {
         public TestController(ILogger<TestController> logger, IMapper mapper, AppDbContext database) : base(logger, mapper, database) { }
@@ -65,5 +64,5 @@ namespace DFMS.WebApi.Controllers
             public string ErrorMessage { get; set; }
         }
     }
-#endif
 }
+#endif

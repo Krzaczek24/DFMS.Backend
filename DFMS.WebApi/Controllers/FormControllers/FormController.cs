@@ -7,15 +7,11 @@ using Microsoft.Extensions.Logging;
 namespace DFMS.WebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("form")]
     public class FormController : BaseController<FormController>
     {
         public FormController(ILogger<FormController> logger, IMapper mapper, AppDbContext database) : base(logger, mapper, database) { }
 
-        [HttpGet("check-api-connection")]
-        public IActionResult CheckApiConnection()
-        {
-            return Ok(new { message = "Test połączenia zakończony pomyślnie" });
-        }
+        
     }
 }

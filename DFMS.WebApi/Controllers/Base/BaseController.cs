@@ -11,6 +11,10 @@ namespace DFMS.WebApi.Controllers.Base
         protected ILogger<T> Logger { get; }
         protected IMapper Mapper { get; }
 
+        //- TO REMOVE -
+        protected const string UserLogin = "TEMP";
+        //-------------
+
         public BaseController(ILogger<T> logger, IMapper mapper, AppDbContext database)
         {
             Logger = logger;
