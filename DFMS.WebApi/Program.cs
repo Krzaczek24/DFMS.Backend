@@ -34,8 +34,8 @@ namespace DFMS.WebApi
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.ConfigureLogging(config => config.ClearProviders());
-                    webBuilder.UseStartup<Startup>();
                     webBuilder.UseNLog();
+                    webBuilder.UseStartup<Startup>();
                 });
     }
 }

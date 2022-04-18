@@ -2,7 +2,7 @@ using DFMS.Database.Models.Base;
 
 namespace DFMS.Database.Models
 {
-	public class DbFormTemplateSection : DbTableCommonModel
+	internal class DbFormTemplateSection : DbTableCommonModel
 	{
 		public virtual string Title { get; set; }
 		public virtual int Sequence { get; set; }

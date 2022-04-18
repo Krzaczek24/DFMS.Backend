@@ -2,7 +2,7 @@ using DFMS.Database.Models.Base;
 
 namespace DFMS.Database.Models
 {
-	public class DbFormFieldVisibilityRule : DbTableCommonModel
+	internal class DbFormFieldVisibilityRule : DbTableCommonModel
 	{
 		public virtual DbFormTemplateField Field { get; set; }
 		public virtual DbFormTemplateSection Section { get; set; }

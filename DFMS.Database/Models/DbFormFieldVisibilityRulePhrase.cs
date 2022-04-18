@@ -2,7 +2,7 @@ using DFMS.Database.Models.Base;
 
 namespace DFMS.Database.Models
 {
-	public class DbFormFieldVisibilityRulePhrase : DbTableCommonModel
+	internal class DbFormFieldVisibilityRulePhrase : DbTableCommonModel
 	{
 		public virtual decimal? Value { get; set; }
 		public virtual DbFormFieldVisibilityRuleExpression Expression { get; set; }

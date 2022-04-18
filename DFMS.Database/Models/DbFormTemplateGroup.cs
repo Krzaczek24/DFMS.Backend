@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DFMS.Database.Models
 {
-	public class DbFormTemplateGroup : DbTableCommonModel
+	internal class DbFormTemplateGroup : DbTableCommonModel
 	{
 		public virtual string Name { get; set; }
 		public virtual string Code { get; set; }

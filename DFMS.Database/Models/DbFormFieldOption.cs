@@ -2,7 +2,7 @@ using DFMS.Database.Models.Base;
 
 namespace DFMS.Database.Models
 {
-	public class DbFormFieldOption : DbTableCommonModel
+	internal class DbFormFieldOption : DbTableCommonModel
 	{
 		public virtual System.DateTime? Date { get; set; }
 		public virtual string String { get; set; }

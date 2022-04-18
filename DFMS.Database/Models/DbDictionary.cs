@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DFMS.Database.Models
 {
-	public class DbDictionary : DbTableCommonModel
+	internal class DbDictionary : DbTableCommonModel
 	{
 		public virtual string Name { get; set; }
 		public virtual string Description { get; set; }

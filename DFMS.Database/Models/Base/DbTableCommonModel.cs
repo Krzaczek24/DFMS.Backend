@@ -1,6 +1,6 @@
 namespace DFMS.Database.Models.Base
 {
-	public abstract class DbTableCommonModel
+	internal abstract class DbTableCommonModel
 	{
 		public virtual int Id { get; set; }
 		public virtual string AddLogin { get; set; }

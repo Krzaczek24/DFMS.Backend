@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace DFMS.Database.Extensions
 {
-    public static class QueryExtensions
+    internal static class QueryExtensions
     {
         public static IQueryable<T> ActiveWhere<T>(this IQueryable<T> query) where T : DbTableCommonModel
         {

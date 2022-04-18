@@ -2,7 +2,7 @@ using DFMS.Database.Models.Base;
 
 namespace DFMS.Database.Models
 {
-	public class DbFormTemplateVersion : DbTableCommonModel
+	internal class DbFormTemplateVersion : DbTableCommonModel
 	{
 		public virtual int Version { get; set; }
 		public virtual int? Columns { get; set; }

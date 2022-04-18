@@ -11,36 +11,36 @@ namespace DFMS.Database
 {
     public class AppDbContext : DbContext
     {
-        public virtual DbSet<DbDictionary> Dictionaries { get; set; }
-        public virtual DbSet<DbFormFavourite> FavouriteForms { get; set; }
-        public virtual DbSet<DbFormFieldDefinition> FormFieldDefinitions { get; set; }
-        public virtual DbSet<DbFormFieldDefinitionValueType> FormFieldDefinitionValueTypes { get; set; }
-        public virtual DbSet<DbFormFieldGroup> FormFieldGroups { get; set; }
-        public virtual DbSet<DbFormFieldOption> FormFieldOptions { get; set; }
-        public virtual DbSet<DbFormFieldValidationRule> FormFieldValidationRules { get; set; }
-        public virtual DbSet<DbFormFieldValidationRuleDefinition> FormFieldValidationRuleDefinitions { get; set; }
-        public virtual DbSet<DbFormFieldValidationRuleType> FormFieldValidationRuleTypes { get; set; }
-        public virtual DbSet<DbFormFieldValidationRuleValueType> FormFieldValidationRuleValueTypes { get; set; }
-        public virtual DbSet<DbFormFieldValue> FormFieldValues { get; set; }
-        public virtual DbSet<DbFormFieldVisibilityRule> FormFieldVisibilityRules { get; set; }
-        public virtual DbSet<DbFormFieldVisibilityRuleDefinition> FormFieldVisibilityRuleDefinitions { get; set; }
-        public virtual DbSet<DbFormFieldVisibilityRuleExpression> FormFieldVisibilityRuleExpressions { get; set; }
-        public virtual DbSet<DbFormFieldVisibilityRuleExpressionType> FormFieldVisibilityRuleExpressionTypes { get; set; }
-        public virtual DbSet<DbFormFieldVisibilityRuleOperator> FormFieldVisibilityRuleOperators { get; set; }
-        public virtual DbSet<DbFormFieldVisibilityRulePhrase> FormFieldVisibilityRulePhrases { get; set; }
-        public virtual DbSet<DbFormInstance> FormInstances { get; set; }
-        public virtual DbSet<DbFormPredefiniedField> FormPredefiniedFields { get; set; }
-        public virtual DbSet<DbFormPredefiniedFieldOption> FormPredefiniedFieldOptions { get; set; }
-        public virtual DbSet<DbFormTemplate> FormTemplates { get; set; }
-        public virtual DbSet<DbFormTemplateAccess> FormTemplateAccesss { get; set; }
-        public virtual DbSet<DbFormTemplateField> FormTemplateFields { get; set; }
-        public virtual DbSet<DbFormTemplateGroup> FormTemplateGroups { get; set; }
-        public virtual DbSet<DbFormTemplateSection> FormTemplateSections { get; set; }
-        public virtual DbSet<DbFormTemplateVersion> FormTemplateVersions { get; set; }
-        public virtual DbSet<DbFormFieldValueType> FormFieldValueTypes { get; set; }
-        public virtual DbSet<DbUser> Users { get; set; }
-        public virtual DbSet<DbUserGroup> UserGroups { get; set; }
-        public virtual DbSet<DbUserGroupMember> UserGroupMembers { get; set; }
+        internal virtual DbSet<DbDictionary> Dictionaries { get; set; }
+        internal virtual DbSet<DbFormFavourite> FavouriteForms { get; set; }
+        internal virtual DbSet<DbFormFieldDefinition> FormFieldDefinitions { get; set; }
+        internal virtual DbSet<DbFormFieldDefinitionValueType> FormFieldDefinitionValueTypes { get; set; }
+        internal virtual DbSet<DbFormFieldGroup> FormFieldGroups { get; set; }
+        internal virtual DbSet<DbFormFieldOption> FormFieldOptions { get; set; }
+        internal virtual DbSet<DbFormFieldValidationRule> FormFieldValidationRules { get; set; }
+        internal virtual DbSet<DbFormFieldValidationRuleDefinition> FormFieldValidationRuleDefinitions { get; set; }
+        internal virtual DbSet<DbFormFieldValidationRuleType> FormFieldValidationRuleTypes { get; set; }
+        internal virtual DbSet<DbFormFieldValidationRuleValueType> FormFieldValidationRuleValueTypes { get; set; }
+        internal virtual DbSet<DbFormFieldValue> FormFieldValues { get; set; }
+        internal virtual DbSet<DbFormFieldVisibilityRule> FormFieldVisibilityRules { get; set; }
+        internal virtual DbSet<DbFormFieldVisibilityRuleDefinition> FormFieldVisibilityRuleDefinitions { get; set; }
+        internal virtual DbSet<DbFormFieldVisibilityRuleExpression> FormFieldVisibilityRuleExpressions { get; set; }
+        internal virtual DbSet<DbFormFieldVisibilityRuleExpressionType> FormFieldVisibilityRuleExpressionTypes { get; set; }
+        internal virtual DbSet<DbFormFieldVisibilityRuleOperator> FormFieldVisibilityRuleOperators { get; set; }
+        internal virtual DbSet<DbFormFieldVisibilityRulePhrase> FormFieldVisibilityRulePhrases { get; set; }
+        internal virtual DbSet<DbFormInstance> FormInstances { get; set; }
+        internal virtual DbSet<DbFormPredefiniedField> FormPredefiniedFields { get; set; }
+        internal virtual DbSet<DbFormPredefiniedFieldOption> FormPredefiniedFieldOptions { get; set; }
+        internal virtual DbSet<DbFormTemplate> FormTemplates { get; set; }
+        internal virtual DbSet<DbFormTemplateAccess> FormTemplateAccesss { get; set; }
+        internal virtual DbSet<DbFormTemplateField> FormTemplateFields { get; set; }
+        internal virtual DbSet<DbFormTemplateGroup> FormTemplateGroups { get; set; }
+        internal virtual DbSet<DbFormTemplateSection> FormTemplateSections { get; set; }
+        internal virtual DbSet<DbFormTemplateVersion> FormTemplateVersions { get; set; }
+        internal virtual DbSet<DbFormFieldValueType> FormFieldValueTypes { get; set; }
+        internal virtual DbSet<DbUser> Users { get; set; }
+        internal virtual DbSet<DbUserGroup> UserGroups { get; set; }
+        internal virtual DbSet<DbUserGroupMember> UserGroupMembers { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 

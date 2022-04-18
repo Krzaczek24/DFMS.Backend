@@ -1,6 +1,6 @@
 ﻿namespace DFMS.Database.Enums
 {
-    public enum DbPrivacyLevel
+    internal enum DbPrivacyLevel
     {
         Private = 0,
         UseAccessSettings = 1,

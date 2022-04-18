@@ -2,7 +2,7 @@ using DFMS.Database.Models.Base;
 
 namespace DFMS.Database.Models
 {
-	public class DbFormFieldValidationRule : DbTableCommonModel
+	internal class DbFormFieldValidationRule : DbTableCommonModel
 	{
 		public virtual string Value { get; set; }
 		public virtual string Message { get; set; }

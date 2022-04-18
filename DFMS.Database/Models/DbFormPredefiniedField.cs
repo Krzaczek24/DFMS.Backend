@@ -2,7 +2,7 @@ using DFMS.Database.Models.Base;
 
 namespace DFMS.Database.Models
 {
-	public class DbFormPredefiniedField : DbTableCommonModel
+	internal class DbFormPredefiniedField : DbTableCommonModel
 	{
 		public virtual string Title { get; set; }
 		public virtual bool? Global { get; set; }

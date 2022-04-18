@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DFMS.Database.Models
 {
-	public class DbFormFieldVisibilityRuleExpression : DbTableCommonModel
+	internal class DbFormFieldVisibilityRuleExpression : DbTableCommonModel
 	{
 		public virtual DbFormFieldVisibilityRuleExpression Parent { get; set; }
 		public virtual DbFormFieldVisibilityRuleExpressionType Type { get; set; }

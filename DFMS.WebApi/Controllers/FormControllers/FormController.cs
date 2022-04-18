@@ -1,16 +1,17 @@
 ﻿using AutoMapper;
 using DFMS.Database;
-using DFMS.WebApi.Controllers.Base;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using NLog;
 
 namespace DFMS.WebApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("form")]
-    public class FormController : BaseController<FormController>
+    public class FormController : BaseController
     {
-        public FormController(ILogger<FormController> logger, IMapper mapper, AppDbContext database) : base(logger, mapper, database) { }
+        public FormController(ILogger logger, IMapper mapper, AppDbContext database) : base(logger, mapper, database) { }
 
         
     }

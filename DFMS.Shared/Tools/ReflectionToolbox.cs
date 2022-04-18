@@ -16,6 +16,15 @@ namespace DFMS.Shared.Tools
                 .ToList();
         }
 
+        public static List<Type> GetAllNonAbstractImplementingInterface(Type @interface)
+        {
+            return Assembly
+                .GetAssembly(@interface)
+                .GetTypes()
+                .Where(t => t.IsClass && !t.IsAbstract && @interface.IsAssignableFrom(t))
+                .ToList();
+        }
+
         public static object CallPropertyMethod(object obj, string propertyName, string methodName)
         {
             var property = obj.GetType().GetProperty(propertyName);
