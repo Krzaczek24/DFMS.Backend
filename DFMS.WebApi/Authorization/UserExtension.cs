@@ -14,7 +14,7 @@ namespace DFMS.WebApi.Authorization
         {
             try
             {
-                return claims.Claims.Where(claim => claim.Type == userClaim.ToString()).Single().Value;
+                return claims.Claims.Single(claim => claim.Type == userClaim.ToString()).Value;
             }
             catch
             {

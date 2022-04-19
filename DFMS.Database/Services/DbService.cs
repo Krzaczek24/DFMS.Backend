@@ -1,4 +1,5 @@
-﻿using DFMS.Shared.Tools;
+﻿using AutoMapper;
+using DFMS.Shared.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,6 +7,18 @@ using System.Linq;
 namespace DFMS.Database.Services
 {
     public interface IDbService { }
+
+    public abstract class DbService : IDbService
+    {
+        protected AppDbContext Database { get; }
+        protected IMapper Mapper { get; }
+
+        public DbService(AppDbContext database, IMapper mapper)
+        {
+            Database = database;
+            Mapper = mapper;
+        }
+    }
 
     public static class DbServiceHelper
     {

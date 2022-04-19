@@ -8,25 +8,18 @@ using System.Linq;
 
 namespace DFMS.Database.Services.FormCreator
 {
-    public interface IFormFieldService : IDbService
+    public interface IFormFieldService
     {
         public ICollection<FormFieldDefinition> GetFieldsDefinitions(string userLogin);
         public bool RemovePredefiniedFieldDefinition(int id);
     }
 
-    public class FormFieldService : IFormFieldService
+    public class FormFieldService : DbService, IFormFieldService
     {
         private static IReadOnlyDictionary<string, IReadOnlyCollection<string>> _fieldValueTypes;
         private IReadOnlyDictionary<string, IReadOnlyCollection<string>> FieldValueTypes => _fieldValueTypes ??= GetFieldValueTypes();
 
-        private AppDbContext Database { get; }
-        private IMapper Mapper { get; }
-
-        public FormFieldService(AppDbContext database, IMapper mapper)
-        {
-            Database = database;
-            Mapper = mapper;
-        }
+        public FormFieldService(AppDbContext database, IMapper mapper) : base(database, mapper) { }
 
         public ICollection<FormFieldDefinition> GetFieldsDefinitions(string userLogin)
         {

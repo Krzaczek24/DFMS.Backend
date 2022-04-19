@@ -12,7 +12,7 @@ namespace DFMS.WebApi.Controllers.FormCreatorControllers
     //[Authorize]
     [ApiController]
     [Route("form-creator/field-definitions")]
-    public class FormCreatorFieldsController : BaseController2
+    public class FormCreatorFieldsController : BaseController
     {
         private IFormFieldService FormFieldService { get; }
 

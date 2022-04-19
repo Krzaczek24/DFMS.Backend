@@ -1,17 +1,11 @@
 ﻿using AutoMapper;
-using DFMS.Database;
-using DFMS.Database.Extensions;
-using DFMS.Database.Models;
+using DFMS.Database.Dto;
 using DFMS.Database.Services.FormCreator;
-using DFMS.Shared.Dto;
-using DFMS.Shared.Extensions;
+using DFMS.WebApi.Authorization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NLog;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace DFMS.WebApi.Controllers.FormCreatorControllers
 {
@@ -20,69 +14,38 @@ namespace DFMS.WebApi.Controllers.FormCreatorControllers
     [Route("form-creator/validation-rules")]
     public class FormCreatorValidationController : BaseController
     {
-        public FormCreatorValidationController(ILogger logger, IMapper mapper, AppDbContext database) : base(logger, mapper, database) { }
+        private IFormFieldValidationService FormFieldValidationService { get; }
 
-        //[HttpGet]
-        //public ICollection<FormFieldValidationRuleDefinition> GetValidationDefinitions()
-        //{
-        //    var validationDefinitions = Database.FormFieldValidationRuleDefinitions
-        //        .ActiveWhere(ffvrd => ffvrd.Global.IsTrue() || ffvrd.AddLogin == User.Login)
-        //        .Include(ffvrd => ffvrd.ValidationType)
-        //        .ToList();
+        public FormCreatorValidationController(IMapper mapper, IFormFieldValidationService formFieldValidationService) : base(mapper)
+        {
+            FormFieldValidationService = formFieldValidationService;
+        }
 
-        //    var mappedDefinitions = Mapper.Map<List<FormFieldValidationRuleDefinition>>(validationDefinitions);
+        [HttpGet]
+        public ICollection<FormFieldValidationRuleDefinition> GetValidationDefinitions()
+        {
+            return FormFieldValidationService.GetValidationDefinitions(User.GetLogin());
+        }
 
-        //    return mappedDefinitions;
-        //}
+        [HttpPost]
+        public IActionResult CreateValidationDefinition([FromBody] FormFieldValidationRuleDefinition validationDefinition)
+        {
+            int newValidationDefinitionId = FormFieldValidationService.CreateValidationDefinition(validationDefinition);
+            return Created(new Uri("~/validations/definitions/" + newValidationDefinitionId), null);
+        }
 
-        //[HttpPost]
-        //public IActionResult CreateValidationDefinition([FromBody] FormFieldValidationRuleDefinition validationDefinitions)
-        //{
-        //    var newValidationDefinition = Mapper.Map<DbFormFieldValidationRuleDefinition>(validationDefinitions);
-        //    Database.Add(newValidationDefinition);
-        //    Database.SaveChanges();
-        //    return Created(new Uri("~/validations/definitions/" + newValidationDefinition.Id), null);
-        //}
+        [HttpPut("{id:int}")]
+        public IActionResult UpdateValidationDefinition([FromRoute] int id, [FromBody] FormFieldValidationRuleDefinition validationDefinition)
+        {
+            bool replaced = FormFieldValidationService.UpdateValidationDefinition(id, validationDefinition);
+            return replaced ? NoContent() : Created(new Uri("~/validations/definitions/" + id), null);
+        }
 
-        //[HttpPut("{id:int}")]
-        //public IActionResult UpdateValidationDefinition([FromRoute] int id, [FromBody] FormFieldValidationRuleDefinition validationDefinition)
-        //{
-        //    var dbDefinition = Database.FormFieldValidationRuleDefinitions
-        //        .ActiveWhere(x => x.Id == id)
-        //        .SingleOrDefault();
-
-        //    if (dbDefinition == null)
-        //    {
-        //        dbDefinition = Mapper.Map<DbFormFieldValidationRuleDefinition>(validationDefinition);
-        //        Database.Add(dbDefinition);
-        //        Database.SaveChanges();
-        //        return Created(new Uri("~/validations/definitions/" + dbDefinition.Id), null);
-        //    }
-        //    else
-        //    {
-        //        Mapper.Map(validationDefinition, dbDefinition);
-        //        Database.Update(dbDefinition);
-        //        Database.SaveChanges();
-        //        return NoContent();
-        //    }
-        //}
-
-        //[HttpDelete("{id:int}")]
-        //public IActionResult DeleteValidationDefinition([FromRoute] int id)
-        //{
-        //    var dbDefinition = Database.FormFieldValidationRuleDefinitions
-        //        .ActiveWhere(x => x.Id == id)
-        //        .Where(x => x.Global.IsNotTrue())
-        //        .SingleOrDefault();
-
-        //    if (dbDefinition != null)
-        //    {
-        //        Database.Remove(dbDefinition);
-        //        Database.SaveChanges();
-        //        return Ok();
-        //    }
-
-        //    return NoContent();
-        //}
+        [HttpDelete("{id:int}")]
+        public IActionResult DeleteValidationDefinition([FromRoute] int id)
+        {
+            bool removed = FormFieldValidationService.DeleteValidationDefinition(id);
+            return removed ? Ok() : NoContent();
+        }
     }
 }

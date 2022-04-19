@@ -9,6 +9,12 @@ namespace DFMS.Shared.Tools
     {
         public static List<Type> GetAllNonAbstractSubclasses(Type type)
         {
+            if (type == null)
+                throw new ArgumentNullException($"Parameter [{nameof(type)}] cannot be null");
+
+            if (type.IsInterface)
+                throw new ArgumentException($"Parameter [{nameof(type)}] cannot be interface type");
+
             return Assembly
                 .GetAssembly(type)
                 .GetTypes()
@@ -18,6 +24,12 @@ namespace DFMS.Shared.Tools
 
         public static List<Type> GetAllNonAbstractImplementingInterface(Type @interface)
         {
+            if (@interface == null)
+                throw new ArgumentNullException($"Parameter [{nameof(@interface)}] cannot be null");
+
+            if (!@interface.IsInterface)
+                throw new ArgumentException($"Parameter [{nameof(@interface)}] must be interface type");
+
             return Assembly
                 .GetAssembly(@interface)
                 .GetTypes()
