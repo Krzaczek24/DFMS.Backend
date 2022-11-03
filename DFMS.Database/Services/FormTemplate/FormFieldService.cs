@@ -1,64 +1,64 @@
 ﻿using AutoMapper;
-using DFMS.Database.Dto;
+using DFMS.Database.Dto.FormTemplate;
 using DFMS.Database.Extensions;
 using DFMS.Shared.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
-namespace DFMS.Database.Services.FormCreator
+namespace DFMS.Database.Services.FormTemplate
 {
     public interface IFormFieldService
     {
-        public ICollection<FormFieldDefinition> GetFieldsDefinitions(string userLogin);
-        public bool RemovePredefiniedFieldDefinition(int id);
+        public Task<ICollection<FormFieldDefinition>> GetFieldsDefinitions(string userLogin);
+        public Task<bool> RemovePredefiniedFieldDefinition(int id);
     }
 
     public class FormFieldService : DbService, IFormFieldService
     {
         private static IReadOnlyDictionary<string, IReadOnlyCollection<string>> _fieldValueTypes;
-        private IReadOnlyDictionary<string, IReadOnlyCollection<string>> FieldValueTypes => _fieldValueTypes ??= GetFieldValueTypes();
+        private IReadOnlyDictionary<string, IReadOnlyCollection<string>> FieldValueTypes => _fieldValueTypes ??= GetFieldValueTypes().Result;
 
         public FormFieldService(AppDbContext database, IMapper mapper) : base(database, mapper) { }
 
-        public ICollection<FormFieldDefinition> GetFieldsDefinitions(string userLogin)
+        public async Task<ICollection<FormFieldDefinition>> GetFieldsDefinitions(string userLogin)
         {
             var fieldDefinitions = new List<FormFieldDefinition>();
-            fieldDefinitions = null;
-            fieldDefinitions.AddRange(GetBaseFormFieldDefinitions());
-            fieldDefinitions.AddRange(GetPredefiniedFormFieldsDefinitions(userLogin));
+            fieldDefinitions.AddRange(await GetBaseFormFieldDefinitions());
+            fieldDefinitions.AddRange(await GetPredefiniedFormFieldsDefinitions(userLogin));
             return fieldDefinitions.OrderBy(fd => fd.Title).ToList();
         }
 
         /// <returns><see langword="true"/> if object was found and removed, otherwise returns <see langword="false"/></returns>
-        public bool RemovePredefiniedFieldDefinition(int id)
+        public async Task<bool> RemovePredefiniedFieldDefinition(int id)
         {
-            var dbDefinition = Database.FormPredefiniedFields
+            var dbDefinition = await Database.FormPredefiniedFields
                 .ActiveWhere(x => x.Id == id)
                 .Where(x => x.Global.IsNotTrue())
-                .SingleOrDefault();
+                .SingleOrDefaultAsync();
 
             if (dbDefinition != null)
             {
-                Database.FormPredefiniedFieldOptions
+                (await Database.FormPredefiniedFieldOptions
                     .ActiveWhere(x => x.PredefiniedField == dbDefinition)
-                    .ToList()
+                    .ToListAsync())
                     .ForEach(x => Database.Remove(x));
                 Database.Remove(dbDefinition);
-                Database.SaveChanges();
+                await Database.SaveChangesAsync();
                 return true;
             }
 
             return false;
         }
 
-        private IReadOnlyDictionary<string, IReadOnlyCollection<string>> GetFieldValueTypes()
+        private async Task<IReadOnlyDictionary<string, IReadOnlyCollection<string>>> GetFieldValueTypes()
         {
-            var fieldValueTypes = Database.FormFieldDefinitionValueTypes
+            var fieldValueTypes = (await Database.FormFieldDefinitionValueTypes
                 .ActiveWhere()
                 .Include(ffdvt => ffdvt.FieldDefinition)
                 .Include(ffdvt => ffdvt.ValueType)
-                .ToList()
+                .ToListAsync())
                 .GroupBy(ffdvt => ffdvt.FieldDefinition.Type)
                 .ToDictionary(x => x.Key, x => x.Select(y => y.ValueType.Code).ToList())
                 .AsReadOnly();
@@ -66,11 +66,11 @@ namespace DFMS.Database.Services.FormCreator
             return fieldValueTypes;
         }
 
-        private List<FormFieldDefinition> GetBaseFormFieldDefinitions()
+        private async Task<List<FormFieldDefinition>> GetBaseFormFieldDefinitions()
         {
-            var baseFields = Database.FormFieldDefinitions
+            var baseFields = await Database.FormFieldDefinitions
                 .ActiveWhere(ffd => ffd.Visible == true)
-                .ToList();
+                .ToListAsync();
 
             var mappedFields = Mapper.Map<List<FormFieldDefinition>>(baseFields);
 
@@ -82,13 +82,13 @@ namespace DFMS.Database.Services.FormCreator
             return mappedFields;
         }
 
-        private List<FormFieldDefinition> GetPredefiniedFormFieldsDefinitions(string userLogin)
+        private async Task<List<FormFieldDefinition>> GetPredefiniedFormFieldsDefinitions(string userLogin)
         {
-            var predefiniedFields = Database.FormPredefiniedFields
+            var predefiniedFields = await Database.FormPredefiniedFields
                 .ActiveWhere(fpf => fpf.Global == true || fpf.AddLogin == userLogin)
                 .Include(fpf => fpf.BaseDefinition)
                 .Include(fpf => fpf.ValueType)
-                .ToList();
+                .ToListAsync();
 
             var predefiniedMappedFields = Mapper.Map<List<FormFieldDefinition>>(predefiniedFields);
 

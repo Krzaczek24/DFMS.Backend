@@ -1,81 +1,82 @@
 ﻿using AutoMapper;
-using DFMS.Database.Dto;
+using DFMS.Database.Dto.FormTemplate;
 using DFMS.Database.Extensions;
 using DFMS.Database.Models;
 using DFMS.Shared.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
-namespace DFMS.Database.Services.FormCreator
+namespace DFMS.Database.Services.FormTemplate
 {
     public interface IFormFieldValidationService
     {
-        public int CreateValidationDefinition(FormFieldValidationRuleDefinition validationDefinition);
-        public bool DeleteValidationDefinition(int id);
-        public ICollection<FormFieldValidationRuleDefinition> GetValidationDefinitions(string userLogin);
-        public bool UpdateValidationDefinition(int id, FormFieldValidationRuleDefinition validationDefinition);
+        public Task<int> CreateValidationDefinition(FormFieldValidationRuleDefinition validationDefinition);
+        public Task<bool> DeleteValidationDefinition(int id);
+        public Task<ICollection<FormFieldValidationRuleDefinition>> GetValidationDefinitions(string userLogin);
+        public Task<bool> UpdateValidationDefinition(int id, FormFieldValidationRuleDefinition validationDefinition);
     }
 
     public class FormFieldValidationService : DbService, IFormFieldValidationService
     {
         public FormFieldValidationService(AppDbContext database, IMapper mapper) : base(database, mapper) { }
 
-        public int CreateValidationDefinition(FormFieldValidationRuleDefinition validationDefinition)
+        public async Task<int> CreateValidationDefinition(FormFieldValidationRuleDefinition validationDefinition)
         {
+            throw new System.NotImplementedException("Brak mapowania i odszukania wartości w DB");
             var newValidationDefinition = Mapper.Map<DbFormFieldValidationRuleDefinition>(validationDefinition);
-            Database.Add(newValidationDefinition);
-            Database.SaveChanges();
+            await Database.AddAsync(newValidationDefinition);
+            await Database.SaveChangesAsync();
             return newValidationDefinition.Id;
         }
 
-        public ICollection<FormFieldValidationRuleDefinition> GetValidationDefinitions(string userLogin)
+        public async Task<ICollection<FormFieldValidationRuleDefinition>> GetValidationDefinitions(string userLogin)
         {
-            var validationDefinitions = Database.FormFieldValidationRuleDefinitions
-                .ActiveWhere(ffvrd => ffvrd.Global.IsTrue() || ffvrd.AddLogin == userLogin)
+            var validationDefinitions = await Database.FormFieldValidationRuleDefinitions
+                .ActiveWhere(ffvrd => ffvrd.Global == true || ffvrd.AddLogin == userLogin)
                 .Include(ffvrd => ffvrd.ValidationType)
-                .ToList();
+                .ToListAsync();
 
             var mappedDefinitions = Mapper.Map<List<FormFieldValidationRuleDefinition>>(validationDefinitions);
-
             return mappedDefinitions;
         }
 
         /// <returns><see langword="true"/> if replaced existing object, otherwise returns <see langword="false"/></returns>
-        public bool UpdateValidationDefinition(int id, FormFieldValidationRuleDefinition validationDefinition)
+        public async Task<bool> UpdateValidationDefinition(int id, FormFieldValidationRuleDefinition validationDefinition)
         {
-            var dbDefinition = Database.FormFieldValidationRuleDefinitions
+            var dbDefinition = await Database.FormFieldValidationRuleDefinitions
                 .ActiveWhere(x => x.Id == id)
-                .SingleOrDefault();
+                .SingleOrDefaultAsync();
 
             if (dbDefinition == null)
             {
                 dbDefinition = Mapper.Map<DbFormFieldValidationRuleDefinition>(validationDefinition);
                 Database.Add(dbDefinition);
-                Database.SaveChanges();
+                await Database.SaveChangesAsync();
                 return true;
             }
             else
             {
                 Mapper.Map(validationDefinition, dbDefinition);
                 Database.Update(dbDefinition);
-                Database.SaveChanges();
+                await Database.SaveChangesAsync();
                 return false;
             }
         }
 
         /// <returns><see langword="true"/> if object was found and removed, otherwise returns <see langword="false"/></returns>
-        public bool DeleteValidationDefinition(int id)
+        public async Task<bool> DeleteValidationDefinition(int id)
         {
-            var dbDefinition = Database.FormFieldValidationRuleDefinitions
+            var dbDefinition = await Database.FormFieldValidationRuleDefinitions
                 .ActiveWhere(x => x.Id == id)
                 .Where(x => x.Global.IsNotTrue())
-                .SingleOrDefault();
+                .SingleOrDefaultAsync();
 
             if (dbDefinition != null)
             {
                 Database.Remove(dbDefinition);
-                Database.SaveChanges();
+                await Database.SaveChangesAsync();
                 return true;
             }
 

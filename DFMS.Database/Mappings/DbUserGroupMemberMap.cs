@@ -19,10 +19,10 @@ namespace DFMS.Database.Mappings
                 .HasConstraintName("fk_ugm_group")
                 .IsRequired();
 
-            builder.Property(e => e.UserLogin)
-                .HasColumnName("user_login")
-                .IsRequired()
-                .HasMaxLength(32);
+            builder.HasOne(e => e.User)
+                .WithMany()
+                .HasForeignKey("user_id")
+                .HasConstraintName("fk_ugm_user");
         }
     }
 }

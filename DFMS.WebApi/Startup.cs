@@ -1,6 +1,6 @@
 using DFMS.Database;
 using DFMS.Database.Services;
-using DFMS.Database.Services.FormCreator;
+using DFMS.WebApi.Constants;
 using DFMS.WebApi.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -37,7 +37,7 @@ namespace DFMS.WebApi
             // dotnet user-secrets init
             // dotnet user-secrets set ApiKey "<key>"
             // rmb project + 'manage user secrets'
-            byte[] key = Encoding.ASCII.GetBytes(Configuration["ApiKey"]);
+            byte[] key = Encoding.ASCII.GetBytes(Configuration[ConfigurationKeys.ApiKey]);
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -46,7 +46,7 @@ namespace DFMS.WebApi
             // rmb project + 'manage user secrets'
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseMySQL(Configuration.GetConnectionString("DFMSdatabase"));
+                options.UseMySQL(Configuration.GetConnectionString(ConfigurationKeys.DatabaseConnectionKey));
 #if DEBUG
                 options.UseLoggerFactory(LoggerFactory);
 #endif

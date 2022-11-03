@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using DFMS.Database.Models;
-using DFMS.Shared.Dto;
 
 namespace DFMS.WebApi.Mapping
 {

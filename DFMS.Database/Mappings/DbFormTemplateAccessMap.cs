@@ -28,9 +28,10 @@ namespace DFMS.Database.Mappings
                 .HasForeignKey("user_group_id")
                 .HasConstraintName("fk_fta_user_group");
 
-            builder.Property(e => e.UserLogin)
-                .HasColumnName("user_login")
-                .HasMaxLength(32);
+            builder.HasOne(e => e.User)
+                .WithMany()
+                .HasForeignKey("user_id")
+                .HasConstraintName("fk_fta_user");
 
             builder.Property(e => e.View)
                 .HasColumnName("view")

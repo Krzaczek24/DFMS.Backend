@@ -41,6 +41,11 @@ namespace DFMS.Database
         internal virtual DbSet<DbUser> Users { get; set; }
         internal virtual DbSet<DbUserGroup> UserGroups { get; set; }
         internal virtual DbSet<DbUserGroupMember> UserGroupMembers { get; set; }
+        internal virtual DbSet<DbUserPrivilege> UserPrivileges { get; set; }
+        internal virtual DbSet<DbUserPrivilegeAssignment> UserPrivilegeAssignments { get; set; }
+        internal virtual DbSet<DbUserPrivilegeGroup> UserPrivilegeGroups { get; set; }
+        internal virtual DbSet<DbUserPrivilegeGroupAssignment> UserPrivilegeGroupAssignments { get; set; }
+        internal virtual DbSet<DbUserRole> UserRoles { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 

@@ -17,6 +17,25 @@ namespace DFMS.Database.Mappings
                 .HasColumnName("login")
                 .IsRequired()
                 .HasMaxLength(32);
+
+            builder.Property(e => e.PasswordHash)
+                .HasColumnName("password_hash")
+                .IsRequired()
+                .HasMaxLength(2048);
+
+            builder.Property(e => e.FirstName)
+                .HasColumnName("first_name")
+                .HasMaxLength(64);
+
+            builder.Property(e => e.LastName)
+                .HasColumnName("last_name")
+                .HasMaxLength(64);
+
+            builder.HasOne(e => e.Role)
+                .WithMany()
+                .HasForeignKey("role_id")
+                .HasConstraintName("fk_u_role")
+                .IsRequired();
         }
     }
 }

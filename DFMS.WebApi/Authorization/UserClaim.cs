@@ -3,6 +3,12 @@
     public enum UserClaim
     {
         Id,
-        Login
+        Login,
+        Role,
+        Permissions,
+        FirstLoginDate,
+        LastLoginDate,
+        FirstName,
+        LastName
     }
 }

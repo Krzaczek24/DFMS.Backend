@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DFMS.Database.Dto
+namespace DFMS.Database.Dto.FormTemplate
 {
     public class FormFieldValidationRuleDefinition
     {
