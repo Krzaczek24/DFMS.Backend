@@ -17,30 +17,39 @@ namespace DFMS.Database.Services
 
         public async Task<User> GetUser(string login, string passwordHash)
         {
-            var query = from u in Database.Users
-                        join r in Database.UserRoles on u.Role.Id equals r.Id
-                        from upga in Database.UserPrivilegeGroupAssignments.Where(x => x.User.Id == u.Id).DefaultIfEmpty()
-                        from upg in Database.UserPrivilegeGroups.Where(x => x.Id == upga.PrivilegeGroup.Id).DefaultIfEmpty()
-                        from upa in Database.UserPrivilegeAssignments.Where(x => x.PrivilegeGroup.Id == upg.Id).DefaultIfEmpty()
-                        from up in Database.UserPrivileges.Where(x => x.Id == upa.Privilege.Id).DefaultIfEmpty()
-                        select new UserRow()
-                        {
-							Id = u.Id,
-							Login = u.Login,
-							Role = r.Name,
-							Privilege = up.Name,
-							FirstName = u.FirstName,
-							LastName = u.LastName
-						};
-						
-			var dbUser = await query.ToListAsync();
-			if (dbUser?.Count > 0)
-			{
-				var user = Mapper.Map<User>(dbUser);
-				return user;
-			}
+            try
+            {
+                var query = from u in Database.Users
+                            join r in Database.UserRoles on u.Role.Id equals r.Id
+                            from upga in Database.UserPermissionGroupAssignments.Where(x => x.User.Id == u.Id).DefaultIfEmpty()
+                            from upg in Database.UserPermissionGroups.Where(x => x.Id == upga.PermissionGroup.Id).DefaultIfEmpty()
+                            from upa in Database.UserPermissionAssignments.Where(x => x.PermissionGroup.Id == upg.Id).DefaultIfEmpty()
+                            from up in Database.UserPermissions.Where(x => x.Id == upa.Permission.Id).DefaultIfEmpty()
+                            select new UserRow()
+                            {
+                                Id = u.Id,
+                                Login = u.Login,
+                                Role = r.Name,
+                                Permission = up.Name,
+                                FirstName = u.FirstName,
+                                LastName = u.LastName
+                            };
 
-			return null;
+                var dbUser = await query.ToListAsync();
+                if (dbUser?.Count > 0)
+                {
+                    var user = Mapper.Map<User>(dbUser);
+                    return user;
+                }
+
+                return null;
+            }
+            catch (System.Exception ex)
+            {
+                string msg = ex.Message;
+            }
+
+            return null;
         }
     }
 }

@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace DFMS.Database.Mappings
 {
-    internal class DbUserPrivilegeGroupMap : DbTableCommonModelMap<DbUserPrivilegeGroup>
+    internal class DbUserPermissionGroupMap : DbTableCommonModelMap<DbUserPermissionGroup>
     {
-        public DbUserPrivilegeGroupMap(EntityTypeBuilder<DbUserPrivilegeGroup> builder) : base(builder) { }
+        public DbUserPermissionGroupMap(EntityTypeBuilder<DbUserPermissionGroup> builder) : base(builder) { }
 
-        public override void Configure(EntityTypeBuilder<DbUserPrivilegeGroup> builder)
+        public override void Configure(EntityTypeBuilder<DbUserPermissionGroup> builder)
         {
-            builder.ToTable("user_privilege_group");
+            builder.ToTable("user_permission_group");
 
             builder.Property(e => e.Name)
                 .HasColumnName("name")

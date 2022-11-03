@@ -10,18 +10,18 @@ namespace DFMS.WebApi.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route(Routes.Privilege)]
-    public class PrivilegeController : BaseController
+    [Route(Routes.Permission)]
+    public class PermissionController : BaseController
     {
-        private IPrivilegeService PrivilegeService { get; }
+        private IPermissionService PermissionService { get; }
 
-        public PrivilegeController(IMapper mapper, IPrivilegeService privilegeService) : base(mapper)
+        public PermissionController(IMapper mapper, IPermissionService permissionService) : base(mapper)
         {
-            PrivilegeService = privilegeService;
+            PermissionService = permissionService;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<string>> GetPrivileges()
+        public async Task<IEnumerable<string>> GetPermissions()
         {
             return null;
         }

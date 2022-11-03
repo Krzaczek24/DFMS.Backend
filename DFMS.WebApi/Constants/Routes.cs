@@ -4,6 +4,6 @@
     {
         public const string Form = "form";
         public const string FormTemplate = "form-template";
-        public const string Privilege = "privilege";
+        public const string Permission = "permission";
     }
 }

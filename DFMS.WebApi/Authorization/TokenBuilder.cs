@@ -32,9 +32,9 @@ namespace DFMS.WebApi.Authorization
                 new CustomClaim(UserClaim.LastName, user.LastName ?? string.Empty),
             };
 
-            if (user.Privileges?.Length > 0)
+            if (user.Permissions?.Length > 0)
             {
-                UserClaims.AddRange(user.Privileges.Select(privilege => new CustomClaim(UserClaim.Permissions, privilege)));
+                UserClaims.AddRange(user.Permissions.Select(permission => new CustomClaim(UserClaim.Permissions, permission)));
             }
         }
 

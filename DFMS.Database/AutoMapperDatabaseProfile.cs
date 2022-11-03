@@ -25,7 +25,7 @@ namespace DFMS.Database
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => src.First().Id))
                 .ForMember(dest => dest.Login, opts => opts.MapFrom(src => src.First().Login))
                 .ForMember(dest => dest.Role, opts => opts.MapFrom(src => src.First().Role))
-                .ForMember(dest => dest.Privileges, opts => opts.MapFrom(src => src.Select(s => s.Privilege).Where(s => s != null).ToArray()))
+                .ForMember(dest => dest.Permissions, opts => opts.MapFrom(src => src.Select(s => s.Permission).Where(s => s != null).ToArray()))
                 .ForMember(dest => dest.FirstName, opts => opts.MapFrom(src => src.First().FirstName))
                 .ForMember(dest => dest.LastName, opts => opts.MapFrom(src => src.First().LastName));
         }

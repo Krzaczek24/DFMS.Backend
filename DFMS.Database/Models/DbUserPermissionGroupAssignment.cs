@@ -3,10 +3,10 @@ using System;
 
 namespace DFMS.Database.Models
 {
-	internal class DbUserPrivilegeGroupAssignment : DbTableCommonModel
+	internal class DbUserPermissionGroupAssignment : DbTableCommonModel
 	{
 		public virtual DateTime? ValidUntil { get; set; }
 		public virtual DbUser User { get; set; }
-		public virtual DbUserPrivilegeGroup PrivilegeGroup { get; set; }
+		public virtual DbUserPermissionGroup PermissionGroup { get; set; }
 	}
 }
