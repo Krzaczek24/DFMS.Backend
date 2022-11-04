@@ -33,7 +33,7 @@ namespace DFMS.WebApi.Controllers
             throw new System.NotImplementedException();
         }
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePredefiniedFieldDefinition([FromRoute] int id)
         {
             bool removed = await FormFieldService.RemovePredefiniedFieldDefinition(id);

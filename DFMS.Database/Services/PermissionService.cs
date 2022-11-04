@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using DFMS.Database.Extensions;
+using DFMS.Database.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,27 +10,27 @@ namespace DFMS.Database.Services
     public interface IPermissionService
     {
         #region Permission
-        public Task AddPermission(string name, string description);
-        public Task RemovePermission(string name);
-        public Task UpdatePermission(string name, string newName = null, string description = null, bool? isActive = null);
+        public Task<int> AddPermission(string creatorLogin, string name, string description);
+        public Task<int> UpdatePermission(int id, string updaterLogin, string name = null, string description = null, bool? active = null);
+        public Task<int> RemovePermission(int id);
         #endregion
 
         #region Permission group
-        public Task AddPermissionGroup(string name, string description);
+        public Task AddPermissionGroup(string creatorLogin, string name, string description);
+        public Task UpdatePermissionGroup(string updaterLogin, string name, string newName = null, string description = null, bool? isActive = null);
         public Task RemovePermissionGroup(string name);
-        public Task UpdatePermissionGroup(string name, string newName = null, string description = null, bool? isActive = null);
         #endregion
 
         #region Permission to group assignment
-        public Task AssignPermissionToGroup(string Permission, string group);
-        public Task UnassignPermissionFromGroup(string Permission, string group);
-        public Task UpdateGroupPermissionAssignment(string Permission, string group, bool isActive);
+        public Task AssignPermissionToGroup(string creatorLogin, string permission, string group);
+        public Task UpdateGroupPermissionAssignment(string updaterLogin, string permission, string group, bool isActive);
+        public Task UnassignPermissionFromGroup(string permission, string group);
         #endregion
 
         #region Permission group to user asignment
-        public Task AssignPermissionGroupToUser(string userLogin, string PermissionGroup, DateTime? validUntil = null);
-        public Task UnassignPermissionGroupFromUser(string userLogin, string PermissionGroup);
-        public Task UpdateUserPermissionGroupAssignment(string userLogin, string PermissionGroup, DateTime? validUntil);
+        public Task AssignPermissionGroupToUser(string creatorLogin, string userLogin, string permissionGroup, DateTime? validUntil = null);
+        public Task UpdateUserPermissionGroupAssignment(string updaterLogin, string userLogin, string permissionGroup, DateTime? validUntil);
+        public Task UnassignPermissionGroupFromUser(string userLogin, string permissionGroup);
         #endregion
 
         public Task<IEnumerable<string>> GetPermissionsStructure();
@@ -39,24 +41,46 @@ namespace DFMS.Database.Services
         public PermissionService(AppDbContext database, IMapper mapper) : base(database, mapper) { }
 
         #region Permission
-        public async Task AddPermission(string name, string description)
+        public async Task<int> AddPermission(string creatorLogin, string name, string description)
         {
-            throw new NotImplementedException();
+            var newPermission = new DbUserPermission()
+            {
+                AddLogin = creatorLogin,
+                Name = name,
+                Description = description
+            };
+
+            await Database.AddAsync(newPermission);
+            await Database.SaveChangesAsync();
+
+            return newPermission.Id;
         }
 
-        public async Task RemovePermission(string name)
+        public async Task<int> RemovePermission(int id)
         {
-            throw new NotImplementedException();
+            var result = await Database.Remove<DbUserPermission>(id);
+            return result;
         }
 
-        public async Task UpdatePermission(string name, string newName = null, string description = null, bool? isActive = null)
+        public async Task<int> UpdatePermission(int id, string updaterLogin, string name = null, string description = null, bool? active = null)
         {
-            throw new NotImplementedException();
+            var result = await Database
+                .Update<DbUserPermission>(id)
+                .SetIfNotNullOrDefault(x => x.Name, name)
+                .SetIfNotNullOrDefault(x => x.Description, description)
+                .SetIfNotNullOrDefault(x => x.Active, active)
+                .Execute(updaterLogin);
+            return result;
         }
         #endregion
 
         #region Permission group
-        public async Task AddPermissionGroup(string name, string description)
+        public async Task AddPermissionGroup(string creatorLogin, string name, string description)
+        {
+            throw new NotImplementedException();
+        }        
+
+        public async Task UpdatePermissionGroup(string updaterLogin, string name, string newName = null, string description = null, bool? isActive = null)
         {
             throw new NotImplementedException();
         }
@@ -65,15 +89,15 @@ namespace DFMS.Database.Services
         {
             throw new NotImplementedException();
         }
-
-        public async Task UpdatePermissionGroup(string name, string newName = null, string description = null, bool? isActive = null)
-        {
-            throw new NotImplementedException();
-        }
         #endregion
 
         #region Permission to group assignment
-        public async Task AssignPermissionToGroup(string Permission, string group)
+        public async Task AssignPermissionToGroup(string creatorLogin, string Permission, string group)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task UpdateGroupPermissionAssignment(string updaterLogin, string permission, string group, bool isActive)
         {
             throw new NotImplementedException();
         }
@@ -82,25 +106,20 @@ namespace DFMS.Database.Services
         {
             throw new NotImplementedException();
         }
-
-        public async Task UpdateGroupPermissionAssignment(string Permission, string group, bool isActive)
-        {
-            throw new NotImplementedException();
-        }
         #endregion
 
         #region Permission group to user asignment
-        public async Task AssignPermissionGroupToUser(string userLogin, string PermissionGroup, DateTime? validUntil = null)
+        public async Task AssignPermissionGroupToUser(string creatorLogin, string userLogin, string PermissionGroup, DateTime? validUntil = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task UpdateUserPermissionGroupAssignment(string updaterLogin, string userLogin, string PermissionGroup, DateTime? validUntil)
         {
             throw new NotImplementedException();
         }
 
         public async Task UnassignPermissionGroupFromUser(string userLogin, string PermissionGroup)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task UpdateUserPermissionGroupAssignment(string userLogin, string PermissionGroup, DateTime? validUntil)
         {
             throw new NotImplementedException();
         }

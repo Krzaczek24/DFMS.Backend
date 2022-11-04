@@ -32,18 +32,18 @@ namespace DFMS.WebApi.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateValidationDefinition([FromBody] FormFieldValidationRuleDefinition validationDefinition)
         {
-            int newValidationDefinitionId = await FormFieldValidationService.CreateValidationDefinition(validationDefinition);
-            return Created(new Uri("~/validations/definitions/" + newValidationDefinitionId), null);
+            int id = await FormFieldValidationService.CreateValidationDefinition(validationDefinition);
+            return Created(new Uri("~/validations/definitions/" + id), null);
         }
 
-        [HttpPut("{id:int}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateValidationDefinition([FromRoute] int id, [FromBody] FormFieldValidationRuleDefinition validationDefinition)
         {
             bool replaced = await FormFieldValidationService.UpdateValidationDefinition(id, validationDefinition);
             return replaced ? NoContent() : Created(new Uri("~/validations/definitions/" + id), null);
         }
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteValidationDefinition([FromRoute] int id)
         {
             bool removed = await FormFieldValidationService.DeleteValidationDefinition(id);

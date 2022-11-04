@@ -44,7 +44,12 @@ namespace DFMS.WebApi.Authorization
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
                 Subject = new ClaimsIdentity(userData),
-                Expires = DateTime.Now.AddHours(1),
+                IssuedAt = DateTime.UtcNow,
+#if DEBUG
+                Expires = DateTime.UtcNow.AddYears(1),
+#else
+                Expires = DateTime.UtcNow.AddHours(1),
+#endif
                 SigningCredentials = new SigningCredentials(Key, SecurityAlgorithms.HmacSha256Signature)
             };
             var tokenHandler = new JwtSecurityTokenHandler();
