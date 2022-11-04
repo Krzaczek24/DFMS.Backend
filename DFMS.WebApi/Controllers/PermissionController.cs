@@ -6,8 +6,6 @@ using DFMS.WebApi.Constants;
 using DFMS.WebApi.Models.Permissions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DFMS.WebApi.Controllers
@@ -17,6 +15,8 @@ namespace DFMS.WebApi.Controllers
     [Route(Routes.Permission)]
     public class PermissionController : BaseController
     {
+        private const string Assignment = "assignment";
+
         private IPermissionService PermissionService { get; }
 
         public PermissionController(IMapper mapper, IPermissionService permissionService) : base(mapper)
@@ -24,11 +24,18 @@ namespace DFMS.WebApi.Controllers
             PermissionService = permissionService;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddPermission([FromBody] AddPermissionInput input)
+        [HttpGet("structure")]
+        public async Task<PermissionGroup[]> GetPermissionsStructure()
         {
-            int id = await PermissionService.AddPermission(User.GetLogin(), input.Name, input.Description);
-            return Created(new Uri($"~/{Routes.Permission}/{id}"), input);
+            return await PermissionService.GetPermissionsStructure();
+        }
+
+        #region Permission
+        [HttpPost]
+        public async Task<int> AddPermission([FromBody] AddPermissionInput input)
+        {
+            int id = await PermissionService.AddPermission(User.GetLogin(), input.Name, input.Description, input.Active);
+            return id;
         }
 
         [HttpPatch("{id}")]
@@ -44,11 +51,29 @@ namespace DFMS.WebApi.Controllers
             bool removed = await PermissionService.RemovePermission(id) > 0;
             return removed ? Ok() : NotFound();
         }
+        #endregion
 
-        [HttpGet("structure")]
-        public async Task<PermissionGroup[]> GetPermissionsStructure()
+        #region Permission to group assignment
+        [HttpPost(Assignment)]
+        public async Task<int> AssignPermissionToGroup([FromBody] AssignPermissionToGroupInput input)
         {
-            return await PermissionService.GetPermissionsStructure();
+            int id = await PermissionService.AssignPermissionToGroup(User.GetLogin(), input.PermissionId, input.PermissionGroupId, input.Active);
+            return id;
         }
+
+        [HttpPatch(Assignment + "/{id}")]
+        public async Task<IActionResult> UpdateGroupPermissionAssignment([FromRoute] int id, [FromBody] UpdatePermissionToGroupAssignmentInput input)
+        {
+            bool updated = await PermissionService.UpdateGroupPermissionAssignment(id, User.GetLogin(), input.Active) > 0;
+            return updated ? Ok() : NoContent();
+        }
+
+        [HttpDelete(Assignment + "/{id}")]
+        public async Task<IActionResult> UnassignPermissionFromGroup([FromRoute] int id)
+        {
+            bool removed = await PermissionService.UnassignPermissionFromGroup(id) > 0;
+            return removed ? Ok() : NotFound();
+        }
+        #endregion
     }
 }

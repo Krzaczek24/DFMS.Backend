@@ -38,12 +38,12 @@ namespace DFMS.Database.Tools
 
         public IUpdateBuilder<TEntity> Set<TProperty>(Expression<Func<TEntity, TProperty>> selector, Specifiable<TProperty> value)
         {
-            return value.IsSpecified ? Set(selector, value.Value) : this;            
+            return (value != null && value.IsSpecified) ? Set(selector, value.Value) : this;            
         }
 
         public IUpdateBuilder<TEntity> SetIfNotNullOrDefault<TProperty>(Expression<Func<TEntity, TProperty>> selector, TProperty value)
         {
-            return value == null || value.Equals(default(TProperty)) ? this : Set(selector, value);
+            return (value == null || value.Equals(default(TProperty))) ? this : Set(selector, value);
         }
 
         public async Task<int> Execute(string updaterLogin)

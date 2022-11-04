@@ -1,6 +1,7 @@
 ﻿using DFMS.Database.Models.Base;
 using DFMS.Database.Tools;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading.Tasks;
 
 namespace DFMS.Database.Extensions
@@ -24,5 +25,10 @@ namespace DFMS.Database.Extensions
 
             return 0;
         }
+
+        public static string GetInnerExceptionMessage(this Exception ex) => ex.InnerException?.Message ?? ex.Message;
+        public static bool IsDuplicateEntryException(this DbUpdateException ex) => ex.InnerException?.Message?.StartsWith("Duplicate entry") ?? false;
+        public static bool IsCannotDeleteOrUpdateExcpetion(this DbUpdateException ex) => ex.InnerException?.Message?.StartsWith("Cannot delete or update") ?? false;
+
     }
 }

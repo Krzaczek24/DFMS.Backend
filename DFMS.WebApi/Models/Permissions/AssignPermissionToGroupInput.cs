@@ -2,13 +2,13 @@
 
 namespace DFMS.WebApi.Models.Permissions
 {
-    public class AddPermissionInput
+    public class AssignPermissionToGroupInput
     {
         [Required]
-        public string Name { get; set; }
+        public int PermissionId { get; set; }
 
         [Required]
-        public string Description { get; set; }
+        public int PermissionGroupId { get; set; }
 
         public bool? Active { get; set; }
     }

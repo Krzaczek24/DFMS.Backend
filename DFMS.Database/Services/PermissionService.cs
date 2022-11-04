@@ -1,38 +1,41 @@
 ﻿using AutoMapper;
 using DFMS.Database.Dto.Permission;
+using DFMS.Database.Exceptions;
 using DFMS.Database.Extensions;
 using DFMS.Database.Models;
+using DFMS.Database.Tools;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace DFMS.Database.Services
 {
     public interface IPermissionService
     {
         #region Permission
-        public Task<int> AddPermission(string creatorLogin, string name, string description);
+        public Task<int> AddPermission(string creatorLogin, string name, string description, bool? active = null);
         public Task<int> UpdatePermission(int id, string updaterLogin, string name = null, string description = null, bool? active = null);
         public Task<int> RemovePermission(int id);
         #endregion
 
         #region Permission group
-        public Task AddPermissionGroup(string creatorLogin, string name, string description);
-        public Task UpdatePermissionGroup(string updaterLogin, string name, string newName = null, string description = null, bool? isActive = null);
-        public Task RemovePermissionGroup(string name);
+        public Task<int> AddPermissionGroup(string creatorLogin, string name, string description, bool? active = null);
+        public Task<int> UpdatePermissionGroup(int id, string updaterLogin, string name = null, string description = null, bool? active = null);
+        public Task<int> RemovePermissionGroup(int id);
         #endregion
 
         #region Permission to group assignment
-        public Task AssignPermissionToGroup(string creatorLogin, string permission, string group);
-        public Task UpdateGroupPermissionAssignment(string updaterLogin, string permission, string group, bool isActive);
-        public Task UnassignPermissionFromGroup(string permission, string group);
+        public Task<int> AssignPermissionToGroup(string creatorLogin, int permissionId, int permissionGroupId, bool? active = null);
+        public Task<int> UpdateGroupPermissionAssignment(int id, string updaterLogin, bool? active = null);
+        public Task<int> UnassignPermissionFromGroup(int id);
         #endregion
 
         #region Permission group to user asignment
-        public Task AssignPermissionGroupToUser(string creatorLogin, string userLogin, string permissionGroup, DateTime? validUntil = null);
-        public Task UpdateUserPermissionGroupAssignment(string updaterLogin, string userLogin, string permissionGroup, DateTime? validUntil);
-        public Task UnassignPermissionGroupFromUser(string userLogin, string permissionGroup);
+        public Task<int> AssignPermissionGroupToUser(string creatorLogin, int userId, int permissionGroupId, DateTime? validUntil = null, bool? active = null);
+        public Task<int> UpdateUserPermissionGroupAssignment(int id, string updaterLogin, Specifiable<DateTime?> validUntil = null, bool? active = null);
+        public Task<int> UnassignPermissionGroupFromUser(int id);
         #endregion
 
         public Task<PermissionGroup[]> GetPermissionsStructure();
@@ -43,87 +46,322 @@ namespace DFMS.Database.Services
         public PermissionService(AppDbContext database, IMapper mapper) : base(database, mapper) { }
 
         #region Permission
-        public async Task<int> AddPermission(string creatorLogin, string name, string description)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="creatorLogin"></param>
+        /// <param name="name"></param>
+        /// <param name="description"></param>
+        /// <param name="active"></param>
+        /// <returns></returns>
+        /// <exception cref="DuplicatedEntryException"></exception>
+        public async Task<int> AddPermission(string creatorLogin, string name, string description, bool? active = null)
         {
-            var newPermission = new DbUserPermission()
+            try
             {
-                AddLogin = creatorLogin,
-                Name = name,
-                Description = description
-            };
+                var newPermission = new DbUserPermission()
+                {
+                    AddLogin = creatorLogin,
+                    Name = name,
+                    Description = description,
+                    Active = active
+                };
 
-            await Database.AddAsync(newPermission);
-            await Database.SaveChangesAsync();
+                await Database.AddAsync(newPermission);
+                await Database.SaveChangesAsync();
 
-            return newPermission.Id;
+                return newPermission.Id;
+            }
+            catch (DbUpdateException ex) when (ex.IsDuplicateEntryException())
+            {
+                throw new DuplicatedEntryException(ex.GetInnerExceptionMessage());
+            }
         }
 
-        public async Task<int> RemovePermission(int id)
-        {
-            var result = await Database.Remove<DbUserPermission>(id);
-            return result;
-        }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="updaterLogin"></param>
+        /// <param name="name"></param>
+        /// <param name="description"></param>
+        /// <param name="active"></param>
+        /// <returns></returns>
+        /// <exception cref="DuplicatedEntryException"></exception>
         public async Task<int> UpdatePermission(int id, string updaterLogin, string name = null, string description = null, bool? active = null)
         {
-            var result = await Database
+            try
+            {
+                var result = await Database
+                    .Update<DbUserPermission>(id)
+                    .SetIfNotNullOrDefault(x => x.Name, name)
+                    .SetIfNotNullOrDefault(x => x.Description, description)
+                    .SetIfNotNullOrDefault(x => x.Active, active)
+                    .Execute(updaterLogin);
+                return result;
+            }
+            catch (DbUpdateException ex) when (ex.IsDuplicateEntryException())
+            {
+                throw new DuplicatedEntryException(ex.GetInnerExceptionMessage());
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="CannotDeleteOrUpdateException"></exception>
+        public async Task<int> RemovePermission(int id)
+        {
+            try
+            {
+                var result = await Database.Remove<DbUserPermission>(id);
+                return result;
+            }
+            catch (DbUpdateException ex) when (ex.IsCannotDeleteOrUpdateExcpetion())
+            {
+                throw new CannotDeleteOrUpdateException(ex.GetInnerExceptionMessage());
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="creatorLogin"></param>
+        /// <param name="name"></param>
+        /// <param name="description"></param>
+        /// <param name="active"></param>
+        /// <returns></returns>
+        /// <exception cref="DuplicatedEntryException"></exception>
+        #region Permission group
+        public async Task<int> AddPermissionGroup(string creatorLogin, string name, string description, bool? active = null)
+        {
+            try
+            {
+                var newPermissionGroup = new DbUserPermissionGroup()
+                {
+                    AddLogin = creatorLogin,
+                    Name = name,
+                    Description = description,
+                    Active = active
+                };
+
+                await Database.AddAsync(newPermissionGroup);
+                await Database.SaveChangesAsync();
+
+                return newPermissionGroup.Id;
+            }
+            catch (DbUpdateException ex) when (ex.IsDuplicateEntryException())
+            {
+                throw new DuplicatedEntryException(ex.GetInnerExceptionMessage());
+            }
+        }        
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="updaterLogin"></param>
+        /// <param name="name"></param>
+        /// <param name="description"></param>
+        /// <param name="active"></param>
+        /// <returns></returns>
+        /// <exception cref="DuplicatedEntryException"></exception>
+        public async Task<int> UpdatePermissionGroup(int id, string updaterLogin, string name = null, string description = null, bool? active = null)
+        {
+            try
+            {
+                var result = await Database
                 .Update<DbUserPermission>(id)
                 .SetIfNotNullOrDefault(x => x.Name, name)
                 .SetIfNotNullOrDefault(x => x.Description, description)
                 .SetIfNotNullOrDefault(x => x.Active, active)
                 .Execute(updaterLogin);
-            return result;
-        }
-        #endregion
-
-        #region Permission group
-        public async Task AddPermissionGroup(string creatorLogin, string name, string description)
-        {
-            throw new NotImplementedException();
-        }        
-
-        public async Task UpdatePermissionGroup(string updaterLogin, string name, string newName = null, string description = null, bool? isActive = null)
-        {
-            throw new NotImplementedException();
+                return result;
+            }
+            catch (DbUpdateException ex) when (ex.IsDuplicateEntryException())
+            {
+                throw new DuplicatedEntryException(ex.GetInnerExceptionMessage());
+            }
         }
 
-        public async Task RemovePermissionGroup(string name)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="CannotDeleteOrUpdateException"></exception>
+        public async Task<int> RemovePermissionGroup(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = await Database.Remove<DbUserPermissionGroup>(id);
+                return result;
+            }
+            catch (DbUpdateException ex) when (ex.IsCannotDeleteOrUpdateExcpetion())
+            {
+                throw new CannotDeleteOrUpdateException(ex.GetInnerExceptionMessage());
+            }
         }
         #endregion
 
         #region Permission to group assignment
-        public async Task AssignPermissionToGroup(string creatorLogin, string Permission, string group)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="creatorLogin"></param>
+        /// <param name="permissionId"></param>
+        /// <param name="permissionGroupId"></param>
+        /// <param name="active"></param>
+        /// <returns></returns>
+        /// <exception cref="DuplicatedEntryException"></exception>
+        public async Task<int> AssignPermissionToGroup(string creatorLogin, int permissionId, int permissionGroupId, bool? active = null)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var newAssignment = new DbUserPermissionAssignment()
+                {
+                    AddLogin = creatorLogin,
+                    Permission = await Database.UserPermissions.FindAsync(permissionId),
+                    PermissionGroup = await Database.UserPermissionGroups.FindAsync(permissionGroupId),
+                    Active = active
+                };
+
+                await Database.AddAsync(newAssignment);
+                await Database.SaveChangesAsync();
+
+                return newAssignment.Id;
+            }
+            catch (DbUpdateException ex) when (ex.IsDuplicateEntryException())
+            {
+                throw new DuplicatedEntryException(ex.GetInnerExceptionMessage());
+            }
         }
 
-        public async Task UpdateGroupPermissionAssignment(string updaterLogin, string permission, string group, bool isActive)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="updaterLogin"></param>
+        /// <param name="active"></param>
+        /// <returns></returns>
+        /// <exception cref="DuplicatedEntryException"></exception>
+        public async Task<int> UpdateGroupPermissionAssignment(int id, string updaterLogin, bool? active = null)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = await Database
+                    .Update<DbUserPermissionAssignment>(id)
+                    .SetIfNotNullOrDefault(x => x.Active, active)
+                    .Execute(updaterLogin);
+                return result;
+            }
+            catch (DbUpdateException ex) when (ex.IsDuplicateEntryException())
+            {
+                throw new DuplicatedEntryException(ex.GetInnerExceptionMessage());
+            }
         }
 
-        public async Task UnassignPermissionFromGroup(string Permission, string group)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="CannotDeleteOrUpdateException"></exception>
+        public async Task<int> UnassignPermissionFromGroup(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = await Database.Remove<DbUserPermissionAssignment>(id);
+                return result;
+            }
+            catch (DbUpdateException ex) when (ex.IsCannotDeleteOrUpdateExcpetion())
+            {
+                throw new CannotDeleteOrUpdateException(ex.GetInnerExceptionMessage());
+            }
         }
         #endregion
 
         #region Permission group to user asignment
-        public async Task AssignPermissionGroupToUser(string creatorLogin, string userLogin, string PermissionGroup, DateTime? validUntil = null)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="creatorLogin"></param>
+        /// <param name="userId"></param>
+        /// <param name="permissionGroupId"></param>
+        /// <param name="validUntil"></param>
+        /// <param name="active"></param>
+        /// <returns></returns>
+        /// <exception cref="DuplicatedEntryException"></exception>
+        public async Task<int> AssignPermissionGroupToUser(string creatorLogin, int userId, int permissionGroupId, DateTime? validUntil = null, bool? active = null)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var newAssignment = new DbUserPermissionGroupAssignment()
+                {
+                    AddLogin = creatorLogin,
+                    User = await Database.Users.FindAsync(userId),
+                    PermissionGroup = await Database.UserPermissionGroups.FindAsync(permissionGroupId),
+                    ValidUntil = validUntil,
+                    Active = active
+                };
+
+                await Database.AddAsync(newAssignment);
+                await Database.SaveChangesAsync();
+
+                return newAssignment.Id;
+            }
+            catch (DbUpdateException ex) when (ex.IsDuplicateEntryException())
+            {
+                throw new DuplicatedEntryException(ex.GetInnerExceptionMessage());
+            }
         }
 
-        public async Task UpdateUserPermissionGroupAssignment(string updaterLogin, string userLogin, string PermissionGroup, DateTime? validUntil)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="updaterLogin"></param>
+        /// <param name="validUntil"></param>
+        /// <param name="active"></param>
+        /// <returns></returns>
+        /// <exception cref="DuplicatedEntryException"></exception>
+        public async Task<int> UpdateUserPermissionGroupAssignment(int id, string updaterLogin, Specifiable<DateTime?> validUntil = null, bool? active = null)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = await Database
+                    .Update<DbUserPermissionGroupAssignment>(id)
+                    .Set(x => x.ValidUntil, validUntil)
+                    .SetIfNotNullOrDefault(x => x.Active, active)
+                    .Execute(updaterLogin);
+                return result;
+            }
+            catch (DbUpdateException ex) when (ex.IsDuplicateEntryException())
+            {
+                throw new DuplicatedEntryException(ex.GetInnerExceptionMessage());
+            }
         }
 
-        public async Task UnassignPermissionGroupFromUser(string userLogin, string PermissionGroup)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="CannotDeleteOrUpdateException"></exception>
+        public async Task<int> UnassignPermissionGroupFromUser(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var result = await Database.Remove<DbUserPermissionGroupAssignment>(id);
+                return result;
+            }
+            catch (DbUpdateException ex) when (ex.IsCannotDeleteOrUpdateExcpetion())
+            {
+                throw new CannotDeleteOrUpdateException(ex.GetInnerExceptionMessage());
+            }
         }
         #endregion
 
