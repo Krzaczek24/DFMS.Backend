@@ -1,5 +1,4 @@
-﻿using DFMS.Database.Dto;
-using DFMS.Shared.Constants;
+﻿using DFMS.Shared.Constants;
 using Microsoft.IdentityModel.Tokens;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -8,6 +7,7 @@ using System.Text;
 using System;
 using System.Linq;
 using System.Data;
+using DFMS.Database.Dto.User;
 
 namespace DFMS.WebApi.Authorization
 {

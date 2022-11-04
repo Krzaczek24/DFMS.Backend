@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DFMS.Database.Dto.Permission;
 using DFMS.Database.Services;
 using DFMS.WebApi.Authorization;
 using DFMS.WebApi.Constants;
@@ -45,9 +46,9 @@ namespace DFMS.WebApi.Controllers
         }
 
         [HttpGet("structure")]
-        public async Task<IEnumerable<string>> GetPermissionsStructure()
+        public async Task<PermissionGroup[]> GetPermissionsStructure()
         {
-            return null;
+            return await PermissionService.GetPermissionsStructure();
         }
     }
 }

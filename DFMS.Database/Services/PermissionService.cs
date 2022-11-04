@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using DFMS.Database.Dto.Permission;
 using DFMS.Database.Extensions;
 using DFMS.Database.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DFMS.Database.Services
@@ -33,7 +35,7 @@ namespace DFMS.Database.Services
         public Task UnassignPermissionGroupFromUser(string userLogin, string permissionGroup);
         #endregion
 
-        public Task<IEnumerable<string>> GetPermissionsStructure();
+        public Task<PermissionGroup[]> GetPermissionsStructure();
     }
 
     public class PermissionService : DbService, IPermissionService
@@ -125,9 +127,28 @@ namespace DFMS.Database.Services
         }
         #endregion
 
-        public async Task<IEnumerable<string>> GetPermissionsStructure()
+        public async Task<PermissionGroup[]> GetPermissionsStructure()
         {
-            throw new NotImplementedException();
+            var query = from upg in Database.UserPermissionGroups
+                        select new PermissionGroup()
+                        {
+                            Id = upg.Id,
+                            Name = upg.Name,
+                            Description = upg.Description,
+                            Active = upg.Active.Value,
+                            Permissions = (from upa in Database.UserPermissionAssignments
+                                           join up in Database.UserPermissions on upa.Permission.Id equals up.Id
+                                           where upa.PermissionGroup.Id == upg.Id
+                                           select new Permission()
+                                           { 
+                                               Id = up.Id,
+                                               Name = up.Name,
+                                               Description= up.Description,
+                                               Active = up.Active.Value
+                                           }).AsEnumerable().ToArray()
+                        };
+
+            return await query.ToArrayAsync();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
-using DFMS.Database.Dto;
+using DFMS.Database.Dto.User;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,39 +18,27 @@ namespace DFMS.Database.Services
 
         public async Task<User> GetUser(string login, string passwordHash)
         {
-            try
-            {
-                var query = from u in Database.Users
-                            join r in Database.UserRoles on u.Role.Id equals r.Id
-                            from upga in Database.UserPermissionGroupAssignments.Where(x => x.User.Id == u.Id).DefaultIfEmpty()
-                            from upg in Database.UserPermissionGroups.Where(x => x.Id == upga.PermissionGroup.Id).DefaultIfEmpty()
-                            from upa in Database.UserPermissionAssignments.Where(x => x.PermissionGroup.Id == upg.Id).DefaultIfEmpty()
-                            from up in Database.UserPermissions.Where(x => x.Id == upa.Permission.Id).DefaultIfEmpty()
-                            select new UserRow()
-                            {
-                                Id = u.Id,
-                                Login = u.Login,
-                                Role = r.Name,
-                                Permission = up.Name,
-                                FirstName = u.FirstName,
-                                LastName = u.LastName
-                            };
+            var query = from u in Database.Users
+                        join r in Database.UserRoles on u.Role.Id equals r.Id
+                        select new User()
+                        {
+                            Id = u.Id,
+                            Login = u.Login,
+                            Role = r.Name,
+                            Permissions = (from upga in Database.UserPermissionGroupAssignments
+                                           join upg in Database.UserPermissionGroups on upga.PermissionGroup.Id equals upg.Id
+                                           join upa in Database.UserPermissionAssignments on upg.Id equals upa.PermissionGroup.Id
+                                           join up in Database.UserPermissions on upa.Permission.Id equals up.Id
+                                           where upga.User.Id == u.Id
+                                           && upga.Active.Value && upg.Active.Value && upa.Active.Value && up.Active.Value
+                                           && (upga.ValidUntil == null || upga.ValidUntil > DateTime.Now)
+                                           select up.Name).AsEnumerable().ToArray(),
+                            FirstName = u.FirstName,
+                            LastName = u.LastName
+                        };
 
-                var dbUser = await query.ToListAsync();
-                if (dbUser?.Count > 0)
-                {
-                    var user = Mapper.Map<User>(dbUser);
-                    return user;
-                }
-
-                return null;
-            }
-            catch (System.Exception ex)
-            {
-                string msg = ex.Message;
-            }
-
-            return null;
+            var user = await query.SingleOrDefaultAsync();
+            return user;
         }
     }
 }
