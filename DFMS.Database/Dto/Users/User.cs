@@ -1,4 +1,4 @@
-﻿namespace DFMS.Database.Dto.User
+﻿namespace DFMS.Database.Dto.Users
 {
     public class User
     {

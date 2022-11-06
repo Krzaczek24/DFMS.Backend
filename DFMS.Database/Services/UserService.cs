@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using DFMS.Database.Dto.User;
+using DFMS.Database.Dto.Users;
+using DFMS.Database.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -10,6 +11,8 @@ namespace DFMS.Database.Services
     public interface IUserService
     {
         public Task<User> GetUser(string login, string passwordHash);
+        public Task<User> CreateUser(string login, string passwordHash, int roleId, string firstName = null, string lastName = null);
+        public Task<Role[]> GetRoles();
     }
 
     public class UserService : DbService, IUserService
@@ -39,6 +42,37 @@ namespace DFMS.Database.Services
 
             var user = await query.SingleOrDefaultAsync();
             return user;
+        }
+
+        public async Task<User> CreateUser(string login, string passwordHash, int roleId, string firstName = null, string lastName = null)
+        {
+            var newUser = new DbUser()
+            {
+                Login = login,
+                PasswordHash = passwordHash,
+                Role = new DbUserRole() { Id = roleId },
+                FirstName = firstName,
+                LastName = lastName
+            };
+            Database.Attach(newUser.Role);
+            await Database.AddAsync(newUser);
+            await Database.SaveChangesAsync();
+
+            var user = Mapper.Map<User>(newUser);
+            return user;
+        }
+
+        public async Task<Role[]> GetRoles()
+        {
+            var query = from r in Database.UserRoles
+                        select new Role()
+                        {
+                            Id = r.Id,
+                            Name = r.Name
+                        };
+
+            var roles = await query.ToArrayAsync();
+            return roles;
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Text;
 using System;
 using System.Linq;
 using System.Data;
-using DFMS.Database.Dto.User;
+using DFMS.Database.Dto.Users;
 
 namespace DFMS.WebApi.Authorization
 {
@@ -50,7 +50,7 @@ namespace DFMS.WebApi.Authorization
 #else
                 Expires = DateTime.UtcNow.AddHours(1),
 #endif
-                SigningCredentials = new SigningCredentials(Key, SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(Key, SecurityAlgorithms.HmacSha512Signature)
             };
             var tokenHandler = new JwtSecurityTokenHandler();
             string token = tokenHandler.WriteToken(tokenHandler.CreateToken(tokenDescriptor));

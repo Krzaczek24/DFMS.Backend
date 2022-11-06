@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace DFMS.WebApi.Models.Permissions
+namespace DFMS.WebApi.DataContracts.Permissions
 {
     public class AssignPermissionGroupToUserInput
     {

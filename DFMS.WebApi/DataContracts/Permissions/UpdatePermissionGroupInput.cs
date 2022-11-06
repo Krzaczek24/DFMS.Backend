@@ -1,6 +1,6 @@
-﻿namespace DFMS.WebApi.Models.Permissions
+﻿namespace DFMS.WebApi.DataContracts.Permissions
 {
-    public class UpdatePermissionInput
+    public class UpdatePermissionGroupInput
     {
         public string Name { get; set; }
 

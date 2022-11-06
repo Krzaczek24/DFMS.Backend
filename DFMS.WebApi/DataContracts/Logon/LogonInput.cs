@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DFMS.WebApi.Models
+namespace DFMS.WebApi.DataContracts.Logon
 {
     public class LogonInput
     {
         [Required]
-        public string Login { get; set; }
+        public string Username { get; set; }
 
         [Required]
         public string PasswordHash { get; set; }

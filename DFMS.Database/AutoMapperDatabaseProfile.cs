@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DFMS.Database.Dto.FormTemplate;
+using DFMS.Database.Dto.Users;
 using DFMS.Database.Models;
 
 namespace DFMS.Database
@@ -17,6 +18,10 @@ namespace DFMS.Database
                 .ForMember(dest => dest.Type, opts => opts.MapFrom(src => src.ValidationType.Code))
                 .ForMember(dest => dest.Message, opts => opts.MapFrom(src => src.DefaultMessage))
                 .ForMember(dest => dest.Value, opts => opts.MapFrom(src => src.DefaultValue));
+
+            CreateMap<DbUser, User>()
+                .ForMember(dest => dest.Permissions, opts => opts.MapFrom(src => new string[] { }))
+                .ForMember(dest => dest.Role, opts => opts.MapFrom(src => src.Role.Name));
         }
     }
 }

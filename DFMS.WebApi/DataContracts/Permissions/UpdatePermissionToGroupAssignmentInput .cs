@@ -1,7 +1,7 @@
 ﻿using DFMS.Database.Tools;
 using System;
 
-namespace DFMS.WebApi.Models.Permissions
+namespace DFMS.WebApi.DataContracts.Permissions
 {
     public class UpdatePermissionToGroupAssignmentInput
     {

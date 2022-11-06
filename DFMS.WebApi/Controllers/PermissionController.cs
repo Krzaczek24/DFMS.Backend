@@ -3,7 +3,7 @@ using DFMS.Database.Dto.Permission;
 using DFMS.Database.Services;
 using DFMS.WebApi.Authorization;
 using DFMS.WebApi.Constants;
-using DFMS.WebApi.Models.Permissions;
+using DFMS.WebApi.DataContracts.Permissions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
