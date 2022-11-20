@@ -33,11 +33,10 @@ namespace DFMS.WebApi.Controllers
             if (user == null)
                 return Unauthorized();
 
-            string token = new TokenBuilder(Configuration[ConfigurationKeys.ApiKey], user).GetToken();
             return new LogonOutput()
             {
                 User = user,
-                Token = token
+                TokenData = new TokenBuilder(Configuration[ConfigurationKeys.ApiKey], user).GetTokenData()
             };
         }
 

@@ -38,23 +38,33 @@ namespace DFMS.WebApi.Authorization
             }
         }
 
-        public string GetToken()
+        public SecurityToken GenerateToken(TimeSpan? tokenLifeTime = null)
         {
-            var userData = UserClaims.Append(new CustomClaim(UserClaim.LastLoginDate, DateTime.Now.ToString(StringFormats.Dates.DateTime)));
+            DateTime now = DateTime.UtcNow;
+            tokenLifeTime ??= TimeSpan.FromHours(1);
+
+            var userData = UserClaims.Append(new CustomClaim(UserClaim.LastLoginDate, now.ToString(StringFormats.Dates.DateTime)));
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
                 Subject = new ClaimsIdentity(userData),
-                IssuedAt = DateTime.UtcNow,
-#if DEBUG
-                Expires = DateTime.UtcNow.AddYears(1),
-#else
-                Expires = DateTime.UtcNow.AddHours(1),
-#endif
+                IssuedAt = now,
+                Expires = now.Add(tokenLifeTime.Value),
                 SigningCredentials = new SigningCredentials(Key, SecurityAlgorithms.HmacSha512Signature)
             };
-            var tokenHandler = new JwtSecurityTokenHandler();
-            string token = tokenHandler.WriteToken(tokenHandler.CreateToken(tokenDescriptor));
+            var token = new JwtSecurityTokenHandler().CreateToken(tokenDescriptor);
             return token;
+        }
+
+        public TokenData GetTokenData() => GetTokenData(GenerateToken());
+        public static TokenData GetTokenData(SecurityToken token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            return new TokenData()
+            {
+                Token = tokenHandler.WriteToken(token),
+                TokenExpiration = DateTime.UtcNow.AddMinutes(tokenHandler.TokenLifetimeInMinutes)
+            };
         }
     }
 }
