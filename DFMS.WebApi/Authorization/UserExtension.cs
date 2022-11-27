@@ -17,7 +17,7 @@ namespace DFMS.WebApi.Authorization
         public static bool HasAllPermissions(this ClaimsPrincipal claims, IEnumerable<string> permissions) => GetPermissions(claims).HasAll(permissions);
 
         #region BASE FUNCTIONS
-        public static string Get(this ClaimsPrincipal claims, UserClaim userClaim) => Get(claims, userClaim.ToString());
+        public static string Get(this ClaimsPrincipal claims, UserClaim userClaim) => Get(claims, userClaim.ToCamelCase());
 
         private static string Get(this ClaimsPrincipal claims, string userClaim)
         {
@@ -33,14 +33,14 @@ namespace DFMS.WebApi.Authorization
         }
 
         public static IReadOnlyCollection<string> GetMany(this ClaimsPrincipal claims, UserClaim userClaim)
-            => GetMany(claims, userClaim.ToString()).ToList().AsReadOnly();
+            => GetMany(claims, userClaim.ToCamelCase()).ToList().AsReadOnly();
 
         private static IEnumerable<string> GetMany(this ClaimsPrincipal claims, string userClaim)
             => claims.Claims.Where(claim => claim.Type == userClaim).Select(claim => claim.Value);
 
         public static IReadOnlyCollection<T> GetMany<T>(this ClaimsPrincipal claims, UserClaim userClaim)
         {
-            try { return claims.GetMany(userClaim.ToString()).Cast<T>().ToList().AsReadOnly(); }
+            try { return claims.GetMany(userClaim.ToCamelCase()).Cast<T>().ToList().AsReadOnly(); }
             catch { throw new InvalidCastException($"Cannot convert user [{userClaim}] claim value collection from [{typeof(string).Name}] to [{typeof(T).Name}] type"); }
         }
         #endregion BASE FUNCTIONS

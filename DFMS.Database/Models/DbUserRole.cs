@@ -5,5 +5,6 @@ namespace DFMS.Database.Models
 	internal class DbUserRole : DbTableCommonModel
 	{
 		public virtual string Name { get; set; }
+		public virtual int Level { get; set; }
 	}
 }

@@ -4,11 +4,12 @@
     {
         Id,
         Login,
+        Name,
         Role,
         Permissions,
         FirstLoginDate,
         LastLoginDate,
         FirstName,
-        LastName
+        LastName            
     }
 }

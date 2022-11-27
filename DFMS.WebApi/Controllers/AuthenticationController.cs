@@ -1,4 +1,5 @@
 using AutoMapper;
+using DFMS.Database.Dto.Users;
 using DFMS.Database.Services;
 using DFMS.WebApi.Authorization;
 using DFMS.WebApi.Constants;
@@ -27,28 +28,22 @@ namespace DFMS.WebApi.Controllers
 
         [HttpPost("/authenticate")]
         [AllowAnonymous]
-        public async Task<ActionResult<LogonOutput>> Authenticate([FromBody] LogonInput input)
+        public async Task<ActionResult<string>> Authenticate([FromBody] LogonInput input)
         {
             var user = await UserService.GetUser(input.Username, input.PasswordHash);
             if (user == null)
                 return Unauthorized();
 
-            return new LogonOutput()
-            {
-                User = user,
-                TokenData = new TokenBuilder(Configuration[ConfigurationKeys.ApiKey], user).GetTokenData()
-            };
+            string token = new TokenBuilder(Configuration[ConfigurationKeys.ApiKey], user).GenerateToken();
+            return token;
         }
 
         [HttpPost("/register")]
         [AllowAnonymous]
-        public async Task<ActionResult<RegisterOutput>> Register([FromBody] RegisterInput input)
+        public async Task<ActionResult<User>> Register([FromBody] RegisterInput input)
         {
-            var user = await UserService.CreateUser(input.Username, input.PasswordHash, input.RoleId, input.FirstName, input.LastName);
-            return new RegisterOutput()
-            {
-                User = user
-            };
+            var user = await UserService.CreateUser(input.Username, input.PasswordHash, input.FirstName, input.LastName);
+            return user;
         }
     }
 }

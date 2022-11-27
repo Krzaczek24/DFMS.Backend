@@ -1,5 +1,7 @@
 using DFMS.Database;
 using DFMS.Database.Services;
+using DFMS.Shared.Extensions;
+using DFMS.WebApi.Authorization;
 using DFMS.WebApi.Constants;
 using DFMS.WebApi.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -66,12 +68,15 @@ namespace DFMS.WebApi
             }).AddJwtBearer(x => {
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;
+                x.MapInboundClaims = false;
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateAudience = false,
+                    RoleClaimType = UserClaim.Role.ToCamelCase(),
+                    NameClaimType = UserClaim.Name.ToCamelCase()
                 };
             });
 

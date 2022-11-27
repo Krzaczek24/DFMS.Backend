@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using System.Data;
 using DFMS.Database.Dto.Users;
+using DFMS.Shared.Extensions;
 
 namespace DFMS.WebApi.Authorization
 {
@@ -23,10 +24,9 @@ namespace DFMS.WebApi.Authorization
             Key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key));
             UserClaims = new List<Claim>
             {
-                new CustomClaim(ClaimTypes.Name, string.IsNullOrEmpty(userName) ? user.Login : userName),
-                new CustomClaim(ClaimTypes.Role, user.Role),
                 new CustomClaim(UserClaim.Id, user.Id.ToString()),
                 new CustomClaim(UserClaim.Login, user.Login),
+                new CustomClaim(UserClaim.Name, string.IsNullOrEmpty(userName) ? user.Login : userName),
                 new CustomClaim(UserClaim.Role, user.Role),
                 new CustomClaim(UserClaim.FirstName, user.FirstName ?? string.Empty),
                 new CustomClaim(UserClaim.LastName, user.LastName ?? string.Empty),
@@ -38,7 +38,7 @@ namespace DFMS.WebApi.Authorization
             }
         }
 
-        public SecurityToken GenerateToken(TimeSpan? tokenLifeTime = null)
+        public string GenerateToken(TimeSpan? tokenLifeTime = null)
         {
             DateTime now = DateTime.UtcNow;
             tokenLifeTime ??= TimeSpan.FromHours(1);
@@ -46,25 +46,15 @@ namespace DFMS.WebApi.Authorization
             var userData = UserClaims.Append(new CustomClaim(UserClaim.LastLoginDate, now.ToString(StringFormats.Dates.DateTime)));
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
-                Subject = new ClaimsIdentity(userData),
+                Subject = new ClaimsIdentity(userData, null, UserClaim.Name.ToCamelCase(), UserClaim.Role.ToCamelCase()),
                 IssuedAt = now,
                 Expires = now.Add(tokenLifeTime.Value),
-                SigningCredentials = new SigningCredentials(Key, SecurityAlgorithms.HmacSha512Signature)
+                SigningCredentials = new SigningCredentials(Key, SecurityAlgorithms.HmacSha512Signature),
             };
-            var token = new JwtSecurityTokenHandler().CreateToken(tokenDescriptor);
-            return token;
-        }
-
-        public TokenData GetTokenData() => GetTokenData(GenerateToken());
-        public static TokenData GetTokenData(SecurityToken token)
-        {
             var tokenHandler = new JwtSecurityTokenHandler();
-
-            return new TokenData()
-            {
-                Token = tokenHandler.WriteToken(token),
-                TokenExpiration = DateTime.UtcNow.AddMinutes(tokenHandler.TokenLifetimeInMinutes)
-            };
+            var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+            string token = tokenHandler.WriteToken(securityToken);
+            return token;
         }
     }
 }
