@@ -28,6 +28,7 @@ namespace DFMS.WebApi.Controllers
 
         [HttpPost("/authenticate")]
         [AllowAnonymous]
+        [Produces("text/plain")]
         public async Task<ActionResult<string>> Authenticate([FromBody] LogonInput input)
         {
             var user = await UserService.GetUser(input.Username, input.PasswordHash);
