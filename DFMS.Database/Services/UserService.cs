@@ -11,7 +11,7 @@ namespace DFMS.Database.Services
     public interface IUserService
     {
         public Task<User> GetUser(string login, string passwordHash);
-        public Task<User> CreateUser(string login, string passwordHash, string firstName = null, string lastName = null);
+        public Task<User> CreateUser(string login, string passwordHash, string email = null, string firstName = null, string lastName = null);
         public Task<Role[]> GetRoles();
     }
 
@@ -44,13 +44,14 @@ namespace DFMS.Database.Services
             return user;
         }
 
-        public async Task<User> CreateUser(string login, string passwordHash, string firstName = null, string lastName = null)
+        public async Task<User> CreateUser(string login, string passwordHash, string email = null, string firstName = null, string lastName = null)
         {
             var newUser = new DbUser()
             {
                 Login = login,
                 PasswordHash = passwordHash,
                 Role = await Database.UserRoles.SingleAsync(role => role.Level == default),
+                Email = email,
                 FirstName = firstName,
                 LastName = lastName
             };

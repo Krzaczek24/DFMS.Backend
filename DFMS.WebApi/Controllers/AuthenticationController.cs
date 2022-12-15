@@ -26,9 +26,9 @@ namespace DFMS.WebApi.Controllers
             UserService = userService;
         }
 
+        [Produces("text/plain")]
         [HttpPost("/authenticate")]
         [AllowAnonymous]
-        [Produces("text/plain")]
         public async Task<ActionResult<string>> Authenticate([FromBody] LogonInput input)
         {
             var user = await UserService.GetUser(input.Username, input.PasswordHash);
@@ -43,7 +43,7 @@ namespace DFMS.WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<User>> Register([FromBody] RegisterInput input)
         {
-            var user = await UserService.CreateUser(input.Username, input.PasswordHash, input.FirstName, input.LastName);
+            var user = await UserService.CreateUser(input.Username, input.PasswordHash, input.Email, input.FirstName, input.LastName);
             return user;
         }
     }
