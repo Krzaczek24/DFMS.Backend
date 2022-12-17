@@ -1,8 +1,12 @@
 using AutoMapper;
 using DFMS.Database.Dto.Users;
+using DFMS.Database.Exceptions;
 using DFMS.Database.Services;
+using DFMS.Shared.Constants;
 using DFMS.WebApi.Authorization;
 using DFMS.WebApi.Constants;
+using DFMS.WebApi.Constants.Enums;
+using DFMS.WebApi.DataContracts;
 using DFMS.WebApi.DataContracts.Logon;
 using DFMS.WebApi.DataContracts.Register;
 using Microsoft.AspNetCore.Authorization;
@@ -41,10 +45,22 @@ namespace DFMS.WebApi.Controllers
 
         [HttpPost("/register")]
         [AllowAnonymous]
-        public async Task<ActionResult<User>> Register([FromBody] RegisterInput input)
+        public async Task<ApiResponse<RegistrationResult>> Register([FromBody] RegisterInput input)
         {
-            var user = await UserService.CreateUser(input.Username, input.PasswordHash, input.Email, input.FirstName, input.LastName);
-            return user;
+            try
+            {
+                _ = await UserService.CreateUser(SystemLogins.Registration, input.Username, input.PasswordHash, input.Email, input.FirstName, input.LastName);
+            }
+            catch (DuplicatedEntryException)
+            {
+                return ApiResponse.Failure.SetResult(RegistrationResult.UsernameAlreadyTaken);
+            }
+            catch
+            {
+                return ApiResponse.Failure.SetResult(RegistrationResult.Failure);
+            }
+            
+            return ApiResponse.Success.As<RegistrationResult>();
         }
     }
 }

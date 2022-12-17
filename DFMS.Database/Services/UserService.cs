@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DFMS.Database.Dto.Users;
+using DFMS.Database.Exceptions;
 using DFMS.Database.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,7 +12,7 @@ namespace DFMS.Database.Services
     public interface IUserService
     {
         public Task<User> GetUser(string login, string passwordHash);
-        public Task<User> CreateUser(string login, string passwordHash, string email = null, string firstName = null, string lastName = null);
+        public Task<User> CreateUser(string addLogin, string login, string passwordHash, string email = null, string firstName = null, string lastName = null);
         public Task<Role[]> GetRoles();
     }
 
@@ -22,6 +23,7 @@ namespace DFMS.Database.Services
         public async Task<User> GetUser(string login, string passwordHash)
         {
             var query = from u in Database.Users
+                        where u.Login == login && u.PasswordHash == passwordHash
                         join r in Database.UserRoles on u.Role.Id equals r.Id
                         select new User()
                         {
@@ -44,10 +46,11 @@ namespace DFMS.Database.Services
             return user;
         }
 
-        public async Task<User> CreateUser(string login, string passwordHash, string email = null, string firstName = null, string lastName = null)
+        public async Task<User> CreateUser(string addLogin, string login, string passwordHash, string email = null, string firstName = null, string lastName = null)
         {
             var newUser = new DbUser()
             {
+                AddLogin = addLogin,
                 Login = login,
                 PasswordHash = passwordHash,
                 Role = await Database.UserRoles.SingleAsync(role => role.Level == default),
@@ -55,9 +58,17 @@ namespace DFMS.Database.Services
                 FirstName = firstName,
                 LastName = lastName
             };
-            Database.Attach(newUser.Role);
-            await Database.AddAsync(newUser);
-            await Database.SaveChangesAsync();
+
+            try
+            {
+                Database.Attach(newUser.Role);
+                await Database.AddAsync(newUser);
+                await Database.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex) when (ex.InnerException?.Message.StartsWith("Duplicate entry") ?? false)
+            {
+                throw new DuplicatedEntryException($"User with login [{login}] already exists", ex);
+            }
 
             var user = Mapper.Map<User>(newUser);
             return user;

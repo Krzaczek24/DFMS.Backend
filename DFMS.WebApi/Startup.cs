@@ -60,6 +60,7 @@ namespace DFMS.WebApi
             services.AddControllers().AddJsonOptions(opts => {
                 opts.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 opts.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
 
             services.AddAuthentication(x => {
