@@ -9,11 +9,14 @@ using System.Linq;
 using System.Data;
 using DFMS.Database.Dto.Users;
 using DFMS.Shared.Extensions;
+using Microsoft.VisualBasic;
 
 namespace DFMS.WebApi.Authorization
 {
     public class TokenBuilder
     {
+        private const string DATE_FORMAT = StringFormats.Dates.ISO_8601;
+
         private SymmetricSecurityKey Key { get; }
         private List<Claim> UserClaims { get; }
 
@@ -30,6 +33,8 @@ namespace DFMS.WebApi.Authorization
                 new CustomClaim(UserClaim.Role, user.Role),
                 new CustomClaim(UserClaim.FirstName, user.FirstName ?? string.Empty),
                 new CustomClaim(UserClaim.LastName, user.LastName ?? string.Empty),
+                new CustomClaim(UserClaim.CreatedAt, user.CreatedAt!.Value.ToString(DATE_FORMAT)),
+                new CustomClaim(UserClaim.LastLoginDate, user.LastLogin?.ToString(DATE_FORMAT) ?? string.Empty),
             };
 
             if (user.Permissions?.Length > 0)
@@ -43,7 +48,7 @@ namespace DFMS.WebApi.Authorization
             DateTime now = DateTime.UtcNow;
             tokenLifeTime ??= TimeSpan.FromHours(1);
 
-            var userData = UserClaims.Append(new CustomClaim(UserClaim.LastLoginDate, now.ToString(StringFormats.Dates.DateTime)));
+            var userData = UserClaims.Append(new CustomClaim(UserClaim.CurrentLoginDate, now.ToString(DATE_FORMAT)));
             var tokenDescriptor = new SecurityTokenDescriptor()
             {
                 Subject = new ClaimsIdentity(userData, null, UserClaim.Name.ToCamelCase(), UserClaim.Role.ToCamelCase()),

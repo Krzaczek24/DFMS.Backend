@@ -13,26 +13,26 @@ namespace DFMS.WebApi.DataContracts
             Status = status;
         }
 
-        public ApiResponse(string message, ResponseStatus status = ResponseStatus.Success) : this(status)
+        public ApiResponse(string? message, ResponseStatus status = ResponseStatus.Success) : this(status)
         {
             Message = message;
         }
 
         public ApiResponse(Exception exception) : this(exception.Message, ResponseStatus.Failure) { }
 
-        public ApiResponse SetStatus(ResponseStatus status)
+        public ApiResponse WithStatus(ResponseStatus status)
         {
             Status = status;
             return this;
         }
 
-        public ApiResponse SetMessage(string message)
+        public ApiResponse WithMessage(string message)
         {
             Message = message;
             return this;
         }
 
-        public ApiResponse<T> SetResult<T>(T data) => (this as ApiResponse<T>)?.SetResult(data) ?? new ApiResponse<T>(data, Message, Status);
+        public ApiResponse<T> WithResult<T>(T data) => (this as ApiResponse<T>)?.WithResult(data) ?? new ApiResponse<T>(data, Message, Status);
 
         public ApiResponse<T> As<T>() => new ApiResponse<T>(default, Message, Status);
 
@@ -53,7 +53,7 @@ namespace DFMS.WebApi.DataContracts
 
         public ApiResponse(TResult data, Exception exception) : this(data, exception.Message, ResponseStatus.Failure) { }
 
-        public ApiResponse<TResult> SetResult(TResult data)
+        public ApiResponse<TResult> WithResult(TResult data)
         {
             Result = data;
             return this;

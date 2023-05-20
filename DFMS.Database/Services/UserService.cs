@@ -11,7 +11,9 @@ namespace DFMS.Database.Services
 {
     public interface IUserService
     {
-        public Task<User> GetUser(string login, string passwordHash);
+        public Task UpdateLastLoginDate(string login);
+        public Task<bool> AuthenticateUser(string login, string passwordHash);
+        public Task<User> GetUser(string login);
         public Task<User> CreateUser(string addLogin, string login, string passwordHash, string email = null, string firstName = null, string lastName = null);
         public Task<Role[]> GetRoles();
     }
@@ -20,10 +22,26 @@ namespace DFMS.Database.Services
     {
         public UserService(AppDbContext database, IMapper mapper) : base(database, mapper) { }
 
-        public async Task<User> GetUser(string login, string passwordHash)
+        public async Task UpdateLastLoginDate(string login)
+        {
+            await Database.Users
+                .Where(u => u.Login == login)
+                .ExecuteUpdateAsync(q => q.SetProperty(p => p.LastLoginDate, DateTime.Now));
+        }
+
+        public async Task<bool> AuthenticateUser(string login, string passwordHash)
+        {
+            var count = Database.Users
+                .Where(u => u.Login == login && u.PasswordHash == passwordHash)
+                .CountAsync();
+
+            return await count > 0;
+        }
+
+        public async Task<User> GetUser(string login)
         {
             var query = from u in Database.Users
-                        where u.Login == login && u.PasswordHash == passwordHash
+                        where u.Login == login
                         join r in Database.UserRoles on u.Role.Id equals r.Id
                         select new User()
                         {
@@ -39,7 +57,9 @@ namespace DFMS.Database.Services
                                            && (upga.ValidUntil == null || upga.ValidUntil > DateTime.Now)
                                            select up.Name).AsEnumerable().ToArray(),
                             FirstName = u.FirstName,
-                            LastName = u.LastName
+                            LastName = u.LastName,
+                            LastLogin = u.LastLoginDate,
+                            CreatedAt = u.AddDate
                         };
 
             var user = await query.SingleOrDefaultAsync();

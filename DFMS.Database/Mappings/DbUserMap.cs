@@ -31,6 +31,9 @@ namespace DFMS.Database.Mappings
                 .HasColumnName("last_name")
                 .HasMaxLength(64);
 
+            builder.Property(e => e.LastLoginDate)
+                .HasColumnName("last_login_date");
+
             builder.HasOne(e => e.Role)
                 .WithMany()
                 .HasForeignKey("role_id")

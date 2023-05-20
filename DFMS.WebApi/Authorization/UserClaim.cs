@@ -7,7 +7,8 @@
         Name,
         Role,
         Permissions,
-        FirstLoginDate,
+        CreatedAt,
+        CurrentLoginDate,
         LastLoginDate,
         FirstName,
         LastName            

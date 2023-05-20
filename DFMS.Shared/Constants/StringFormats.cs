@@ -7,6 +7,7 @@
             public const string Date = "yyyy-MM-dd";
             public const string DateTime = "yyyy-MM-dd HH:mm:ss";
             public const string PreciseDateTime = "yyyy-MM-dd HH:mm:ss.fff";
+            public const string ISO_8601 = "yyyy-MM-ddTHH:mm:ss.fffZ";
         }
     }
 }

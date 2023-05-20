@@ -5,9 +5,9 @@ namespace DFMS.WebApi.DataContracts.Logon
     public class LogonInput
     {
         [Required]
-        public string Username { get; set; }
+        public string Username { get; set; } = default!;
 
         [Required]
-        public string PasswordHash { get; set; }
+        public string PasswordHash { get; set; } = default!;
     }
 }

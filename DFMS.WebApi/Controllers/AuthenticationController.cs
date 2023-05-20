@@ -35,11 +35,13 @@ namespace DFMS.WebApi.Controllers
         [AllowAnonymous]
         public async Task<ActionResult<string>> Authenticate([FromBody] LogonInput input)
         {
-            var user = await UserService.GetUser(input.Username, input.PasswordHash);
-            if (user == null)
+            if (!await UserService.AuthenticateUser(input.Username, input.PasswordHash))
                 return Unauthorized();
 
-            string token = new TokenBuilder(Configuration[ConfigurationKeys.ApiKey], user).GenerateToken();
+            var user = await UserService.GetUser(input.Username);
+            await UserService.UpdateLastLoginDate(input.Username);
+
+            string token = new TokenBuilder(Configuration[ConfigurationKeys.ApiKey]!, user).GenerateToken();
             return token;
         }
 
@@ -53,11 +55,11 @@ namespace DFMS.WebApi.Controllers
             }
             catch (DuplicatedEntryException)
             {
-                return ApiResponse.Failure.SetResult(RegistrationResult.UsernameAlreadyTaken);
+                return ApiResponse.Failure.WithResult(RegistrationResult.UsernameAlreadyTaken);
             }
             catch
             {
-                return ApiResponse.Failure.SetResult(RegistrationResult.Failure);
+                return ApiResponse.Failure.WithResult(RegistrationResult.Failure);
             }
             
             return ApiResponse.Success.As<RegistrationResult>();
