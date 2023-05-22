@@ -13,6 +13,12 @@ namespace DFMS.Database.Mappings
         {
             builder.ToTable("user_group");
 
+            builder.HasOne(e => e.Workspace)
+                .WithMany()
+                .HasForeignKey("workspace_id")
+                .HasConstraintName("fk_ug_workspace")
+                .IsRequired();
+
             builder.Property(e => e.Name)
                 .HasColumnName("name")
                 .IsRequired()

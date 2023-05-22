@@ -12,8 +12,8 @@ namespace DFMS.WebApi.DataContracts.Permissions
         [Required]
         public int PermissionGroupId { get; set; }
 
-        public Specifiable<DateTime?> ValidUntil { get; set; }
 
         public bool? Active { get; set; }
+        public Specifiable<DateTime?> ValidUntil { get; set; } = default!;
     }
 }

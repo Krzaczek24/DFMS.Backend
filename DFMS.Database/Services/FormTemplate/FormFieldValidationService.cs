@@ -24,7 +24,6 @@ namespace DFMS.Database.Services.FormTemplate
 
         public async Task<int> CreateValidationDefinition(FormFieldValidationRuleDefinition validationDefinition)
         {
-            throw new System.NotImplementedException("Brak mapowania i odszukania wartości w DB");
             var newValidationDefinition = Mapper.Map<DbFormFieldValidationRuleDefinition>(validationDefinition);
             await Database.AddAsync(newValidationDefinition);
             await Database.SaveChangesAsync();

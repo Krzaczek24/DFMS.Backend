@@ -6,8 +6,8 @@ namespace DFMS.Database.Models
 	{
 		public virtual string Title { get; set; }
 		public virtual string ReferenceNumberPattern { get; set; }
-		public virtual int? PublishedVersion { get; set; }
-		public virtual int? PrivacyLevel { get; set; }
-		public virtual DbFormTemplateGroup Group { get; set; }
+		public virtual DbFormCategory Category { get; set; }
+		public virtual DbWorkspace Workspace { get; set; }
+		public virtual DbFormTemplateVersion PublishedVersion { get; set; }
 	}
 }

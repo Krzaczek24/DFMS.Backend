@@ -34,7 +34,6 @@ namespace DFMS.Database
         internal virtual DbSet<DbFormTemplate> FormTemplates { get; set; }
         internal virtual DbSet<DbFormTemplateAccess> FormTemplateAccesss { get; set; }
         internal virtual DbSet<DbFormTemplateField> FormTemplateFields { get; set; }
-        internal virtual DbSet<DbFormTemplateGroup> FormTemplateGroups { get; set; }
         internal virtual DbSet<DbFormTemplateSection> FormTemplateSections { get; set; }
         internal virtual DbSet<DbFormTemplateVersion> FormTemplateVersions { get; set; }
         internal virtual DbSet<DbFormFieldValueType> FormFieldValueTypes { get; set; }
@@ -46,6 +45,8 @@ namespace DFMS.Database
         internal virtual DbSet<DbUserPermissionGroup> UserPermissionGroups { get; set; }
         internal virtual DbSet<DbUserPermissionGroupAssignment> UserPermissionGroupAssignments { get; set; }
         internal virtual DbSet<DbUserRole> UserRoles { get; set; }
+        internal virtual DbSet<DbWorkspace> Workspaces { get; set; }
+        internal virtual DbSet<DbWorkspaceUser> WorkspaceUsers { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 

@@ -13,11 +13,22 @@ namespace DFMS.Database.Mappings
         {
             builder.ToTable("form_template");
 
-            builder.HasOne(e => e.Group)
+            builder.HasOne(e => e.Workspace)
                 .WithMany()
-                .HasForeignKey("group_id")
-                .HasConstraintName("fk_ft_group")
+                .HasForeignKey("workspace_id")
+                .HasConstraintName("fk_ft_workspace")
                 .IsRequired();
+
+            builder.HasOne(e => e.Category)
+                .WithMany()
+                .HasForeignKey("category_id")
+                .HasConstraintName("fk_ft_category")
+                .IsRequired();
+
+            builder.HasOne(e => e.PublishedVersion)
+                .WithMany()
+                .HasForeignKey("published_version_id")
+                .HasConstraintName("fk_ft_published_version");
 
             builder.Property(e => e.Title)
                 .HasColumnName("title")
@@ -27,15 +38,7 @@ namespace DFMS.Database.Mappings
             builder.Property(e => e.ReferenceNumberPattern)
                 .HasColumnName("reference_number_pattern")
                 .IsRequired()
-                .HasMaxLength(32);
-
-            builder.Property(e => e.PublishedVersion)
-                .HasColumnName("published_version");
-
-            builder.Property(e => e.PrivacyLevel)
-                .HasColumnName("privacy_level")
-                .IsRequired()
-                .HasConversion<int>();
+                .HasMaxLength(64);
         }
     }
 }

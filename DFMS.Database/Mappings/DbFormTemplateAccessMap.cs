@@ -13,25 +13,20 @@ namespace DFMS.Database.Mappings
         {
             builder.ToTable("form_template_access");
 
-            builder.HasOne(e => e.TemplateGroup)
+            builder.HasOne(e => e.FormCategory)
                 .WithMany()
-                .HasForeignKey("template_group_id")
-                .HasConstraintName("fk_fta_template_group");
-
-            builder.HasOne(e => e.Template)
-                .WithMany()
-                .HasForeignKey("template_id")
-                .HasConstraintName("fk_fta_template");
+                .HasForeignKey("form_category_id")
+                .HasConstraintName("fk_fta_form_category");
 
             builder.HasOne(e => e.UserGroup)
                 .WithMany()
                 .HasForeignKey("user_group_id")
                 .HasConstraintName("fk_fta_user_group");
 
-            builder.HasOne(e => e.User)
-                .WithMany()
-                .HasForeignKey("user_id")
-                .HasConstraintName("fk_fta_user");
+            builder.Property(e => e.Use)
+                .HasColumnName("use")
+                .IsRequired()
+                .HasDefaultValue(false);
 
             builder.Property(e => e.View)
                 .HasColumnName("view")
@@ -45,6 +40,11 @@ namespace DFMS.Database.Mappings
 
             builder.Property(e => e.Delete)
                 .HasColumnName("delete")
+                .IsRequired()
+                .HasDefaultValue(false);
+
+            builder.Property(e => e.Publish)
+                .HasColumnName("publish")
                 .IsRequired()
                 .HasDefaultValue(false);
         }

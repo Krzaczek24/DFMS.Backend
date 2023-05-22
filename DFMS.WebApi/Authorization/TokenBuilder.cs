@@ -9,7 +9,6 @@ using System.Linq;
 using System.Data;
 using DFMS.Database.Dto.Users;
 using DFMS.Shared.Extensions;
-using Microsoft.VisualBasic;
 
 namespace DFMS.WebApi.Authorization
 {
