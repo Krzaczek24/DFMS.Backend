@@ -1,6 +1,6 @@
 ﻿using DFMS.Database.Models;
 using DFMS.Database.Models.Base;
-using DFMS.Shared.Tools;
+using KrzaqTools;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;

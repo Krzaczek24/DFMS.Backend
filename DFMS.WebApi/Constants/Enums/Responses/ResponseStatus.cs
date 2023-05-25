@@ -1,4 +1,4 @@
-﻿namespace DFMS.WebApi.Constants.Enums
+﻿namespace DFMS.WebApi.Constants.Enums.Responses
 {
     public enum ResponseStatus
     {

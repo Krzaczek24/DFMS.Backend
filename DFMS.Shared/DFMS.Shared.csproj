@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="NLog" Version="5.1.4" />
+    <PackageReference Include="StringNotationExtension" Version="1.0.0" />
   </ItemGroup>
 
 </Project>

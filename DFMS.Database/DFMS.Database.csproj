@@ -1,15 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="Core.Database.EntityFrameworkCore" Version="1.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.5" />
     <PackageReference Include="MySql.EntityFrameworkCore" Version="7.0.2" />
+    <PackageReference Include="NullableBooleanExtension" Version="1.0.0" />
+    <PackageReference Include="ReadOnlyDictionaryExtension" Version="1.0.0" />
+    <PackageReference Include="ReflectionToolbox" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>

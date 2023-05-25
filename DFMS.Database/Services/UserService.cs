@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.Database.Services;
 using DFMS.Database.Dto.Users;
 using DFMS.Database.Exceptions;
 using DFMS.Database.Models;
@@ -18,7 +19,7 @@ namespace DFMS.Database.Services
         public Task<Role[]> GetRoles();
     }
 
-    public class UserService : DbService, IUserService
+    public class UserService : DbService<AppDbContext>, IUserService
     {
         public UserService(AppDbContext database, IMapper mapper) : base(database, mapper) { }
 

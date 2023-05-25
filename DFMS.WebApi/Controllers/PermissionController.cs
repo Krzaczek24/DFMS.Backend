@@ -34,22 +34,23 @@ namespace DFMS.WebApi.Controllers
         [HttpPost]
         public async Task<int> AddPermission([FromBody] AddPermissionInput input)
         {
-            int id = await PermissionService.AddPermission(User.GetLogin(), input.Name, input.Description, input.Active);
-            return id;
+            return await PermissionService.AddPermission(User.GetLogin(), input.Name, input.Description, input.Active);
         }
 
         [HttpPatch("{id}")]
         public async Task<IActionResult> UpdatePermission([FromRoute] int id, [FromBody] UpdatePermissionInput input)
         {
-            bool updated = await PermissionService.UpdatePermission(id, User.GetLogin(), input.Name, input.Description, input.Active) > 0;
+            bool updated = await PermissionService.UpdatePermission(id, User.GetLogin(), input.Name, input.Description, input.Active);
             return updated ? Ok() : NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> RemovePermission([FromRoute] int id)
         {
-            bool removed = await PermissionService.RemovePermission(id) > 0;
-            return removed ? Ok() : NotFound();
+            //bool removed = await PermissionService.RemovePermission(id) > 0;
+            //return removed ? Ok() : NotFound();
+
+            return Ok();
         }
         #endregion
 
@@ -57,22 +58,19 @@ namespace DFMS.WebApi.Controllers
         [HttpPost(Assignment)]
         public async Task<int> AssignPermissionToGroup([FromBody] AssignPermissionToGroupInput input)
         {
-            int id = await PermissionService.AssignPermissionToGroup(User.GetLogin(), input.PermissionId, input.PermissionGroupId, input.Active);
-            return id;
-        }
+            //int id = await PermissionService.AssignPermissionToGroup(User.GetLogin(), input.PermissionId, input.PermissionGroupId, input.Active);
+            //return id;
 
-        [HttpPatch(Assignment + "/{id}")]
-        public async Task<IActionResult> UpdateGroupPermissionAssignment([FromRoute] int id, [FromBody] UpdatePermissionToGroupAssignmentInput input)
-        {
-            bool updated = await PermissionService.UpdateGroupPermissionAssignment(id, User.GetLogin(), input.Active) > 0;
-            return updated ? Ok() : NoContent();
+            return 0;
         }
 
         [HttpDelete(Assignment + "/{id}")]
         public async Task<IActionResult> UnassignPermissionFromGroup([FromRoute] int id)
         {
-            bool removed = await PermissionService.UnassignPermissionFromGroup(id) > 0;
-            return removed ? Ok() : NotFound();
+            //bool removed = await PermissionService.UnassignPermissionFromGroup(id) > 0;
+            //return removed ? Ok() : NotFound();
+
+            return Ok();
         }
         #endregion
     }

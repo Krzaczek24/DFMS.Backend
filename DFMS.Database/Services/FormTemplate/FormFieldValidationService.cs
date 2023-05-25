@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
+using Core.Database.Extensions;
+using Core.Database.Services;
 using DFMS.Database.Dto.FormTemplate;
-using DFMS.Database.Extensions;
 using DFMS.Database.Models;
-using DFMS.Shared.Extensions;
+using KrzaqTools.NullableBooleanExtension;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace DFMS.Database.Services.FormTemplate
         public Task<bool> UpdateValidationDefinition(int id, FormFieldValidationRuleDefinition validationDefinition);
     }
 
-    public class FormFieldValidationService : DbService, IFormFieldValidationService
+    public class FormFieldValidationService : DbService<AppDbContext>, IFormFieldValidationService
     {
         public FormFieldValidationService(AppDbContext database, IMapper mapper) : base(database, mapper) { }
 

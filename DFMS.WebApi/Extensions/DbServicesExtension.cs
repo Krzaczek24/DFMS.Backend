@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Core.Database.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DFMS.Database.Services
 {

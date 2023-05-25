@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Core.Database.Extensions;
+using Core.Database.Services;
 using DFMS.Database.Dto.FormTemplate;
-using DFMS.Database.Extensions;
-using DFMS.Shared.Extensions;
+using KrzaqTools.NullableBooleanExtension;
+using KrzaqTools.ReadOnlyDictionaryExtension;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +17,7 @@ namespace DFMS.Database.Services.FormTemplate
         public Task<bool> RemovePredefiniedFieldDefinition(int id);
     }
 
-    public class FormFieldService : DbService, IFormFieldService
+    public class FormFieldService : DbService<AppDbContext>, IFormFieldService
     {
         private static IReadOnlyDictionary<string, IReadOnlyCollection<string>> _fieldValueTypes;
         private IReadOnlyDictionary<string, IReadOnlyCollection<string>> FieldValueTypes => _fieldValueTypes ??= GetFieldValueTypes().Result;

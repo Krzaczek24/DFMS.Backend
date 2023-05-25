@@ -5,7 +5,7 @@ using DFMS.Database.Services;
 using DFMS.Shared.Constants;
 using DFMS.WebApi.Authorization;
 using DFMS.WebApi.Constants;
-using DFMS.WebApi.Constants.Enums;
+using DFMS.WebApi.Constants.Enums.Responses.Results;
 using DFMS.WebApi.DataContracts;
 using DFMS.WebApi.DataContracts.Logon;
 using DFMS.WebApi.DataContracts.Register;
@@ -51,7 +51,7 @@ namespace DFMS.WebApi.Controllers
         {
             try
             {
-                _ = await UserService.CreateUser(SystemLogins.Registration, input.Username, input.PasswordHash, input.Email, input.FirstName, input.LastName);
+                _ = await UserService.CreateUser(input.Username, input.Username, input.PasswordHash, input.Email, input.FirstName, input.LastName);
             }
             catch (DuplicatedEntryException)
             {

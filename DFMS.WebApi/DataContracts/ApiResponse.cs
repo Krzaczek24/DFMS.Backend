@@ -1,4 +1,4 @@
-﻿using DFMS.WebApi.Constants.Enums;
+﻿using DFMS.WebApi.Constants.Enums.Responses;
 using System;
 
 namespace DFMS.WebApi.DataContracts

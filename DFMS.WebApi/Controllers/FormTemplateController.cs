@@ -15,7 +15,7 @@ namespace DFMS.WebApi.Controllers
         [HttpPost]
         public IActionResult CreateFormTemplate()
         {
-            return null;
+            return null!;
         }
     }
 }
