@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.WebApi.Controllers;
 using DFMS.Database.Dto.Permission;
 using DFMS.Database.Services;
 using DFMS.WebApi.Authorization;

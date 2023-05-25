@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.WebApi.Controllers;
 using DFMS.WebApi.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,11 +12,5 @@ namespace DFMS.WebApi.Controllers
     public class FormTemplateController : BaseController
     {
         public FormTemplateController(IMapper mapper) : base(mapper) { }
-
-        [HttpPost]
-        public IActionResult CreateFormTemplate()
-        {
-            return null!;
-        }
     }
 }

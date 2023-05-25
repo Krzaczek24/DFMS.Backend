@@ -1,9 +1,9 @@
+using Core.Database.Services;
+using Core.WebApi.Middlewares;
 using DFMS.Database;
-using DFMS.Database.Services;
 using DFMS.Shared.Extensions;
 using DFMS.WebApi.Authorization;
 using DFMS.WebApi.Constants;
-using DFMS.WebApi.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

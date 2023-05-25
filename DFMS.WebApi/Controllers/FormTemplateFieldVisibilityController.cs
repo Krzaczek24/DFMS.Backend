@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.WebApi.Controllers;
 using DFMS.WebApi.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
