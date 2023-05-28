@@ -9,7 +9,7 @@ namespace DFMS.WebApi.Controllers
     [Authorize]
     [ApiController]
     [Route(Routes.FormTemplate)]
-    public class FormTemplateController : BaseController
+    public class FormTemplateController : BaseResponseController
     {
         public FormTemplateController(IMapper mapper) : base(mapper) { }
     }

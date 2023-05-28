@@ -7,7 +7,7 @@ namespace DFMS.WebApi.Controllers
 {
     [ApiController]
     [Route(Routes.Form)]
-    public class FormController : BaseController
+    public class FormController : BaseResponseController
     {
         public FormController(IMapper mapper) : base(mapper) { }
     }

@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NLog" Version="5.1.4" />
     <PackageReference Include="StringNotationExtension" Version="1.0.0" />
   </ItemGroup>
 

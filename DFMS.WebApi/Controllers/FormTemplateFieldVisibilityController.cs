@@ -9,7 +9,7 @@ namespace DFMS.WebApi.Controllers
     [Authorize]
     [ApiController]
     [Route(Routes.FormTemplate + "/visibility-rules")]
-    public class FormTemplateFieldVisibilityController : BaseController
+    public class FormTemplateFieldVisibilityController : BaseResponseController
     {
         public FormTemplateFieldVisibilityController(IMapper mapper) : base(mapper) { }
 

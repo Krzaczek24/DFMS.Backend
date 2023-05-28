@@ -17,7 +17,7 @@ namespace DFMS.WebApi.Controllers
     [Authorize]
     [ApiController]
     [Route(Routes.PermissionGroup)]
-    public class PermissionGroupController : BaseController
+    public class PermissionGroupController : BaseResponseController
     {
         private const string Assignment = "assignment";
 

@@ -7,6 +7,7 @@ using DFMS.WebApi.Constants;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,8 +17,11 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NLog.Extensions.Logging;
 using System;
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
+using System.Linq;
+using Core.WebApi.Extensions;
 
 namespace DFMS.WebApi
 {
@@ -54,7 +58,7 @@ namespace DFMS.WebApi
 #endif
             });
 
-            services.AddScopedDbServices();
+            services.AddCoreScopedServices(typeof(AppDbContext).Assembly!);
 
             // `ReferenceHandler.IgnoreCycles` helps to handle cyclic references in entity framework core database models
             services.AddControllers().AddJsonOptions(opts => {

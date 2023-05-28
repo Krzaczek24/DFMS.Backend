@@ -13,7 +13,7 @@ namespace DFMS.WebApi.Controllers
     [Authorize]
     [ApiController]
     [Route(Routes.FormTemplate + "/field-definitions")]
-    public class FormTemplateFieldsController : BaseController
+    public class FormTemplateFieldsController : BaseResponseController
     {
         private IFormFieldService FormFieldService { get; }
 
