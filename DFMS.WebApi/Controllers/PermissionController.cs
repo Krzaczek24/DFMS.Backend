@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
-using Core.WebApi.Controllers;
 using DFMS.Database.Dto.Permission;
+using DFMS.Database.Exceptions;
 using DFMS.Database.Services;
 using DFMS.WebApi.Authorization;
 using DFMS.WebApi.Constants;
+using DFMS.WebApi.Core.Controllers;
+using DFMS.WebApi.Core.Errors;
+using DFMS.WebApi.Core.Exceptions;
 using DFMS.WebApi.DataContracts.Permissions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +17,8 @@ namespace DFMS.WebApi.Controllers
     [Authorize]
     [ApiController]
     [Route(Routes.Permission)]
-    public class PermissionController : BaseResponseController
+    public class PermissionController : ResponseController
     {
-        private const string Assignment = "assignment";
-
         private IPermissionService PermissionService { get; }
 
         public PermissionController(IMapper mapper, IPermissionService permissionService) : base(mapper)
@@ -31,48 +32,45 @@ namespace DFMS.WebApi.Controllers
             return await PermissionService.GetPermissionsStructure();
         }
 
-        #region Permission
         [HttpPost]
-        public async Task<int> AddPermission([FromBody] AddPermissionInput input)
+        public async Task<int> CreatePermission([FromBody] AddPermissionInput input)
         {
-            return await PermissionService.AddPermission(User.GetLogin(), input.Name, input.Description, input.Active);
+            try
+            {
+                return await PermissionService.CreatePermission(User.GetLogin(), input.Name, input.Description);
+            }
+            catch (DuplicatedEntryException)
+            {
+                throw new ConflictException(ErrorCode.NON_UNIQUE_NAME);
+            }
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdatePermission([FromRoute] int id, [FromBody] UpdatePermissionInput input)
+        public async Task UpdatePermission([FromRoute] int id, [FromBody] UpdatePermissionInput input)
         {
-            bool updated = await PermissionService.UpdatePermission(id, User.GetLogin(), input.Name, input.Description, input.Active);
-            return updated ? Ok() : NoContent();
+            try
+            {
+                if (!await PermissionService.UpdatePermission(id, User.GetLogin(), input.Name, input.Description, input.Active))
+                    throw new NotFoundException(ErrorCode.RESOURCE_NOT_FOUND);
+            }
+            catch (DuplicatedEntryException)
+            {
+                throw new ConflictException(ErrorCode.NON_UNIQUE_NAME);
+            }
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> RemovePermission([FromRoute] int id)
+        public async Task RemovePermission([FromRoute] int id)
         {
-            //bool removed = await PermissionService.RemovePermission(id) > 0;
-            //return removed ? Ok() : NotFound();
-
-            return Ok();
+            try
+            {
+                if (!await PermissionService.RemovePermission(id))
+                    throw new NotFoundException(ErrorCode.RESOURCE_NOT_FOUND);
+            }
+            catch (CannotDeleteOrUpdateException)
+            {
+                throw new ConflictException(ErrorCode.RESOURCE_IN_USE);
+            }
         }
-        #endregion
-
-        #region Permission to group assignment
-        [HttpPost(Assignment)]
-        public async Task<int> AssignPermissionToGroup([FromBody] AssignPermissionToGroupInput input)
-        {
-            //int id = await PermissionService.AssignPermissionToGroup(User.GetLogin(), input.PermissionId, input.PermissionGroupId, input.Active);
-            //return id;
-
-            return 0;
-        }
-
-        [HttpDelete(Assignment + "/{id}")]
-        public async Task<IActionResult> UnassignPermissionFromGroup([FromRoute] int id)
-        {
-            //bool removed = await PermissionService.UnassignPermissionFromGroup(id) > 0;
-            //return removed ? Ok() : NotFound();
-
-            return Ok();
-        }
-        #endregion
     }
 }

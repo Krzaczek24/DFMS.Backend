@@ -1,13 +1,11 @@
 using AutoMapper;
-using Core.WebApi.Controllers;
-using DFMS.Database.Dto.Users;
 using DFMS.Database.Exceptions;
 using DFMS.Database.Services;
-using DFMS.Shared.Constants;
 using DFMS.WebApi.Authorization;
 using DFMS.WebApi.Constants;
-using DFMS.WebApi.Constants.Enums.Responses.Results;
-using DFMS.WebApi.DataContracts;
+using DFMS.WebApi.Core.Controllers;
+using DFMS.WebApi.Core.Errors;
+using DFMS.WebApi.Core.Exceptions;
 using DFMS.WebApi.DataContracts.Logon;
 using DFMS.WebApi.DataContracts.Register;
 using Microsoft.AspNetCore.Authorization;
@@ -20,7 +18,7 @@ namespace DFMS.WebApi.Controllers
     [Authorize]
     [ApiController]
     [Route("authentication")]
-    public class AuthenticationController : BaseController
+    public class AuthenticationController : ResponseController
     {
         private IConfiguration Configuration { get; }
         private IUserService UserService { get; }
@@ -34,10 +32,10 @@ namespace DFMS.WebApi.Controllers
         [Produces("text/plain")]
         [HttpPost("/authenticate")]
         [AllowAnonymous]
-        public async Task<ActionResult<string>> Authenticate([FromBody] LogonInput input)
+        public async Task<string> Authenticate([FromBody] LogonInput input)
         {
             if (!await UserService.AuthenticateUser(input.Username, input.PasswordHash))
-                return Unauthorized();
+                throw new UnauthorizedException();
 
             var user = await UserService.GetUser(input.Username);
             await UserService.UpdateLastLoginDate(input.Username);
@@ -48,7 +46,7 @@ namespace DFMS.WebApi.Controllers
 
         [HttpPost("/register")]
         [AllowAnonymous]
-        public async Task<ApiResponse<RegistrationResult>> Register([FromBody] RegisterInput input)
+        public async Task Register([FromBody] RegisterInput input)
         {
             try
             {
@@ -56,14 +54,8 @@ namespace DFMS.WebApi.Controllers
             }
             catch (DuplicatedEntryException)
             {
-                return ApiResponse.Failure.WithResult(RegistrationResult.UsernameAlreadyTaken);
+                throw new ConflictException(ErrorCode.USERNAME_ALREADY_TAKEN);
             }
-            catch
-            {
-                return ApiResponse.Failure.WithResult(RegistrationResult.Failure);
-            }
-            
-            return ApiResponse.Success.As<RegistrationResult>();
         }
     }
 }

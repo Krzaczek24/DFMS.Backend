@@ -8,8 +8,8 @@ namespace DFMS.Database.Models
 		public virtual bool? IsProcessed { get; set; }
 		public virtual string Data { get; set; }
 		public virtual string WorkerName { get; set; }
-		public virtual DateTime? ProcessingStarted { get; set; }
-		public virtual DateTime? ProcessingEdned { get; set; }
+		public virtual DateTime? ProcessingStart { get; set; }
+		public virtual DateTime? ProcessingEnd { get; set; }
 		public virtual DbEventType Type { get; set; }
 	}
 }

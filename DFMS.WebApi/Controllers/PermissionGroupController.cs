@@ -1,15 +1,17 @@
 ﻿using AutoMapper;
-using Core.WebApi.Controllers;
+using DFMS.Database.Dto.Permission;
 using DFMS.Database.Exceptions;
 using DFMS.Database.Services;
 using DFMS.WebApi.Authorization;
 using DFMS.WebApi.Constants;
-using DFMS.WebApi.Constants.Enums.Responses.Results;
+using DFMS.WebApi.Core.Controllers;
+using DFMS.WebApi.Core.Errors;
+using DFMS.WebApi.Core.Exceptions;
 using DFMS.WebApi.DataContracts;
 using DFMS.WebApi.DataContracts.Permissions;
-using DFMS.WebApi.Tools;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace DFMS.WebApi.Controllers
@@ -17,10 +19,8 @@ namespace DFMS.WebApi.Controllers
     [Authorize]
     [ApiController]
     [Route(Routes.PermissionGroup)]
-    public class PermissionGroupController : BaseResponseController
+    public class PermissionGroupController : ResponseController
     {
-        private const string Assignment = "assignment";
-
         private IPermissionService PermissionService { get; }
 
         public PermissionGroupController(IMapper mapper, IPermissionService permissionService) : base(mapper)
@@ -30,104 +30,127 @@ namespace DFMS.WebApi.Controllers
 
         #region Permission group
         [HttpPost]
-        public async Task<ApiResponse<ResourceManipulationResult<int>>> AddPermissionGroup([FromBody] AddPermissionGroupInput input)
+        public async Task<int> CreateGroup([FromBody] AddPermissionGroupInput input)
         {
-            return await Executor.ExecuteAndHandleResourceCreation(async () => await PermissionService.AddPermissionGroup(User.GetLogin(), input.Name, input.Description, input.Active));
-
             try
             {
-                var result = PermissionService.AddPermissionGroup(User.GetLogin(), input.Name, input.Description, input.Active);
-                return ApiResponse.Success.WithResult(new ResourceManipulationResult<int>(await result));
+                return await PermissionService.CreatePermissionGroup(User.GetLogin(), input.Name, input.Description);
             }
             catch (DuplicatedEntryException)
             {
-                return ApiResponse.Failure.WithResult(new ResourceManipulationResult<int>(ResourceManipulationFailureReason.NotUnique));
+                throw new ConflictException(ErrorCode.NON_UNIQUE_NAME);
             }
         }
 
         [HttpPatch("{id}")]
-        public async Task<ApiResponse<ResourceManipulationFailureReason>> UpdatePermissionGroup([FromRoute] int id, [FromBody] UpdatePermissionGroupInput input)
+        public async Task UpdateGroup([FromRoute] int id, [FromBody] UpdatePermissionInput input)
         {
-            return await Executor.ExecuteAndHandleResourceUpdate(async () => await PermissionService.UpdatePermissionGroup(id, User.GetLogin(), input.Name, input.Description, input.Active));
-
             try
             {
-                return await PermissionService.UpdatePermissionGroup(id, User.GetLogin(), input.Name, input.Description, input.Active) ?
-                    ApiResponse.Success.As<ResourceManipulationFailureReason>() :
-                    ApiResponse.Failure.WithResult(ResourceManipulationFailureReason.NotFound);
+                if (!await PermissionService.UpdatePermissionGroup(id, User.GetLogin(), input.Name, input.Description, input.Active))
+                    throw new NotFoundException(ErrorCode.RESOURCE_NOT_FOUND);
             }
             catch (DuplicatedEntryException)
             {
-                return ApiResponse.Failure.WithResult(ResourceManipulationFailureReason.NotUnique);
+                throw new ConflictException(ErrorCode.NON_UNIQUE_NAME);
             }
         }
 
         [HttpDelete("{id}")]
-        public async Task<ApiResponse<ResourceManipulationFailureReason>> RemovePermissionGroup([FromRoute] int id)
+        public async Task RemoveGroup([FromRoute] int id)
         {
-            return await Executor.ExecuteAndHandleResourceRemoval(async () => await PermissionService.RemovePermissionGroup(id));
-
             try
             {
-                return await PermissionService.RemovePermissionGroup(id) ? 
-                    ApiResponse.Success.As<ResourceManipulationFailureReason>() : 
-                    ApiResponse.Failure.WithResult(ResourceManipulationFailureReason.NotFound);
+                if (!await PermissionService.RemovePermissionGroup(id))
+                    throw new NotFoundException(ErrorCode.RESOURCE_NOT_FOUND);
             }
             catch (CannotDeleteOrUpdateException)
             {
-                return ApiResponse.Failure.WithResult(ResourceManipulationFailureReason.InUse);
+                throw new ConflictException(ErrorCode.RESOURCE_IN_USE);
             }
         }
         #endregion
 
-        #region Permission group to user assignment
-        [HttpPost(Assignment)]
-        public async Task<ApiResponse<ResourceManipulationResult<int>>> AssignPermissionGroupToUser([FromBody] AssignPermissionGroupToUserInput input)
+        #region Permission to group assignment
+        [HttpPost("{group-id}/permission/{permission-id}")]
+        public async Task AddPermissionToGroup(
+            [FromRoute(Name = "group-id")] int groupId,
+            [FromRoute(Name = "permission-id")] int permissionId)
         {
-            return await Executor.ExecuteAndHandleResourceCreation(async () => await PermissionService.AssignPermissionGroupToUser(User.GetLogin(), input.PermissionId, input.PermissionGroupId, input.ValidUntil));
-
             try
             {
-                var result = PermissionService.AssignPermissionGroupToUser(User.GetLogin(), input.PermissionId, input.PermissionGroupId, input.ValidUntil);
-                return ApiResponse.Success.WithResult(new ResourceManipulationResult<int>(await result));
+                await PermissionService.AddPermissionToGroup(User.GetLogin(), groupId, permissionId);
             }
             catch (DuplicatedEntryException)
             {
-                return ApiResponse.Failure.WithResult(new ResourceManipulationResult<int>(ResourceManipulationFailureReason.NotUnique));
+                throw new ConflictException(ErrorCode.NON_UNIQUE_RELATION);
             }
         }
 
-        [HttpPatch(Assignment + "/{id}")]
-        public async Task<ApiResponse<ResourceManipulationFailureReason>> UpdateUserPermissionGroupAssignment([FromRoute] int id, [FromBody] UpdatePermissionGroupToUserAssignmentInput input)
+        [HttpDelete("{group-id}/permission/{permission-id}")]
+        public async Task RemovePermissionFromGroup(
+            [FromRoute(Name = "group-id")] int groupId,
+            [FromRoute(Name = "permission-id")] int permissionId)
         {
-            return await Executor.ExecuteAndHandleResourceUpdate(async () => await PermissionService.UpdateUserPermissionGroupAssignment(id, User.GetLogin(), input.ValidUntil));
-
             try
             {
-                return await PermissionService.UpdateUserPermissionGroupAssignment(id, User.GetLogin(), input.ValidUntil) ?
-                    ApiResponse.Success.As<ResourceManipulationFailureReason>() :
-                    ApiResponse.Failure.WithResult(ResourceManipulationFailureReason.NotFound);
+                if (!await PermissionService.RemovePermissionFromGroup(groupId, permissionId))
+                    throw new NotFoundException(ErrorCode.RESOURCE_NOT_FOUND);
             }
             catch (CannotDeleteOrUpdateException)
             {
-                return ApiResponse.Failure.WithResult(ResourceManipulationFailureReason.NotUnique);
+                throw new ConflictException(ErrorCode.UNKNOWN);
+            }
+        }
+        #endregion
+
+        #region User to group assignment
+        [HttpPost("{group-id}/user/{user-id}")]
+        public async Task AssignUserToPermissionGroup(
+            [FromRoute(Name = "group-id")] int groupId,
+            [FromRoute(Name = "user-id")] int userId,
+            [FromQuery(Name = "valid-until")] DateTime? validUntil)
+        {
+            try
+            {
+                await PermissionService.AssignUserToPermissionGroup(User.GetLogin(), groupId, userId, validUntil);
+            }
+            catch (DuplicatedEntryException)
+            {
+                throw new ConflictException(ErrorCode.NON_UNIQUE_RELATION);
             }
         }
 
-        [HttpDelete(Assignment + "/{id}")]
-        public async Task<ApiResponse<ResourceManipulationFailureReason>> UnassignPermissionGroupFromUser([FromRoute] int id)
+        [HttpPatch("{group-id}/user/{user-id}")]
+        public async Task UpdateUserPermissionGroupAssignment(
+            [FromRoute(Name = "group-id")] int groupId,
+            [FromRoute(Name = "user-id")] int userId,
+            [FromQuery(Name = "valid-until")] DateTime? validUntil)
         {
-            return await Executor.ExecuteAndHandleResourceRemoval(async () => await PermissionService.UnassignPermissionGroupFromUser(id));
-
             try
             {
-                return await PermissionService.UnassignPermissionGroupFromUser(id) ?
-                    ApiResponse.Success.As<ResourceManipulationFailureReason>() :
-                    ApiResponse.Failure.WithResult(ResourceManipulationFailureReason.NotFound);
+                if (!await PermissionService.UpdateUserPermissionGroupAssignment(User.GetLogin(), groupId, userId, validUntil))
+                    throw new NotFoundException(ErrorCode.RESOURCE_NOT_FOUND);
             }
             catch (CannotDeleteOrUpdateException)
             {
-                return ApiResponse.Failure.WithResult(ResourceManipulationFailureReason.InUse);
+                throw new ConflictException(ErrorCode.UNKNOWN);
+            }
+        }
+
+        [HttpDelete("{group-id}/user/{user-id}")]
+        public async Task UnassignPermissionGroupFromUser(
+            [FromRoute(Name = "group-id")] int groupId,
+            [FromRoute(Name = "user-id")] int userId)
+        {
+            try
+            {
+                if (!await PermissionService.RemoveUserFromPermissionGroup(groupId, userId))
+                    throw new NotFoundException(ErrorCode.RESOURCE_NOT_FOUND);
+            }
+            catch (CannotDeleteOrUpdateException)
+            {
+                throw new ConflictException(ErrorCode.UNKNOWN);
             }
         }
         #endregion

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
-using Core.WebApi.Controllers;
 using DFMS.Database.Dto.FormTemplate;
 using DFMS.Database.Services.FormTemplate;
+using DFMS.WebApi.Authorization;
 using DFMS.WebApi.Constants;
+using DFMS.WebApi.Core.Controllers;
+using DFMS.WebApi.Core.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -13,7 +15,7 @@ namespace DFMS.WebApi.Controllers
     [Authorize]
     [ApiController]
     [Route(Routes.FormTemplate + "/field-definitions")]
-    public class FormTemplateFieldsController : BaseResponseController
+    public class FormTemplateFieldsController : ResponseController
     {
         private IFormFieldService FormFieldService { get; }
 
@@ -25,7 +27,7 @@ namespace DFMS.WebApi.Controllers
         [HttpGet]
         public async Task<ICollection<FormFieldDefinition>> GetFieldsDefinitions()
         {
-            return await FormFieldService.GetFieldsDefinitions(string.Empty);//User.GetLogin()
+            return await FormFieldService.GetFieldsDefinitions(User.GetLogin());
         }
 
         [HttpPost]
@@ -35,10 +37,10 @@ namespace DFMS.WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePredefiniedFieldDefinition([FromRoute] int id)
+        public async Task DeletePredefiniedFieldDefinition([FromRoute] int id)
         {
-            bool removed = await FormFieldService.RemovePredefiniedFieldDefinition(id);
-            return removed ? Ok() : NoContent();
+            if (!await FormFieldService.RemovePredefiniedFieldDefinition(id))
+                throw new NotFoundException();
         }
     }
 }

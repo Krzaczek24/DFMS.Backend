@@ -1,9 +1,11 @@
-using Core.Database.Services;
+using Core.WebApi.Extensions;
 using Core.WebApi.Middlewares;
 using DFMS.Database;
 using DFMS.Shared.Extensions;
 using DFMS.WebApi.Authorization;
 using DFMS.WebApi.Constants;
+using DFMS.WebApi.Core.Errors;
+using DFMS.WebApi.Core.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,13 +17,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using NLog.Extensions.Logging;
 using System;
-using System.Reflection;
+using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
-using System.Linq;
-using Core.WebApi.Extensions;
 
 namespace DFMS.WebApi
 {
@@ -67,6 +69,8 @@ namespace DFMS.WebApi
                 opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
 
+            services.AddMvc().ConfigureApiBehaviorOptions(options => options.InvalidModelStateResponseFactory = CustomInvalidModelStateResponse);
+
             services.AddAuthentication(x => {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -89,6 +93,11 @@ namespace DFMS.WebApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DFMS.WebApi", Version = "v1" });
             });
+
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings()
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver()
+            };
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -105,7 +114,7 @@ namespace DFMS.WebApi
                 app.UseExceptionHandler("/Error");
             }
 
-            app.UseRestLoggingMiddleware();
+            app.UseRestMiddleware();
             app.UseRouting();
             app.UseCors(x => x
                 .AllowAnyOrigin()
@@ -115,6 +124,18 @@ namespace DFMS.WebApi
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
+        }
+
+        public static BadRequestObjectResult CustomInvalidModelStateResponse(ActionContext actionContext)
+        {
+            var errors = actionContext.ModelState.Values
+                .SelectMany(x => x.Errors)
+                .Select(x => new ErrorModel() {
+                    Code = ErrorCode.INVALID_REQUEST_FIELD_VALUE,
+                    Message = x.ErrorMessage
+                }).ToList();
+
+            return new BadRequestObjectResult(new ErrorResponse(errors));
         }
     }
 }

@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
-using Core.WebApi.Controllers;
 using DFMS.WebApi.Constants;
+using DFMS.WebApi.Core.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DFMS.WebApi.Controllers
 {
     [ApiController]
     [Route(Routes.Form)]
-    public class FormController : BaseResponseController
+    public class FormController : ResponseController
     {
         public FormController(IMapper mapper) : base(mapper) { }
     }
