@@ -6,6 +6,7 @@ using System.Net;
 
 namespace DFMS.WebApi.Core.Controllers
 {
+    [ProducesResponse(HttpStatusCode.OK)]
     [ProducesResponse<ErrorResponse>(HttpStatusCode.BadRequest)]
     [ProducesResponse<ErrorResponse>(HttpStatusCode.Unauthorized)]
     [ProducesResponse<ErrorResponse>(HttpStatusCode.Forbidden)]

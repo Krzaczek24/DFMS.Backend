@@ -29,7 +29,6 @@ namespace DFMS.WebApi.Controllers
             UserService = userService;
         }
 
-        [Produces("text/plain")]
         [HttpPost("/authenticate")]
         [AllowAnonymous]
         public async Task<string> Authenticate([FromBody] LogonInput input)
