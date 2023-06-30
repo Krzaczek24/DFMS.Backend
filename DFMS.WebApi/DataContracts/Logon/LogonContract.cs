@@ -10,4 +10,9 @@ namespace DFMS.WebApi.DataContracts.Logon
         [Required]
         public string PasswordHash { get; set; } = default!;
     }
+
+    public class LogonOutput
+    {
+        public string Token { get; set; } = default!;
+    }
 }

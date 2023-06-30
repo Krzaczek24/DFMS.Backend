@@ -31,7 +31,7 @@ namespace DFMS.WebApi.Controllers
 
         [HttpPost("/authenticate")]
         [AllowAnonymous]
-        public async Task<string> Authenticate([FromBody] LogonInput input)
+        public async Task<LogonOutput> Authenticate([FromBody] LogonInput input)
         {
             if (!await UserService.AuthenticateUser(input.Username, input.PasswordHash))
                 throw new UnauthorizedException();
@@ -40,7 +40,7 @@ namespace DFMS.WebApi.Controllers
             await UserService.UpdateLastLoginDate(input.Username);
 
             string token = new TokenBuilder(Configuration[ConfigurationKeys.ApiKey]!, user).GenerateToken();
-            return token;
+            return new LogonOutput() { Token = token };
         }
 
         [HttpPost("/register")]

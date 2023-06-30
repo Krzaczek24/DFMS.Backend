@@ -12,12 +12,13 @@
     <PackageReference Include="Core.WebApi" Version="1.4.3" />
     <PackageReference Include="EnumExtension" Version="1.0.0" />
     <PackageReference Include="IEnumerableExtension" Version="1.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.8" />
     <PackageReference Include="MySql.EntityFrameworkCore" Version="7.0.2" />
-    <PackageReference Include="NLog" Version="5.1.5" />
-    <PackageReference Include="NLog.Extensions.Logging" Version="5.2.5" />
-    <PackageReference Include="NLog.Web.AspNetCore" Version="5.2.3" />
+    <PackageReference Include="NLog" Version="5.2.0" />
+    <PackageReference Include="NLog.Extensions.Logging" Version="5.3.0" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="5.3.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
