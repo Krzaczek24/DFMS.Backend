@@ -38,7 +38,7 @@
       "protectedMethods": [],
       "configurationClass": "",
       "useTransformOptionsMethod": true,
-      "useTransformResultMethod": false,
+      "useTransformResultMethod": true,
       "generateDtoTypes": true,
       "operationGenerationMode": "MultipleClientsFromFirstTagAndPathSegments",
       "markOptionalProperties": true,
