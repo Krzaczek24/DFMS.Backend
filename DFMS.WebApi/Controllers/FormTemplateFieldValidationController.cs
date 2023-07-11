@@ -14,7 +14,7 @@ namespace DFMS.WebApi.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route(Routes.ValidationRule)]
+    [Route(ControllerGroup.Api + "/form-template/field-validation")]
     public class FormTemplateFieldValidationController : ResponseController
     {
         private IFormFieldValidationService FormFieldValidationService { get; }

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Core.WebApi.Attributes;
-using Core.WebApi.Controllers;
 using DFMS.WebApi.Core.Errors;
 using System.Net;
 
@@ -13,7 +12,7 @@ namespace DFMS.WebApi.Core.Controllers
     [ProducesResponse<ErrorResponse>(HttpStatusCode.NotFound)]
     [ProducesResponse<ErrorResponse>(HttpStatusCode.Conflict)]
     [ProducesResponse<ErrorResponse>(HttpStatusCode.InternalServerError)]
-    public class ResponseController : BaseController
+    public class ResponseController : ApiController
     {
         public ResponseController(IMapper mapper) : base(mapper) { }
     }

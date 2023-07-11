@@ -1,4 +1,5 @@
 ﻿using Core.WebApi.Exceptions;
+using Core.WebApi.Extensions;
 using Core.WebApi.Middlewares;
 using DFMS.WebApi.Core.Errors;
 using Microsoft.AspNetCore.Builder;
@@ -29,6 +30,16 @@ namespace DFMS.WebApi.Core.Middlewares
                 Code = ErrorCode.UNKNOWN,
                 Message = exception.Message
             });
+        }
+
+        protected override void LogRequest(HttpContext httpContext, string bodyText)
+        {
+            Logger.Info($"REQUEST  {httpContext.GetRequestId()} | {httpContext.Request.GetPath()} | {bodyText}");
+        }
+
+        protected override void LogResponse(HttpContext httpContext, string bodyText)
+        {            
+            Logger.Info($"RESPONSE {httpContext.GetRequestId()} | {httpContext.Response.StatusCode} | {bodyText}");
         }
     }
 }

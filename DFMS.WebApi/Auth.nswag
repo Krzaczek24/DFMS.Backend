@@ -4,7 +4,7 @@
   "documentGenerator": {
     "fromDocument": {
       "json": "",
-      "url": "http://localhost:5000/swagger/v1/swagger.json",
+      "url": "http://localhost:5000/swagger/auth/swagger.json",
       "output": null,
       "newLineBehavior": "Auto"
     }
@@ -30,7 +30,7 @@
       "exportTypes": true,
       "wrapDtoExceptions": false,
       "exceptionClass": "ApiException",
-      "clientBaseClass": "ApiBaseClient",
+      "clientBaseClass": "AuthBaseClient",
       "wrapResponses": true,
       "wrapResponseMethods": [],
       "generateResponseClasses": true,
@@ -48,7 +48,7 @@
       "useLeafType": false,
       "classTypes": [],
       "extendedClasses": [],
-      "extensionCode": "../../DFMS.Frontend.TypeScriptReactWithMobx/src/api/ApiBaseClient.ts",
+      "extensionCode": "../../DFMS.Frontend.TypeScriptReactWithMobx/src/clients/auth/AuthBaseClient.ts",
       "generateDefaultValues": true,
       "excludedTypeNames": [],
       "excludedParameterNames": [],
@@ -70,7 +70,7 @@
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "../../DFMS.Frontend.TypeScriptReactWithMobx/src/api/ApiClient.ts",
+      "output": "../../DFMS.Frontend.TypeScriptReactWithMobx/src/clients/auth/AuthClient.ts",
       "newLineBehavior": "Auto"
     }
   }

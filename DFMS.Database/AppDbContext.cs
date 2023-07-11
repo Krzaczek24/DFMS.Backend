@@ -6,11 +6,15 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DFMS.Database
 {
     public class AppDbContext : DbContext
     {
+        private static readonly string[] UNMODIFIABLE_PROPERTIES = new[] { "" };
+
         internal virtual DbSet<DbDictionary> Dictionaries { get; set; }
         internal virtual DbSet<DbFormFavourite> FavouriteForms { get; set; }
         internal virtual DbSet<DbFormFieldDefinition> FormFieldDefinitions { get; set; }
@@ -45,30 +49,22 @@ namespace DFMS.Database
         internal virtual DbSet<DbUserPermissionGroup> UserPermissionGroups { get; set; }
         internal virtual DbSet<DbUserPermissionGroupAssignment> UserPermissionGroupAssignments { get; set; }
         internal virtual DbSet<DbUserRole> UserRoles { get; set; }
+        internal virtual DbSet<DbUserSession> UserSessions { get; set; }
         internal virtual DbSet<DbWorkspace> Workspaces { get; set; }
         internal virtual DbSet<DbWorkspaceUser> WorkspaceUsers { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public override int SaveChanges()
+        public override sealed int SaveChanges()
         {
-            var entries = ChangeTracker.Entries().Where(e => e.Entity is DbTableCommonModel);
-
-            foreach (var entityEntry in entries)
-            {
-                var entity = entityEntry.Entity as DbTableCommonModel;
-
-                switch (entityEntry.State)
-                {
-                    case EntityState.Modified:
-                        if (!entity.Active.Value)
-                            throw new InvalidOperationException("Cannot modify inactive records");
-                        entity.ModifDate = DateTime.Now;
-                        break;
-                }                
-            }
-
+            ValidateAndSetModifDate();
             return base.SaveChanges();
+        }
+
+        public override sealed Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            ValidateAndSetModifDate();
+            return base.SaveChangesAsync(cancellationToken);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -99,6 +95,28 @@ namespace DFMS.Database
             }
 
             return configurations;
+        }
+
+        private void ValidateAndSetModifDate()
+        {
+            DbTableCommonModel entity;
+
+            foreach (var entityEntry in ChangeTracker.Entries().Where(e => e.Entity is DbTableCommonModel))
+            {
+                entity = (DbTableCommonModel)entityEntry.Entity;
+
+                switch (entityEntry.State)
+                {
+                    case EntityState.Modified:
+                        if (!entity.Active.Value)
+                            throw new InvalidOperationException("Cannot modify inactive records");
+                        foreach (string member in DbTableCommonModel.UnmodifiableMembers)
+                            if (entityEntry.Member(member).IsModified)
+                                throw new InvalidOperationException($"Cannot modify '{member}' member");
+                        entity.ModifDate = DateTime.Now;
+                        break;
+                }
+            }
         }
     }
 }

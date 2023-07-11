@@ -11,12 +11,12 @@ namespace DFMS.WebApi
     {
         public static void Main(string[] args)
         {
-            var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+            var logger = LogManager.Setup().LoadConfigurationFromFile().GetCurrentClassLogger();
 
             try
             {
                 logger.Info("init main");
-                CreateHostBuilder(args).Build().Run();
+                CreateHostBuilder(args).UseNLog().Build().Run();
             }
             catch (Exception ex)
             {
@@ -25,6 +25,7 @@ namespace DFMS.WebApi
             }
             finally
             {
+                LogManager.Flush();
                 LogManager.Shutdown();
             }
         }

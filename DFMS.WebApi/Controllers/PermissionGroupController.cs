@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DFMS.Database.Dto.Permission;
 using DFMS.Database.Exceptions;
 using DFMS.Database.Services;
 using DFMS.WebApi.Authorization;
@@ -7,7 +6,6 @@ using DFMS.WebApi.Constants;
 using DFMS.WebApi.Core.Controllers;
 using DFMS.WebApi.Core.Errors;
 using DFMS.WebApi.Core.Exceptions;
-using DFMS.WebApi.DataContracts;
 using DFMS.WebApi.DataContracts.Permissions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +16,7 @@ namespace DFMS.WebApi.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route(Routes.PermissionGroup)]
+    [Route(ControllerGroup.Api + "/permission-group")]
     public class PermissionGroupController : ResponseController
     {
         private IPermissionService PermissionService { get; }

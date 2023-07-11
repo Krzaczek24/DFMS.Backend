@@ -1,16 +1,19 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using DFMS.WebApi.Constants;
+using DFMS.WebApi.Core.Controllers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading;
 
 namespace DFMS.WebApi.Controllers
 {
     [AllowAnonymous]
     [ApiController]
-    public class TechnicalController
+    [Route(ControllerGroup.Api + "/technical")]
+    public class TechnicalController : ResponseController
     {
-        public TechnicalController() { }
+        public TechnicalController(IMapper mapper) : base(mapper) { }
 
-        [HttpPost("/ping")]
-        public void Ping() { Thread.Sleep(100); }
+        [HttpPost("ping")]
+        public void Ping() {  }
     }
 }

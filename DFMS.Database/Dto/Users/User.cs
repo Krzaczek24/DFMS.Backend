@@ -12,5 +12,7 @@ namespace DFMS.Database.Dto.Users
         public string[] Permissions { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string FirstAndLastName => $"{FirstName} {LastName}".Trim();
+        public string Name => string.IsNullOrEmpty(FirstAndLastName) ? Login : FirstAndLastName;
     }
 }

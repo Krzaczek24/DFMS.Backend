@@ -8,7 +8,7 @@ namespace DFMS.WebApi.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route(Routes.FormTemplate)]
+    [Route(ControllerGroup.Api + "/form-template")]
     public class FormTemplateController : ResponseController
     {
         public FormTemplateController(IMapper mapper) : base(mapper) { }

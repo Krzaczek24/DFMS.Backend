@@ -70,6 +70,7 @@ namespace DFMS.WebApi
             });
 
             services.AddMvc().ConfigureApiBehaviorOptions(options => options.InvalidModelStateResponseFactory = CustomInvalidModelStateResponse);
+            services.AddSession();
 
             services.AddAuthentication(x => {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -91,7 +92,9 @@ namespace DFMS.WebApi
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DFMS.WebApi", Version = "v1" });
+                c.SwaggerDoc(ControllerGroup.Auth, new OpenApiInfo { Title = "DFMS.Authorization", Version = "v1" });
+                c.SwaggerDoc(ControllerGroup.Api, new OpenApiInfo { Title = "DFMS.WebApi", Version = "v1" });
+                
             });
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings()
@@ -107,7 +110,10 @@ namespace DFMS.WebApi
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DFMS.WebApi v1"));
+                app.UseSwaggerUI(c => {
+                    c.SwaggerEndpoint($"/swagger/{ControllerGroup.Auth}/swagger.json", "DFMS.Authorization");
+                    c.SwaggerEndpoint($"/swagger/{ControllerGroup.Api}/swagger.json", "DFMS.WebApi");
+                });
             }
             else
             {
@@ -123,6 +129,7 @@ namespace DFMS.WebApi
             );
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseSession();
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
 

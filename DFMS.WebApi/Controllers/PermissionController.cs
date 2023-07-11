@@ -16,7 +16,7 @@ namespace DFMS.WebApi.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route(Routes.Permission)]
+    [Route(ControllerGroup.Api + "/permission")]
     public class PermissionController : ResponseController
     {
         private IPermissionService PermissionService { get; }

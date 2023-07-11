@@ -22,5 +22,11 @@ namespace DFMS.WebApi.Core.Errors
         UNAUTHORIZED,
         [Description("Insufficient permissions")]
         FORBIDDEN,
+        [Description("Token expired")]
+        TOKEN_EXPIRED,
+        [Description("Invalid token")]
+        TOKEN_INVALID,
+        [Description("Token already exists")]
+        TOKEN_EXISTS
     }
 }
