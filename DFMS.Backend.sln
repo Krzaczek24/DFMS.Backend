@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFMS.Database", "DFMS.Datab
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFMS.Shared", "DFMS.Shared\DFMS.Shared.csproj", "{D26B90DC-219B-413B-A564-3A9C3EFD35FC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiMiddlewares", "..\..\WebApiMiddlewares\WebApiMiddlewares\WebApiMiddlewares.csproj", "{FA15D617-FDCF-4807-9662-C7EA737B9A7C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{D26B90DC-219B-413B-A564-3A9C3EFD35FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D26B90DC-219B-413B-A564-3A9C3EFD35FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D26B90DC-219B-413B-A564-3A9C3EFD35FC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FA15D617-FDCF-4807-9662-C7EA737B9A7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FA15D617-FDCF-4807-9662-C7EA737B9A7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FA15D617-FDCF-4807-9662-C7EA737B9A7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FA15D617-FDCF-4807-9662-C7EA737B9A7C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
