@@ -1,11 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+	<TargetFramework>net7.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="StringNotationExtension" Version="1.0.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="StringNotationExtension" Version="1.0.0" />
+	</ItemGroup>
 
 </Project>
