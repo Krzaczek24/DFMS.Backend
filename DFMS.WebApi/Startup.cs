@@ -1,9 +1,9 @@
 using Core.WebApi.Extensions;
-using Core.WebApi.Middlewares;
 using DFMS.Database;
+using DFMS.Shared.Converters;
 using DFMS.Shared.Extensions;
 using DFMS.WebApi.Authorization;
-using DFMS.WebApi.Constants;
+using DFMS.WebApi.Core.Constants;
 using DFMS.WebApi.Core.Errors;
 using DFMS.WebApi.Core.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -66,7 +66,7 @@ namespace DFMS.WebApi
             services.AddControllers().AddJsonOptions(opts => {
                 opts.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 opts.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-                opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                opts.JsonSerializerOptions.Converters.Add(new EnumToStringConverterFactory());
             });
 
             services.AddMvc().ConfigureApiBehaviorOptions(options => options.InvalidModelStateResponseFactory = CustomInvalidModelStateResponse);
@@ -94,7 +94,6 @@ namespace DFMS.WebApi
             {
                 c.SwaggerDoc(ControllerGroup.Auth, new OpenApiInfo { Title = "DFMS.Authorization", Version = "v1" });
                 c.SwaggerDoc(ControllerGroup.Api, new OpenApiInfo { Title = "DFMS.WebApi", Version = "v1" });
-                
             });
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings()
@@ -138,7 +137,7 @@ namespace DFMS.WebApi
             var errors = actionContext.ModelState.Values
                 .SelectMany(x => x.Errors)
                 .Select(x => new ErrorModel() {
-                    Code = ErrorCode.INVALID_REQUEST_FIELD_VALUE,
+                    Code = ErrorCode.InvalidRequestFieldValue,
                     Message = x.ErrorMessage
                 }).ToList();
 

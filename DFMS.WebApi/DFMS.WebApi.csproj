@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
-		<TargetFramework>net7.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<UserSecretsId>45575577-973a-45c7-90af-b29dbcef33b0</UserSecretsId>
 		<Nullable>enable</Nullable>
 		<RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
@@ -12,20 +12,19 @@
 		<DebugType>embedded</DebugType>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="AutoMapper" Version="12.0.1"/>
-		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1"/>
-		<PackageReference Include="Core.WebApi" Version="1.4.5"/>
-		<PackageReference Include="EnumExtension" Version="1.1.0"/>
-		<PackageReference Include="IEnumerableExtension" Version="1.0.0"/>
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.8"/>
-		<PackageReference Include="MySql.EntityFrameworkCore" Version="7.0.2"/>
-		<PackageReference Include="NLog" Version="5.2.2"/>
-		<PackageReference Include="NLog.Extensions.Logging" Version="5.3.2"/>
-		<PackageReference Include="NLog.Web.AspNetCore" Version="5.3.2"/>
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
+		<PackageReference Include="Core.WebApi" Version="1.4.5" />
+		<PackageReference Include="EnumExtension" Version="1.1.1" />
+		<PackageReference Include="IEnumerableExtension" Version="1.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.2" />
+		<PackageReference Include="MySql.EntityFrameworkCore" Version="8.0.0" />
+		<PackageReference Include="NLog" Version="5.2.8" />
+		<PackageReference Include="NLog.Extensions.Logging" Version="5.3.8" />
+		<PackageReference Include="NLog.Web.AspNetCore" Version="5.3.8" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+		<PackageReference Include="System.Drawing.Common" Version="8.0.2" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\DFMS.Database\DFMS.Database.csproj"/>
+		<ProjectReference Include="..\DFMS.Database\DFMS.Database.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<Content Update="nlog.config">

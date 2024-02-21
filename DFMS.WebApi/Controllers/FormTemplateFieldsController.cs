@@ -2,7 +2,7 @@
 using DFMS.Database.Dto.FormTemplate;
 using DFMS.Database.Services.FormTemplate;
 using DFMS.WebApi.Authorization;
-using DFMS.WebApi.Constants;
+using DFMS.WebApi.Core.Attributes;
 using DFMS.WebApi.Core.Controllers;
 using DFMS.WebApi.Core.Exceptions;
 using Microsoft.AspNetCore.Authorization;
@@ -14,7 +14,7 @@ namespace DFMS.WebApi.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route(ControllerGroup.Api + "/form-template/field-definitions")]
+    [ApiRoute("form-template/field-definitions")]
     public class FormTemplateFieldsController : ResponseController
     {
         private IFormFieldService FormFieldService { get; }

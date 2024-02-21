@@ -2,7 +2,7 @@
 using DFMS.Database.Exceptions;
 using DFMS.Database.Services;
 using DFMS.WebApi.Authorization;
-using DFMS.WebApi.Constants;
+using DFMS.WebApi.Core.Attributes;
 using DFMS.WebApi.Core.Controllers;
 using DFMS.WebApi.Core.Errors;
 using DFMS.WebApi.Core.Exceptions;
@@ -16,7 +16,7 @@ namespace DFMS.WebApi.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route(ControllerGroup.Api + "/permission-group")]
+    [ApiRoute("permission-group")]
     public class PermissionGroupController : ResponseController
     {
         private IPermissionService PermissionService { get; }
@@ -36,7 +36,7 @@ namespace DFMS.WebApi.Controllers
             }
             catch (DuplicatedEntryException)
             {
-                throw new ConflictException(ErrorCode.NON_UNIQUE_NAME);
+                throw new ConflictException(ErrorCode.NonUniqueName);
             }
         }
 
@@ -46,11 +46,11 @@ namespace DFMS.WebApi.Controllers
             try
             {
                 if (!await PermissionService.UpdatePermissionGroup(id, User.GetLogin(), input.Name, input.Description, input.Active))
-                    throw new NotFoundException(ErrorCode.RESOURCE_NOT_FOUND);
+                    throw new NotFoundException(ErrorCode.ResourceNotFound);
             }
             catch (DuplicatedEntryException)
             {
-                throw new ConflictException(ErrorCode.NON_UNIQUE_NAME);
+                throw new ConflictException(ErrorCode.NonUniqueName);
             }
         }
 
@@ -60,11 +60,11 @@ namespace DFMS.WebApi.Controllers
             try
             {
                 if (!await PermissionService.RemovePermissionGroup(id))
-                    throw new NotFoundException(ErrorCode.RESOURCE_NOT_FOUND);
+                    throw new NotFoundException(ErrorCode.ResourceNotFound);
             }
             catch (CannotDeleteOrUpdateException)
             {
-                throw new ConflictException(ErrorCode.RESOURCE_IN_USE);
+                throw new ConflictException(ErrorCode.ResourceInUse);
             }
         }
         #endregion
@@ -81,7 +81,7 @@ namespace DFMS.WebApi.Controllers
             }
             catch (DuplicatedEntryException)
             {
-                throw new ConflictException(ErrorCode.NON_UNIQUE_RELATION);
+                throw new ConflictException(ErrorCode.NonUniqueRelation);
             }
         }
 
@@ -93,11 +93,11 @@ namespace DFMS.WebApi.Controllers
             try
             {
                 if (!await PermissionService.RemovePermissionFromGroup(groupId, permissionId))
-                    throw new NotFoundException(ErrorCode.RESOURCE_NOT_FOUND);
+                    throw new NotFoundException(ErrorCode.ResourceNotFound);
             }
             catch (CannotDeleteOrUpdateException)
             {
-                throw new ConflictException(ErrorCode.UNKNOWN);
+                throw new ConflictException(ErrorCode.Unknown);
             }
         }
         #endregion
@@ -115,7 +115,7 @@ namespace DFMS.WebApi.Controllers
             }
             catch (DuplicatedEntryException)
             {
-                throw new ConflictException(ErrorCode.NON_UNIQUE_RELATION);
+                throw new ConflictException(ErrorCode.NonUniqueRelation);
             }
         }
 
@@ -128,11 +128,11 @@ namespace DFMS.WebApi.Controllers
             try
             {
                 if (!await PermissionService.UpdateUserPermissionGroupAssignment(User.GetLogin(), groupId, userId, validUntil))
-                    throw new NotFoundException(ErrorCode.RESOURCE_NOT_FOUND);
+                    throw new NotFoundException(ErrorCode.ResourceNotFound);
             }
             catch (CannotDeleteOrUpdateException)
             {
-                throw new ConflictException(ErrorCode.UNKNOWN);
+                throw new ConflictException(ErrorCode.Unknown);
             }
         }
 
@@ -144,11 +144,11 @@ namespace DFMS.WebApi.Controllers
             try
             {
                 if (!await PermissionService.RemoveUserFromPermissionGroup(groupId, userId))
-                    throw new NotFoundException(ErrorCode.RESOURCE_NOT_FOUND);
+                    throw new NotFoundException(ErrorCode.ResourceNotFound);
             }
             catch (CannotDeleteOrUpdateException)
             {
-                throw new ConflictException(ErrorCode.UNKNOWN);
+                throw new ConflictException(ErrorCode.Unknown);
             }
         }
         #endregion

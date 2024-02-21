@@ -2,7 +2,7 @@
 using DFMS.Database.Dto.FormTemplate;
 using DFMS.Database.Services.FormTemplate;
 using DFMS.WebApi.Authorization;
-using DFMS.WebApi.Constants;
+using DFMS.WebApi.Core.Attributes;
 using DFMS.WebApi.Core.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +14,7 @@ namespace DFMS.WebApi.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route(ControllerGroup.Api + "/form-template/field-validation")]
+    [ApiRoute("form-template/field-validation")]
     public class FormTemplateFieldValidationController : ResponseController
     {
         private IFormFieldValidationService FormFieldValidationService { get; }

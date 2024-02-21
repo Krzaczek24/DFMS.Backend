@@ -32,7 +32,7 @@ namespace DFMS.WebApi.Authorization
                 new CustomClaim(UserClaim.Id, user.Id.ToString()),
                 new CustomClaim(UserClaim.Login, user.Login),
                 new CustomClaim(UserClaim.Name, user.Name),
-                new CustomClaim(UserClaim.Role, user.Role),
+                new CustomClaim(UserClaim.Role, user.Role.ToString().ToUpper()),
                 new CustomClaim(UserClaim.FirstName, user.FirstName ?? string.Empty),
                 new CustomClaim(UserClaim.LastName, user.LastName ?? string.Empty),
                 new CustomClaim(UserClaim.CreatedAt, user.CreatedAt!.Value.ToString(DATE_FORMAT)),

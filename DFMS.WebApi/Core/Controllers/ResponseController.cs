@@ -12,8 +12,8 @@ namespace DFMS.WebApi.Core.Controllers
     [ProducesResponse<ErrorResponse>(HttpStatusCode.NotFound)]
     [ProducesResponse<ErrorResponse>(HttpStatusCode.Conflict)]
     [ProducesResponse<ErrorResponse>(HttpStatusCode.InternalServerError)]
-    public class ResponseController : ApiController
+    public class ResponseController(IMapper mapper) : ApiController(mapper)
     {
-        public ResponseController(IMapper mapper) : base(mapper) { }
+        
     }
 }

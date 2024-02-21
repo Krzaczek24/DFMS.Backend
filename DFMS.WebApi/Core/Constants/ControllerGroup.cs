@@ -1,4 +1,4 @@
-﻿namespace DFMS.WebApi.Constants
+﻿namespace DFMS.WebApi.Core.Constants
 {
     public class ControllerGroup
     {

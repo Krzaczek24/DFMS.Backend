@@ -2,7 +2,7 @@
 using Core.WebApi.Extensions;
 using DFMS.Database.Services;
 using DFMS.WebApi.Authorization;
-using DFMS.WebApi.Constants;
+using DFMS.WebApi.Core.Attributes;
 using DFMS.WebApi.Core.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +12,7 @@ namespace DFMS.WebApi.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route(ControllerGroup.Api)]
+    [ApiRoute]
     public class LogoutController : ResponseController
     {
         private IUserService UserService { get; }

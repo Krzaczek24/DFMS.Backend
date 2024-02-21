@@ -1,32 +1,34 @@
-﻿using System.ComponentModel;
+﻿using DFMS.Shared.Converters;
+using System.ComponentModel;
 
 namespace DFMS.WebApi.Core.Errors
 {
+    [EnumToString(NameAlterMode.ToUpperSnake)]
     public enum ErrorCode
     {
         [Description("An unknown error occurred")]
-        UNKNOWN,
+        Unknown,
         [Description("At least one of request fields is invalid")]
-        INVALID_REQUEST_FIELD_VALUE,
+        InvalidRequestFieldValue,
         [Description("Selected username is already used")]
-        USERNAME_ALREADY_TAKEN,
+        UsernameAlreadyTaken,
         [Description("Resource has been not found")]
-        RESOURCE_NOT_FOUND,
+        ResourceNotFound,
         [Description("Already exists resource with that name")]
-        NON_UNIQUE_NAME,
+        NonUniqueName,
         [Description("Resource is used by some other resource")]
-        RESOURCE_IN_USE,
+        ResourceInUse,
         [Description("Already exists such relation")]
-        NON_UNIQUE_RELATION,
+        NonUniqueRelation,
         [Description("Failed to authorize")]
-        UNAUTHORIZED,
+        Unauthorized,
         [Description("Insufficient permissions")]
-        FORBIDDEN,
+        Forbidden,
         [Description("Token expired")]
-        TOKEN_EXPIRED,
+        TokenExpired,
         [Description("Invalid token")]
-        TOKEN_INVALID,
+        TokenInvalid,
         [Description("Token already exists")]
-        TOKEN_EXISTS
+        TokenExists
     }
 }

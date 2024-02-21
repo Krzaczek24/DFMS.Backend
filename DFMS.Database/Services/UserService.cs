@@ -3,10 +3,11 @@ using Core.Database.Services;
 using DFMS.Database.Dto.Users;
 using DFMS.Database.Exceptions;
 using DFMS.Database.Models;
+using DFMS.Shared.Enums;
+using KrzaqTools;
 using Microsoft.EntityFrameworkCore;
-using MySqlX.XDevAPI;
-using NLog.Fluent;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,8 +20,11 @@ namespace DFMS.Database.Services
         public Task SaveNewRefreshToken(string login, string clientIp, string refreshToken, DateTime? validUntil);
         public Task<bool> UpdateRefreshToken(string login, string clientIp, string newRefreshToken, DateTime? validUntil);
         public Task<bool> AuthenticateUser(string login, string passwordHash);
+        public Task<User> GetUser(int id);
         public Task<User> GetUser(string login);
         public Task<User> GetUser(string refreshToken, string clientIp);
+        public Task<int> GetUsersCount(string phraseFilter, DateTime? onlineAfter = null, bool? isActive = true);
+        public Task<IEnumerable<User>> SearchUsers(string phraseFilter = null, DateTime? onlineAfter = null, bool? isActive = true, int page = 0, int pageSize = 10);
         public Task<User> CreateUser(string addLogin, string login, string passwordHash, string email = null, string firstName = null, string lastName = null);
         public Task<Role[]> GetRoles();
     }
@@ -80,7 +84,7 @@ namespace DFMS.Database.Services
             var sessions = await (from us in Database.UserSessions
                                   join u in Database.Users on us.User.Id equals u.Id
                                   where u.Login == login && u.Active.Value
-                                  && us.ClientIp == clientIp && us.ValidUntil > DateTime.Now
+                                  && us.ClientIp == clientIp
                                   select us).ToListAsync();
 
             foreach (var session in sessions)
@@ -101,6 +105,34 @@ namespace DFMS.Database.Services
             return await count > 0;
         }
 
+        public async Task<User> GetUser(int id)
+        {
+            var query = from u in Database.Users
+                        where u.Id == id
+                        join r in Database.UserRoles on u.Role.Id equals r.Id
+                        select new User()
+                        {
+                            Id = u.Id,
+                            Login = u.Login,
+                            Role = Enum.Parse<UserRole>(r.Name, true),
+                            Permissions = (from upga in Database.UserPermissionGroupAssignments
+                                           join upg in Database.UserPermissionGroups on upga.PermissionGroup.Id equals upg.Id
+                                           join upa in Database.UserPermissionAssignments on upg.Id equals upa.PermissionGroup.Id
+                                           join up in Database.UserPermissions on upa.Permission.Id equals up.Id
+                                           where upga.User.Id == u.Id
+                                           && upga.Active.Value && upg.Active.Value && upa.Active.Value && up.Active.Value
+                                           && (upga.ValidUntil == null || upga.ValidUntil > DateTime.Now)
+                                           select up.Name).AsEnumerable().ToArray(),
+                            FirstName = u.FirstName,
+                            LastName = u.LastName,
+                            LastLogin = u.LastLoginDate,
+                            CreatedAt = u.AddDate
+                        };
+
+            var user = await query.SingleOrDefaultAsync();
+            return user;
+        }
+
         public async Task<User> GetUser(string login)
         {
             var query = from u in Database.Users
@@ -110,7 +142,7 @@ namespace DFMS.Database.Services
                         {
                             Id = u.Id,
                             Login = u.Login,
-                            Role = r.Name,
+                            Role = Enum.Parse<UserRole>(r.Name, true),
                             Permissions = (from upga in Database.UserPermissionGroupAssignments
                                            join upg in Database.UserPermissionGroups on upga.PermissionGroup.Id equals upg.Id
                                            join upa in Database.UserPermissionAssignments on upg.Id equals upa.PermissionGroup.Id
@@ -139,7 +171,7 @@ namespace DFMS.Database.Services
                         {
                             Id = u.Id,
                             Login = u.Login,
-                            Role = r.Name,
+                            Role = Enum.Parse<UserRole>(r.Name, true),
                             Permissions = (from upga in Database.UserPermissionGroupAssignments
                                            join upg in Database.UserPermissionGroups on upga.PermissionGroup.Id equals upg.Id
                                            join upa in Database.UserPermissionAssignments on upg.Id equals upa.PermissionGroup.Id
@@ -156,6 +188,19 @@ namespace DFMS.Database.Services
 
             var user = await query.SingleOrDefaultAsync();
             return user;
+        }
+
+        public async Task<int> GetUsersCount(string phraseFilter, DateTime? onlineAfter = null, bool? isActive = true)
+        {
+            return await GetUserSearchQuery(phraseFilter, onlineAfter, isActive).CountAsync();
+        }
+
+        public async Task<IEnumerable<User>> SearchUsers(string phraseFilter = null, DateTime? onlineAfter = null, bool? isActive = true, int page = 0, int pageSize = 10)
+        {
+            var result = await GetUserSearchQuery(phraseFilter, onlineAfter, isActive)
+                .Skip(page * pageSize).Take(pageSize).ToListAsync();
+
+            return Mapper.Map<IEnumerable<User>>(result);
         }
 
         public async Task<User> CreateUser(string addLogin, string login, string passwordHash, string email = null, string firstName = null, string lastName = null)
@@ -192,11 +237,33 @@ namespace DFMS.Database.Services
                         select new Role()
                         {
                             Id = r.Id,
-                            Name = r.Name
+                            Name = r.Name,
+                            Level = r.Level
                         };
 
             var roles = await query.ToArrayAsync();
             return roles;
+        }
+
+        private IQueryable<DbUser> GetUserSearchQuery(string phraseFilter, DateTime? onlineAfter = null, bool? isActive = true)
+        {
+            const StringComparison comparison = StringComparison.InvariantCultureIgnoreCase;
+
+            var query = Database.Users.AsQueryable();
+
+            if (onlineAfter.HasValue)
+                query = query.Where(u => u.LastLoginDate != null && u.LastLoginDate > onlineAfter.Value);
+
+            if (isActive.HasValue)
+                query = query.Where(u => u.Active.Value == isActive.Value);
+
+            if (!string.IsNullOrEmpty(phraseFilter))
+                query = query.Where(u => u.Login.Contains(phraseFilter, comparison)
+                                      || (u.FirstName != null && u.FirstName.Contains(phraseFilter, comparison))
+                                      || (u.LastName != null && u.LastName.Contains(phraseFilter, comparison))
+                                      || (u.Email != null && u.Email.Contains(phraseFilter, comparison)));
+
+            return query;
         }
     }
 }

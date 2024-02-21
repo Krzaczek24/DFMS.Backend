@@ -1,5 +1,5 @@
 ﻿using Core.WebApi.Interfaces;
-using KrzaqTools.EnumExtension;
+using KrzaqTools.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 

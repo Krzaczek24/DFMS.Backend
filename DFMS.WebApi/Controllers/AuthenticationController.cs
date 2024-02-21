@@ -4,7 +4,7 @@ using DFMS.Database.Dto.Users;
 using DFMS.Database.Exceptions;
 using DFMS.Database.Services;
 using DFMS.WebApi.Authorization;
-using DFMS.WebApi.Constants;
+using DFMS.WebApi.Core.Constants;
 using DFMS.WebApi.Core.Controllers;
 using DFMS.WebApi.Core.Errors;
 using DFMS.WebApi.Core.Exceptions;
@@ -48,7 +48,7 @@ namespace DFMS.WebApi.Controllers
             }
             catch (DuplicatedEntryException)
             {
-                throw new ConflictException(ErrorCode.TOKEN_EXISTS);
+                throw new ConflictException(ErrorCode.TokenExists);
             }
         }
 
@@ -56,11 +56,11 @@ namespace DFMS.WebApi.Controllers
         public async Task<AuthenticateOutput> RefreshToken([FromBody] RefreshInput input)
         {
             if (!TokenBuilder.IsRefreshTokenValid(input.RefreshToken))
-                throw new UnauthorizedException(ErrorCode.TOKEN_EXPIRED);
+                throw new UnauthorizedException(ErrorCode.TokenExpired);
 
             var user = await UserService.GetUser(input.RefreshToken, HttpContext.GetClientIp());
             if (user == null)
-                throw new UnauthorizedException(ErrorCode.TOKEN_INVALID);
+                throw new UnauthorizedException(ErrorCode.TokenInvalid);
 
             return await GenerateTokens(user, UserService.UpdateRefreshToken);
         }
@@ -74,7 +74,7 @@ namespace DFMS.WebApi.Controllers
             }
             catch (DuplicatedEntryException)
             {
-                throw new ConflictException(ErrorCode.USERNAME_ALREADY_TAKEN);
+                throw new ConflictException(ErrorCode.UsernameAlreadyTaken);
             }
         }
 

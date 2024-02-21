@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using Core.WebApi.Controllers;
-using DFMS.WebApi.Constants;
+using DFMS.WebApi.Core.Constants;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DFMS.WebApi.Core.Controllers
 {
     [ApiExplorerSettings(GroupName = ControllerGroup.Api)]
-    public class ApiController : BaseController
+    public class ApiController(IMapper mapper) : BaseController(mapper)
     {
-        public ApiController(IMapper mapper) : base(mapper) { }
+        
     }
 }

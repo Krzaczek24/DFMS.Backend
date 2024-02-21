@@ -2,6 +2,8 @@
 using DFMS.Database.Dto.FormTemplate;
 using DFMS.Database.Dto.Users;
 using DFMS.Database.Models;
+using DFMS.Shared.Enums;
+using System;
 
 namespace DFMS.Database
 {
@@ -21,7 +23,7 @@ namespace DFMS.Database
 
             CreateMap<DbUser, User>()
                 .ForMember(dest => dest.Permissions, opts => opts.MapFrom(src => new string[] { }))
-                .ForMember(dest => dest.Role, opts => opts.MapFrom(src => src.Role.Name));
+                .ForMember(dest => dest.Role, opts => opts.MapFrom(src => Enum.Parse<UserRole>(src.Role.Name, true)));
         }
     }
 }

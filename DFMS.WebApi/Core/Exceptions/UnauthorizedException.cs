@@ -8,7 +8,7 @@ namespace DFMS.WebApi.Core.Exceptions
     public class UnauthorizedException : UnauthorizedException<ErrorModel>
     {
         public UnauthorizedException(Exception? innerException = null)
-            : this(ErrorCode.UNAUTHORIZED, innerException) { }
+            : this(ErrorCode.Unauthorized, innerException) { }
 
         public UnauthorizedException(ErrorModel error, Exception? innerException = null)
             : base(error, innerException) { }

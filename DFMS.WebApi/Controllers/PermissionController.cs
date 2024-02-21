@@ -3,7 +3,7 @@ using DFMS.Database.Dto.Permission;
 using DFMS.Database.Exceptions;
 using DFMS.Database.Services;
 using DFMS.WebApi.Authorization;
-using DFMS.WebApi.Constants;
+using DFMS.WebApi.Core.Attributes;
 using DFMS.WebApi.Core.Controllers;
 using DFMS.WebApi.Core.Errors;
 using DFMS.WebApi.Core.Exceptions;
@@ -16,7 +16,7 @@ namespace DFMS.WebApi.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route(ControllerGroup.Api + "/permission")]
+    [ApiRoute("permission")]
     public class PermissionController : ResponseController
     {
         private IPermissionService PermissionService { get; }
@@ -41,7 +41,7 @@ namespace DFMS.WebApi.Controllers
             }
             catch (DuplicatedEntryException)
             {
-                throw new ConflictException(ErrorCode.NON_UNIQUE_NAME);
+                throw new ConflictException(ErrorCode.NonUniqueName);
             }
         }
 
@@ -51,11 +51,11 @@ namespace DFMS.WebApi.Controllers
             try
             {
                 if (!await PermissionService.UpdatePermission(id, User.GetLogin(), input.Name, input.Description, input.Active))
-                    throw new NotFoundException(ErrorCode.RESOURCE_NOT_FOUND);
+                    throw new NotFoundException(ErrorCode.ResourceNotFound);
             }
             catch (DuplicatedEntryException)
             {
-                throw new ConflictException(ErrorCode.NON_UNIQUE_NAME);
+                throw new ConflictException(ErrorCode.NonUniqueName);
             }
         }
 
@@ -65,11 +65,11 @@ namespace DFMS.WebApi.Controllers
             try
             {
                 if (!await PermissionService.RemovePermission(id))
-                    throw new NotFoundException(ErrorCode.RESOURCE_NOT_FOUND);
+                    throw new NotFoundException(ErrorCode.ResourceNotFound);
             }
             catch (CannotDeleteOrUpdateException)
             {
-                throw new ConflictException(ErrorCode.RESOURCE_IN_USE);
+                throw new ConflictException(ErrorCode.ResourceInUse);
             }
         }
     }

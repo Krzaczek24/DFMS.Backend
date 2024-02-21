@@ -27,7 +27,7 @@ namespace DFMS.WebApi.Core.Middlewares
 
             return new ErrorResponse(new ErrorModel()
             {
-                Code = ErrorCode.UNKNOWN,
+                Code = ErrorCode.Unknown,
                 Message = exception.Message
             });
         }
