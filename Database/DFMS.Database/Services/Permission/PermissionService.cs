@@ -63,7 +63,7 @@ namespace DFMS.Database.Services.Permissions
         /// <param name="active"></param>
         /// <returns></returns>
         /// <exception cref="DuplicatedEntryException"></exception>
-        public async Task<bool> UpdatePermission(int id, string updaterLogin, string name = null, string description = null, bool? active = null)
+        public async Task<bool> UpdatePermission(int id, string updaterLogin, string? name = null, string? description = null, bool? active = null)
         {
             try
             {

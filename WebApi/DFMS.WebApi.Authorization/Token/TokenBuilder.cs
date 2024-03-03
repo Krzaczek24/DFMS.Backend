@@ -50,7 +50,7 @@ namespace DFMS.WebApi.Authorization.Token
                 Subject = new ClaimsIdentity(userClaims, null, UserClaim.Name.ToCamelCase(), UserClaim.Role.ToCamelCase()),
                 IssuedAt = now,
 #if DEBUG
-                Expires = now.Add(TimeSpan.FromHours(1)),
+                Expires = now.Add(TimeSpan.FromDays(42)),
 #else
                 Expires = now.Add(TimeSpan.FromMinutes(5)),
 #endif

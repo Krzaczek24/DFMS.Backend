@@ -12,8 +12,8 @@
 		<PackageReference Include="NLog.Web.AspNetCore" Version="5.3.8" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\DFMS.Database\DFMS.Database.csproj" />
-		<ProjectReference Include="..\DFMS.WebApi.Common\DFMS.WebApi.Common.csproj" />
+		<ProjectReference Include="..\..\Database\DFMS.Database\DFMS.Database.csproj" />
+		<ProjectReference Include="..\..\WebApi\DFMS.WebApi.Common\DFMS.WebApi.Common.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<Content Update="nlog.config">

@@ -15,6 +15,6 @@
 		<PackageReference Include="MySql.EntityFrameworkCore" Version="8.0.0" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\DFMS.Shared\DFMS.Shared.csproj" />
+		<ProjectReference Include="..\..\Shared\DFMS.Shared\DFMS.Shared.csproj" />
 	</ItemGroup>
 </Project>
