@@ -1,25 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
-		<Nullable>annotations</Nullable>
 	</PropertyGroup>
-	
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="12.0.1" />
-		<PackageReference Include="Core.Database.EntityFrameworkCore" Version="1.2.0" />
+		<PackageReference Include="Core.Database.EntityFrameworkCore" Version="1.1.0" />
 		<PackageReference Include="Krzaq.Extensions.NullableBoolean" Version="1.0.0" />
 		<PackageReference Include="Krzaq.Extensions.ReadOnlyDictionary" Version="1.0.0" />
 		<PackageReference Include="Krzaq.ReflectionToolbox" Version="1.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.2" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.0" />
 		<PackageReference Include="MySql.EntityFrameworkCore" Version="8.0.0" />
 	</ItemGroup>
-	
 	<ItemGroup>
 		<ProjectReference Include="..\DFMS.Shared\DFMS.Shared.csproj" />
 	</ItemGroup>
-	
 </Project>
