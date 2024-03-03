@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace DFMS.WebApi.Controllers.Permissions
+namespace DFMS.WebApi.Permissions.Controllers
 {
     [Authorize]
     [ApiController]

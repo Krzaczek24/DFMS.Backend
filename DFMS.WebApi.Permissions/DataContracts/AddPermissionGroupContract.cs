@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DFMS.WebApi.DataContracts.Permissions
+namespace DFMS.WebApi.Permissions.DataContracts
 {
-    public class AddPermissionInput
+    public class AddPermissionGroupInput
     {
         [Required]
         public string Name { get; set; } = string.Empty;

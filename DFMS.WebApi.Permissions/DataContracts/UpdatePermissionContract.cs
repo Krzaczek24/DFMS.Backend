@@ -1,4 +1,4 @@
-﻿namespace DFMS.WebApi.DataContracts.Permissions
+﻿namespace DFMS.WebApi.Permissions.DataContracts
 {
     public class UpdatePermissionInput
     {

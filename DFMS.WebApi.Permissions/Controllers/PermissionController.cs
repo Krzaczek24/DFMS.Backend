@@ -7,12 +7,12 @@ using DFMS.WebApi.Common.Controllers;
 using DFMS.WebApi.Common.Errors;
 using DFMS.WebApi.Common.Exceptions;
 using DFMS.WebApi.Common.Extensions;
-using DFMS.WebApi.DataContracts.Permissions;
+using DFMS.WebApi.Permissions.DataContracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace DFMS.WebApi.Controllers.Permissions
+namespace DFMS.WebApi.Permissions.Controllers
 {
     [Authorize]
     [ApiController]
