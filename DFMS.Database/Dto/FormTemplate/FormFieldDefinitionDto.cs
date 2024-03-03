@@ -2,7 +2,7 @@
 
 namespace DFMS.Database.Dto.FormTemplate
 {
-    public class FormFieldDefinition
+    public class FormFieldDefinitionDto
     {
         public string Title { get; set; }
         public string Type { get; set; }

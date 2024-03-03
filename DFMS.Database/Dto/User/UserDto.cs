@@ -3,7 +3,7 @@ using System;
 
 namespace DFMS.Database.Dto.Users
 {
-    public class User
+    public class UserDto
     {
         public DateTime? CreatedAt { get; set; }
         public DateTime? LastLogin { get; set; }

@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using DFMS.Database.Dto.Permission;
-using DFMS.Database.Exceptions;
-using DFMS.Database.Services;
+using DFMS.Database.Dto.Permissions;
+using DFMS.Database.Services.Permissions;
+using DFMS.Shared.Exceptions;
 using DFMS.WebApi.Common.Attributes;
 using DFMS.WebApi.Common.Controllers;
 using DFMS.WebApi.Common.Errors;
@@ -22,13 +22,13 @@ namespace DFMS.WebApi.Permissions.Controllers
         private IPermissionService PermissionService { get; } = permissionService;
 
         [HttpGet("structure")]
-        public async Task<PermissionGroup[]> GetPermissionsStructure()
+        public async Task<PermissionGroupDto[]> GetPermissionsStructure()
         {
             return await PermissionService.GetPermissionsStructure();
         }
 
         [HttpPost]
-        public async Task<int> CreatePermission([FromBody] AddPermissionInput input)
+        public async Task<int> CreatePermission([FromBody] CreatePermissionInput input)
         {
             try
             {

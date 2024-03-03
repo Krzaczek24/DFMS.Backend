@@ -20,7 +20,7 @@ namespace DFMS.WebApi.Controllers
         private IFormFieldService FormFieldService { get; } = formFieldService;
 
         [HttpGet]
-        public async Task<ICollection<FormFieldDefinition>> GetFieldsDefinitions()
+        public async Task<ICollection<FormFieldDefinitionDto>> GetFieldsDefinitions()
         {
             return await FormFieldService.GetFieldsDefinitions(User.GetLogin());
         }

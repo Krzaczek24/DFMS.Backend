@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DFMS.WebApi.Permissions.DataContracts
+namespace DFMS.WebApi.Workspaces.DataContracts
 {
-    public class CreatePermissionInput
+    public class CreateWorkspaceInput
     {
         [Required]
         public string Name { get; set; } = string.Empty;
 
         [Required]
-        public string Description { get; set; } = string.Empty;
+        public bool IsPublic { get; set; }
     }
 }

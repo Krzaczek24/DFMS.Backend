@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using DFMS.Database.Exceptions;
-using DFMS.Database.Services;
+using DFMS.Database.Services.Permissions;
+using DFMS.Shared.Exceptions;
 using DFMS.WebApi.Common.Attributes;
 using DFMS.WebApi.Common.Controllers;
 using DFMS.WebApi.Common.Errors;
@@ -16,11 +16,10 @@ namespace DFMS.WebApi.Permissions.Controllers
     [Authorize]
     [ApiController]
     [ApiRoute("permission/group/{group-id}/user/{user-id}")]
-    public class PermissionUserAssigmentController(IMapper mapper, IPermissionService permissionService) : ResponseController(mapper)
+    public class PermissionUserAssigmentController(IMapper mapper, IUserToGroupAssigmentService service) : ResponseController(mapper)
     {
-        private IPermissionService PermissionService { get; } = permissionService;
+        private IUserToGroupAssigmentService Service { get; } = service;
 
-        #region User to group assignment
         [HttpPost]
         public async Task AssignUserToPermissionGroup(
             [FromRoute(Name = "group-id")] int groupId,
@@ -29,7 +28,7 @@ namespace DFMS.WebApi.Permissions.Controllers
         {
             try
             {
-                await PermissionService.AssignUserToPermissionGroup(User.GetLogin(), groupId, userId, validUntil);
+                await Service.AssignUserToPermissionGroup(User.GetLogin(), groupId, userId, validUntil);
             }
             catch (DuplicatedEntryException)
             {
@@ -45,7 +44,7 @@ namespace DFMS.WebApi.Permissions.Controllers
         {
             try
             {
-                if (!await PermissionService.UpdateUserPermissionGroupAssignment(User.GetLogin(), groupId, userId, validUntil))
+                if (!await Service.UpdateUserPermissionGroupAssignment(User.GetLogin(), groupId, userId, validUntil))
                     throw new NotFoundException(ErrorCode.ResourceNotFound);
             }
             catch (CannotDeleteOrUpdateException)
@@ -61,7 +60,7 @@ namespace DFMS.WebApi.Permissions.Controllers
         {
             try
             {
-                if (!await PermissionService.RemoveUserFromPermissionGroup(groupId, userId))
+                if (!await Service.RemoveUserFromPermissionGroup(groupId, userId))
                     throw new NotFoundException(ErrorCode.ResourceNotFound);
             }
             catch (CannotDeleteOrUpdateException)
@@ -69,6 +68,5 @@ namespace DFMS.WebApi.Permissions.Controllers
                 throw new ConflictException(ErrorCode.Unknown);
             }
         }
-        #endregion
     }
 }

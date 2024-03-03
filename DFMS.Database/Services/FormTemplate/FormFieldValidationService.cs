@@ -13,17 +13,17 @@ namespace DFMS.Database.Services.FormTemplate
 {
     public interface IFormFieldValidationService
     {
-        public Task<int> CreateValidationDefinition(FormFieldValidationRuleDefinition validationDefinition);
+        public Task<int> CreateValidationDefinition(FormFieldValidationRuleDefinitionDto validationDefinition);
         public Task<bool> DeleteValidationDefinition(int id);
-        public Task<ICollection<FormFieldValidationRuleDefinition>> GetValidationDefinitions(string userLogin);
-        public Task<bool> UpdateValidationDefinition(int id, FormFieldValidationRuleDefinition validationDefinition);
+        public Task<ICollection<FormFieldValidationRuleDefinitionDto>> GetValidationDefinitions(string userLogin);
+        public Task<bool> UpdateValidationDefinition(int id, FormFieldValidationRuleDefinitionDto validationDefinition);
     }
 
-    public class FormFieldValidationService : DbService<AppDbContext>, IFormFieldValidationService
+    public class FormFieldValidationService : DbService<DfmsDbContext>, IFormFieldValidationService
     {
-        public FormFieldValidationService(AppDbContext database, IMapper mapper) : base(database, mapper) { }
+        public FormFieldValidationService(DfmsDbContext database, IMapper mapper) : base(database, mapper) { }
 
-        public async Task<int> CreateValidationDefinition(FormFieldValidationRuleDefinition validationDefinition)
+        public async Task<int> CreateValidationDefinition(FormFieldValidationRuleDefinitionDto validationDefinition)
         {
             var newValidationDefinition = Mapper.Map<DbFormFieldValidationRuleDefinition>(validationDefinition);
             await Database.AddAsync(newValidationDefinition);
@@ -31,19 +31,19 @@ namespace DFMS.Database.Services.FormTemplate
             return newValidationDefinition.Id;
         }
 
-        public async Task<ICollection<FormFieldValidationRuleDefinition>> GetValidationDefinitions(string userLogin)
+        public async Task<ICollection<FormFieldValidationRuleDefinitionDto>> GetValidationDefinitions(string userLogin)
         {
             var validationDefinitions = await Database.FormFieldValidationRuleDefinitions
                 .ActiveWhere(ffvrd => ffvrd.Global == true || ffvrd.AddLogin == userLogin)
                 .Include(ffvrd => ffvrd.ValidationType)
                 .ToListAsync();
 
-            var mappedDefinitions = Mapper.Map<List<FormFieldValidationRuleDefinition>>(validationDefinitions);
+            var mappedDefinitions = Mapper.Map<List<FormFieldValidationRuleDefinitionDto>>(validationDefinitions);
             return mappedDefinitions;
         }
 
         /// <returns><see langword="true"/> if replaced existing object, otherwise returns <see langword="false"/></returns>
-        public async Task<bool> UpdateValidationDefinition(int id, FormFieldValidationRuleDefinition validationDefinition)
+        public async Task<bool> UpdateValidationDefinition(int id, FormFieldValidationRuleDefinitionDto validationDefinition)
         {
             var dbDefinition = await Database.FormFieldValidationRuleDefinitions
                 .ActiveWhere(x => x.Id == id)

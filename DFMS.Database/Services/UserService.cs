@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Core.Database.Services;
 using DFMS.Database.Dto.Users;
-using DFMS.Database.Exceptions;
 using DFMS.Database.Models;
 using DFMS.Shared.Enums;
+using DFMS.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,18 +19,18 @@ namespace DFMS.Database.Services
         public Task SaveNewRefreshToken(string login, string clientIp, string refreshToken, DateTime? validUntil);
         public Task<bool> UpdateRefreshToken(string login, string clientIp, string newRefreshToken, DateTime? validUntil);
         public Task<bool> AuthenticateUser(string login, string passwordHash);
-        public Task<User> GetUser(int id);
-        public Task<User> GetUser(string login);
-        public Task<User> GetUser(string refreshToken, string clientIp);
+        public Task<UserDto> GetUser(int id);
+        public Task<UserDto> GetUser(string login);
+        public Task<UserDto> GetUser(string refreshToken, string clientIp);
         public Task<int> GetUsersCount(string phraseFilter, DateTime? onlineAfter = null, bool? isActive = true);
-        public Task<IEnumerable<User>> SearchUsers(string phraseFilter = null, DateTime? onlineAfter = null, bool? isActive = true, int page = 0, int pageSize = 10);
-        public Task<User> CreateUser(string addLogin, string login, string passwordHash, string email = null, string firstName = null, string lastName = null);
-        public Task<Role[]> GetRoles();
+        public Task<IEnumerable<UserDto>> SearchUsers(string phraseFilter = null, DateTime? onlineAfter = null, bool? isActive = true, int page = 0, int pageSize = 10);
+        public Task<UserDto> CreateUser(string addLogin, string login, string passwordHash, string email = null, string firstName = null, string lastName = null);
+        public Task<RoleDto[]> GetRoles();
     }
 
-    public class UserService : DbService<AppDbContext>, IUserService
+    public class UserService : DbService<DfmsDbContext>, IUserService
     {
-        public UserService(AppDbContext database, IMapper mapper) : base(database, mapper) { }
+        public UserService(DfmsDbContext database, IMapper mapper) : base(database, mapper) { }
 
         public async Task UpdateLastLoginDate(string login)
         {
@@ -104,12 +104,12 @@ namespace DFMS.Database.Services
             return await count > 0;
         }
 
-        public async Task<User> GetUser(int id)
+        public async Task<UserDto> GetUser(int id)
         {
             var query = from u in Database.Users
                         where u.Id == id
                         join r in Database.UserRoles on u.Role.Id equals r.Id
-                        select new User()
+                        select new UserDto()
                         {
                             Id = u.Id,
                             Login = u.Login,
@@ -132,12 +132,12 @@ namespace DFMS.Database.Services
             return user;
         }
 
-        public async Task<User> GetUser(string login)
+        public async Task<UserDto> GetUser(string login)
         {
             var query = from u in Database.Users
                         where u.Login == login
                         join r in Database.UserRoles on u.Role.Id equals r.Id
-                        select new User()
+                        select new UserDto()
                         {
                             Id = u.Id,
                             Login = u.Login,
@@ -160,13 +160,13 @@ namespace DFMS.Database.Services
             return user;
         }
 
-        public async Task<User> GetUser(string refreshToken, string clientIp)
+        public async Task<UserDto> GetUser(string refreshToken, string clientIp)
         {
             var query = from u in Database.Users
                         join s in Database.UserSessions on u.Id equals s.User.Id
                         join r in Database.UserRoles on u.Role.Id equals r.Id
                         where s.RefreshToken == refreshToken && s.ClientIp == clientIp && s.ValidUntil > DateTime.Now
-                        select new User()
+                        select new UserDto()
                         {
                             Id = u.Id,
                             Login = u.Login,
@@ -194,15 +194,15 @@ namespace DFMS.Database.Services
             return await GetUserSearchQuery(phraseFilter, onlineAfter, isActive).CountAsync();
         }
 
-        public async Task<IEnumerable<User>> SearchUsers(string phraseFilter = null, DateTime? onlineAfter = null, bool? isActive = true, int page = 0, int pageSize = 10)
+        public async Task<IEnumerable<UserDto>> SearchUsers(string phraseFilter = null, DateTime? onlineAfter = null, bool? isActive = true, int page = 0, int pageSize = 10)
         {
             var result = await GetUserSearchQuery(phraseFilter, onlineAfter, isActive)
                 .Skip(page * pageSize).Take(pageSize).ToListAsync();
 
-            return Mapper.Map<IEnumerable<User>>(result);
+            return Mapper.Map<IEnumerable<UserDto>>(result);
         }
 
-        public async Task<User> CreateUser(string addLogin, string login, string passwordHash, string email = null, string firstName = null, string lastName = null)
+        public async Task<UserDto> CreateUser(string addLogin, string login, string passwordHash, string email = null, string firstName = null, string lastName = null)
         {
             var newUser = new DbUser()
             {
@@ -226,14 +226,14 @@ namespace DFMS.Database.Services
                 throw new DuplicatedEntryException($"User with login [{login}] already exists", ex);
             }
 
-            var user = Mapper.Map<User>(newUser);
+            var user = Mapper.Map<UserDto>(newUser);
             return user;
         }
 
-        public async Task<Role[]> GetRoles()
+        public async Task<RoleDto[]> GetRoles()
         {
             var query = from r in Database.UserRoles
-                        select new Role()
+                        select new RoleDto()
                         {
                             Id = r.Id,
                             Name = r.Name,

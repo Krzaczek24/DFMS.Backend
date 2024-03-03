@@ -9,13 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFMS.Database", "DFMS.Datab
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFMS.Shared", "DFMS.Shared\DFMS.Shared.csproj", "{D26B90DC-219B-413B-A564-3A9C3EFD35FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DFMS.WebApi.Common", "DFMS.WebApi.Common\DFMS.WebApi.Common.csproj", "{24682857-C2A2-4E6E-BF51-DA325E1DF5E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFMS.WebApi.Common", "DFMS.WebApi.Common\DFMS.WebApi.Common.csproj", "{24682857-C2A2-4E6E-BF51-DA325E1DF5E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DFMS.WebApi.Authorization", "DFMS.WebApi.Authorization\DFMS.WebApi.Authorization.csproj", "{5949B323-C002-462B-A950-6FC22748A527}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFMS.WebApi.Authorization", "DFMS.WebApi.Authorization\DFMS.WebApi.Authorization.csproj", "{5949B323-C002-462B-A950-6FC22748A527}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DFMS.WebApi.Permissions", "DFMS.WebApi.Permissions\DFMS.WebApi.Permissions.csproj", "{5052578B-B1A3-43FF-BF6A-B0E5626F4F2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFMS.WebApi.Permissions", "DFMS.WebApi.Permissions\DFMS.WebApi.Permissions.csproj", "{5052578B-B1A3-43FF-BF6A-B0E5626F4F2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DFMS.WebApi.Workspaces", "DFMS.WebApi.Workspaces\DFMS.WebApi.Workspaces.csproj", "{AE464791-784D-4D98-84A6-4A8DFD7A5E37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFMS.WebApi.Workspaces", "DFMS.WebApi.Workspaces\DFMS.WebApi.Workspaces.csproj", "{AE464791-784D-4D98-84A6-4A8DFD7A5E37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

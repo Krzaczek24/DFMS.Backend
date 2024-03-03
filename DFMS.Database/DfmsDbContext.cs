@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace DFMS.Database
 {
-    public class AppDbContext : DbContext
+    public class DfmsDbContext : DbContext
     {
-        private static readonly string[] UNMODIFIABLE_PROPERTIES = new[] { "" };
+        private static readonly string[] UNMODIFIABLE_PROPERTIES = [""];
 
         internal virtual DbSet<DbDictionary> Dictionaries { get; set; }
         internal virtual DbSet<DbFormFavourite> FavouriteForms { get; set; }
@@ -53,7 +53,7 @@ namespace DFMS.Database
         internal virtual DbSet<DbWorkspace> Workspaces { get; set; }
         internal virtual DbSet<DbWorkspaceUser> WorkspaceUsers { get; set; }
 
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        public DfmsDbContext(DbContextOptions<DfmsDbContext> options) : base(options) { }
 
         public override sealed int SaveChanges()
         {
@@ -85,12 +85,12 @@ namespace DFMS.Database
 
             foreach (Type tableType in tablesToMap)
             {
-                string mapTypeFullName = tableType.FullName.Replace("Models", "Mappings") + "Map";
-                Type mapType = GetType().Assembly.GetType(mapTypeFullName);
+                string mapTypeFullName = tableType.FullName!.Replace("Models", "Mappings") + "Map";
+                Type mapType = GetType().Assembly.GetType(mapTypeFullName)!;
                 if (mapType == null)
                     throw new NotImplementedException($"There is missing [{mapTypeFullName.Split('.').Last()}] for [{tableType.Name}]");
                 var builder = method.MakeGenericMethod(tableType).Invoke(modelBuilder, null);
-                dynamic configurtionInstance = Activator.CreateInstance(mapType, builder);
+                dynamic? configurtionInstance = Activator.CreateInstance(mapType, builder);
                 configurations.Add(configurtionInstance);
             }
 
@@ -108,7 +108,7 @@ namespace DFMS.Database
                 switch (entityEntry.State)
                 {
                     case EntityState.Modified:
-                        if (!entity.Active.Value)
+                        if (!entity.Active!.Value)
                             throw new InvalidOperationException("Cannot modify inactive records");
                         foreach (string member in DbTableCommonModel.UnmodifiableMembers)
                             if (entityEntry.Member(member).IsModified)

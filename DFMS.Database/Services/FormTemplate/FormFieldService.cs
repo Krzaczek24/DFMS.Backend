@@ -12,20 +12,20 @@ namespace DFMS.Database.Services.FormTemplate
 {
     public interface IFormFieldService
     {
-        public Task<ICollection<FormFieldDefinition>> GetFieldsDefinitions(string userLogin);
+        public Task<ICollection<FormFieldDefinitionDto>> GetFieldsDefinitions(string userLogin);
         public Task<bool> RemovePredefiniedFieldDefinition(int id);
     }
 
-    public class FormFieldService : DbService<AppDbContext>, IFormFieldService
+    public class FormFieldService : DbService<DfmsDbContext>, IFormFieldService
     {
         private static IReadOnlyDictionary<string, IReadOnlyCollection<string>> _fieldValueTypes;
         private IReadOnlyDictionary<string, IReadOnlyCollection<string>> FieldValueTypes => _fieldValueTypes ??= GetFieldValueTypes().Result;
 
-        public FormFieldService(AppDbContext database, IMapper mapper) : base(database, mapper) { }
+        public FormFieldService(DfmsDbContext database, IMapper mapper) : base(database, mapper) { }
 
-        public async Task<ICollection<FormFieldDefinition>> GetFieldsDefinitions(string userLogin)
+        public async Task<ICollection<FormFieldDefinitionDto>> GetFieldsDefinitions(string userLogin)
         {
-            var fieldDefinitions = new List<FormFieldDefinition>();
+            var fieldDefinitions = new List<FormFieldDefinitionDto>();
             fieldDefinitions.AddRange(await GetBaseFormFieldDefinitions());
             fieldDefinitions.AddRange(await GetPredefiniedFormFieldsDefinitions(userLogin));
             return fieldDefinitions.OrderBy(fd => fd.Title).ToList();
@@ -67,13 +67,13 @@ namespace DFMS.Database.Services.FormTemplate
             return fieldValueTypes;
         }
 
-        private async Task<List<FormFieldDefinition>> GetBaseFormFieldDefinitions()
+        private async Task<List<FormFieldDefinitionDto>> GetBaseFormFieldDefinitions()
         {
             var baseFields = await Database.FormFieldDefinitions
                 .ActiveWhere(ffd => ffd.Visible == true)
                 .ToListAsync();
 
-            var mappedFields = Mapper.Map<List<FormFieldDefinition>>(baseFields);
+            var mappedFields = Mapper.Map<List<FormFieldDefinitionDto>>(baseFields);
 
             foreach (var field in mappedFields)
             {
@@ -83,7 +83,7 @@ namespace DFMS.Database.Services.FormTemplate
             return mappedFields;
         }
 
-        private async Task<List<FormFieldDefinition>> GetPredefiniedFormFieldsDefinitions(string userLogin)
+        private async Task<List<FormFieldDefinitionDto>> GetPredefiniedFormFieldsDefinitions(string userLogin)
         {
             var predefiniedFields = await Database.FormPredefiniedFields
                 .ActiveWhere(fpf => fpf.Global == true || fpf.AddLogin == userLogin)
@@ -91,7 +91,7 @@ namespace DFMS.Database.Services.FormTemplate
                 .Include(fpf => fpf.ValueType)
                 .ToListAsync();
 
-            var predefiniedMappedFields = Mapper.Map<List<FormFieldDefinition>>(predefiniedFields);
+            var predefiniedMappedFields = Mapper.Map<List<FormFieldDefinitionDto>>(predefiniedFields);
 
             return predefiniedMappedFields;
         }

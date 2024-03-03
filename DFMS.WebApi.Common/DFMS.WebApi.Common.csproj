@@ -18,8 +18,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\DFMS.Database\DFMS.Database.csproj" />
-	  <ProjectReference Include="..\DFMS.Shared\DFMS.Shared.csproj" />
+		<ProjectReference Include="..\DFMS.Database\DFMS.Database.csproj" />
+		<ProjectReference Include="..\DFMS.Shared\DFMS.Shared.csproj" />
 	</ItemGroup>
 
 </Project>

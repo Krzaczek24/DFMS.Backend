@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using DFMS.Database.Exceptions;
-using DFMS.Database.Services;
+using DFMS.Database.Services.Permissions;
+using DFMS.Shared.Exceptions;
 using DFMS.WebApi.Common.Attributes;
 using DFMS.WebApi.Common.Controllers;
 using DFMS.WebApi.Common.Errors;
@@ -16,16 +16,16 @@ namespace DFMS.WebApi.Permissions.Controllers
     [Authorize]
     [ApiController]
     [ApiRoute("permission/group")]
-    public class PermissionGroupController(IMapper mapper, IPermissionService permissionService) : ResponseController(mapper)
+    public class PermissionGroupController(IMapper mapper, IPermissionGroupService service) : ResponseController(mapper)
     {
-        private IPermissionService PermissionService { get; } = permissionService;
+        private IPermissionGroupService Service { get; } = service;
 
         [HttpPost]
         public async Task<int> CreateGroup([FromBody] AddPermissionGroupInput input)
         {
             try
             {
-                return await PermissionService.CreatePermissionGroup(User.GetLogin(), input.Name, input.Description);
+                return await Service.CreatePermissionGroup(User.GetLogin(), input.Name, input.Description);
             }
             catch (DuplicatedEntryException)
             {
@@ -38,7 +38,7 @@ namespace DFMS.WebApi.Permissions.Controllers
         {
             try
             {
-                if (!await PermissionService.UpdatePermissionGroup(id, User.GetLogin(), input.Name, input.Description, input.Active))
+                if (!await Service.UpdatePermissionGroup(id, User.GetLogin(), input.Name, input.Description, input.Active))
                     throw new NotFoundException(ErrorCode.ResourceNotFound);
             }
             catch (DuplicatedEntryException)
@@ -52,7 +52,7 @@ namespace DFMS.WebApi.Permissions.Controllers
         {
             try
             {
-                if (!await PermissionService.RemovePermissionGroup(id))
+                if (!await Service.RemovePermissionGroup(id))
                     throw new NotFoundException(ErrorCode.ResourceNotFound);
             }
             catch (CannotDeleteOrUpdateException)

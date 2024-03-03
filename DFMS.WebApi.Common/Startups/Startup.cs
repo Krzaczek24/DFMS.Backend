@@ -42,7 +42,7 @@ namespace DFMS.WebApi.Common.Startups
             // dotnet user-secrets init
             // dotnet user-secrets set ConnectionStrings:DFMSdatabase "server=<server_address;port=<server_port>;user id=<username>;password=<pasword>;database=<scheme>"
             // rmb project + 'manage user secrets'
-            services.AddDbContext<AppDbContext>(options =>
+            services.AddDbContext<DfmsDbContext>(options =>
             {
                 options.UseMySQL(Configuration.GetConnectionString(ConfigurationKeys.DatabaseConnectionKey)!);
 #if DEBUG
@@ -50,7 +50,7 @@ namespace DFMS.WebApi.Common.Startups
 #endif
             });
 
-            services.AddCoreScopedServices(typeof(AppDbContext).Assembly!);
+            services.AddCoreScopedServices(typeof(DfmsDbContext).Assembly!);
 
             // `ReferenceHandler.IgnoreCycles` helps to handle cyclic references in entity framework core database models
             services.AddControllers().AddJsonOptions(opts => {

@@ -1,8 +1,8 @@
 using AutoMapper;
 using Core.WebApi.Extensions;
 using DFMS.Database.Dto.Users;
-using DFMS.Database.Exceptions;
 using DFMS.Database.Services;
+using DFMS.Shared.Exceptions;
 using DFMS.WebApi.Authorization.Models.DataContracts;
 using DFMS.WebApi.Authorization.Token;
 using DFMS.WebApi.Common.Constants;
@@ -77,7 +77,7 @@ namespace DFMS.WebApi.Controllers
             }
         }
 
-        private async Task<AuthenticateOutput> GenerateTokens(User user, Func<string, string?, string, DateTime?, Task> refreshTokenFunc)
+        private async Task<AuthenticateOutput> GenerateTokens(UserDto user, Func<string, string?, string, DateTime?, Task> refreshTokenFunc)
         {
             var tokenBuilder = new TokenBuilder(Configuration[Common.Constants.ConfigurationKeys.ApiKey]!);
             string refreshToken = tokenBuilder.GenerateRefreshToken(out DateTime? validUntil);

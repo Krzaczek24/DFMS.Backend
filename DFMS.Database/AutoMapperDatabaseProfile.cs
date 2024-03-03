@@ -11,17 +11,17 @@ namespace DFMS.Database
     {
         public AutoMapperDatabaseProfile()
         {
-            CreateMap<DbFormFieldDefinition, FormFieldDefinition>();
-            CreateMap<DbFormPredefiniedField, FormFieldDefinition>()
+            CreateMap<DbFormFieldDefinition, FormFieldDefinitionDto>();
+            CreateMap<DbFormPredefiniedField, FormFieldDefinitionDto>()
                 .ForMember(dest => dest.Type, opts => opts.MapFrom(src => src.BaseDefinition.Type))
                 .ForMember(dest => dest.ValueTypes, opts => opts.MapFrom(src => new[] { src.ValueType.Code }));
 
-            CreateMap<DbFormFieldValidationRuleDefinition, FormFieldValidationRuleDefinition>()
+            CreateMap<DbFormFieldValidationRuleDefinition, FormFieldValidationRuleDefinitionDto>()
                 .ForMember(dest => dest.Type, opts => opts.MapFrom(src => src.ValidationType.Code))
                 .ForMember(dest => dest.Message, opts => opts.MapFrom(src => src.DefaultMessage))
                 .ForMember(dest => dest.Value, opts => opts.MapFrom(src => src.DefaultValue));
 
-            CreateMap<DbUser, User>()
+            CreateMap<DbUser, UserDto>()
                 .ForMember(dest => dest.Permissions, opts => opts.MapFrom(src => new string[] { }))
                 .ForMember(dest => dest.Role, opts => opts.MapFrom(src => Enum.Parse<UserRole>(src.Role.Name, true)));
         }

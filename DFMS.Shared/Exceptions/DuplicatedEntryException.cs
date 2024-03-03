@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DFMS.Database.Exceptions
+namespace DFMS.Shared.Exceptions
 {
     public class DuplicatedEntryException : Exception
     {

@@ -20,20 +20,20 @@ namespace DFMS.WebApi.Controllers
         private IFormFieldValidationService FormFieldValidationService { get; } = formFieldValidationService;
 
         [HttpGet]
-        public async Task<ICollection<FormFieldValidationRuleDefinition>> GetValidationDefinitions()
+        public async Task<ICollection<FormFieldValidationRuleDefinitionDto>> GetValidationDefinitions()
         {
             return await FormFieldValidationService.GetValidationDefinitions(User.GetLogin());
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateValidationDefinition([FromBody] FormFieldValidationRuleDefinition validationDefinition)
+        public async Task<IActionResult> CreateValidationDefinition([FromBody] FormFieldValidationRuleDefinitionDto validationDefinition)
         {
             int id = await FormFieldValidationService.CreateValidationDefinition(validationDefinition);
             return Created(new Uri("~/validations/definitions/" + id), null);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateValidationDefinition([FromRoute] int id, [FromBody] FormFieldValidationRuleDefinition validationDefinition)
+        public async Task<IActionResult> UpdateValidationDefinition([FromRoute] int id, [FromBody] FormFieldValidationRuleDefinitionDto validationDefinition)
         {
             bool replaced = await FormFieldValidationService.UpdateValidationDefinition(id, validationDefinition);
             return replaced ? NoContent() : Created(new Uri("~/validations/definitions/" + id), null);

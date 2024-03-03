@@ -2,7 +2,7 @@
 
 namespace DFMS.Database.Dto.FormTemplate
 {
-    public class FormFieldValidationRuleDefinition
+    public class FormFieldValidationRuleDefinitionDto
     {
         public string Title { get; set; }
         public string Type { get; set; }

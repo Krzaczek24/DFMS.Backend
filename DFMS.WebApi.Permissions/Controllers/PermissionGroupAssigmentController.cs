@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using DFMS.Database.Exceptions;
-using DFMS.Database.Services;
+using DFMS.Database.Services.Permissions;
+using DFMS.Shared.Exceptions;
 using DFMS.WebApi.Common.Attributes;
 using DFMS.WebApi.Common.Controllers;
 using DFMS.WebApi.Common.Errors;
@@ -15,9 +15,9 @@ namespace DFMS.WebApi.Permissions.Controllers
     [Authorize]
     [ApiController]
     [ApiRoute("permission/{permission-id}/group/{group-id}")]
-    public class PermissionGroupAssigmentController(IMapper mapper, IPermissionService permissionService) : ResponseController(mapper)
+    public class PermissionGroupAssigmentController(IMapper mapper, IPermissionToGroupAssigmentService service) : ResponseController(mapper)
     {
-        private IPermissionService PermissionService { get; } = permissionService;
+        private IPermissionToGroupAssigmentService Service { get; } = service;
 
         [HttpPost]
         public async Task AddPermissionToGroup(
@@ -26,7 +26,7 @@ namespace DFMS.WebApi.Permissions.Controllers
         {
             try
             {
-                await PermissionService.AddPermissionToGroup(User.GetLogin(), groupId, permissionId);
+                await Service.AddPermissionToGroup(User.GetLogin(), groupId, permissionId);
             }
             catch (DuplicatedEntryException)
             {
@@ -41,7 +41,7 @@ namespace DFMS.WebApi.Permissions.Controllers
         {
             try
             {
-                if (!await PermissionService.RemovePermissionFromGroup(groupId, permissionId))
+                if (!await Service.RemovePermissionFromGroup(groupId, permissionId))
                     throw new NotFoundException(ErrorCode.ResourceNotFound);
             }
             catch (CannotDeleteOrUpdateException)

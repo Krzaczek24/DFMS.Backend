@@ -24,7 +24,7 @@ namespace DFMS.WebApi.Authorization.Token
             Key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(key));
         }
 
-        public string GenerateAccessToken(User user)
+        public string GenerateAccessToken(UserDto user)
         {
             DateTime now = DateTime.UtcNow;
 

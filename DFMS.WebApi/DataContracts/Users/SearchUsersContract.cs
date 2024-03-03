@@ -18,6 +18,6 @@ namespace DFMS.WebApi.DataContracts.Users
     {
         public int TotalResults { get; set; }
 
-        public IEnumerable<User> Results { get; set; } = new List<User>();
+        public IEnumerable<UserDto> Results { get; set; } = new List<UserDto>();
     }
 }
