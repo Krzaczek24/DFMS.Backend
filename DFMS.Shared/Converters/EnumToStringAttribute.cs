@@ -1,4 +1,4 @@
-﻿using KrzaqTools.StringNotationExtension;
+﻿using KrzaqTools.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Reflection;

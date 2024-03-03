@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using DFMS.Database.Services;
 using DFMS.Shared.Enums;
-using DFMS.WebApi.Core.Attributes;
-using DFMS.WebApi.Core.Controllers;
+using DFMS.WebApi.Common.Attributes;
+using DFMS.WebApi.Common.Controllers;
 using DFMS.WebApi.DataContracts.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

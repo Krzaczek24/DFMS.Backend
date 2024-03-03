@@ -4,7 +4,6 @@ using DFMS.Database.Dto.Users;
 using DFMS.Database.Exceptions;
 using DFMS.Database.Models;
 using DFMS.Shared.Enums;
-using KrzaqTools;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -91,7 +90,7 @@ namespace DFMS.Database.Services
             {
                 session.ValidUntil = validUntil;
                 session.RefreshToken = newRefreshToken;
-            };
+            }
 
             return await Database.SaveChangesAsync() > 0;
         }

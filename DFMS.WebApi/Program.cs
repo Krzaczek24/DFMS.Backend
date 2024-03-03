@@ -1,3 +1,5 @@
+using DFMS.WebApi.Common.Constants;
+using DFMS.WebApi.Common.Startups;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -12,7 +14,7 @@ namespace DFMS.WebApi
 {
     public class Program
     {
-        private static Logger Logger { get; set; }
+        private static Logger? Logger { get; set; }
 
         public static void Main(string[] args)
         {
@@ -21,16 +23,16 @@ namespace DFMS.WebApi
             try
             {
 #if DEBUG
-                const int frontendPort = 3000;
-                if (GetProcessIdByPort(frontendPort).HasValue)
-                {
-                    Logger.Info($"> React Frontend already running on [{frontendPort}] port");
-                }
-                else
-                {
-                    Logger.Info("> Starting React Frontend");
-                    RunFrontendProcess();
-                }
+                //const int frontendPort = 3000;
+                //if (GetProcessIdByPort(frontendPort).HasValue)
+                //{
+                //    Logger.Info($"> React Frontend already running on [{frontendPort}] port");
+                //}
+                //else
+                //{
+                //    Logger.Info("> Starting React Frontend");
+                //    RunFrontendProcess();
+                //}
 #endif
                 Logger.Info("> Starting WebApi");
                 CreateHostBuilder(args).UseNLog().Build().Run();
@@ -53,7 +55,10 @@ namespace DFMS.WebApi
                 {
                     webBuilder.ConfigureLogging(config => config.ClearProviders());
                     webBuilder.UseNLog();
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup(builder => new Startup(builder.Configuration, new StartupSettings()
+                    {
+                        Swagger = new SwaggerSettings(ControllerGroup.Api, "DFMS.WebApi")
+                    }));
                 });
 
         private static int? GetProcessIdByPort(int port)

@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using DFMS.Database.Dto.FormTemplate;
 using DFMS.Database.Services.FormTemplate;
-using DFMS.WebApi.Authorization;
-using DFMS.WebApi.Core.Attributes;
-using DFMS.WebApi.Core.Controllers;
+using DFMS.WebApi.Common.Attributes;
+using DFMS.WebApi.Common.Controllers;
+using DFMS.WebApi.Common.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -15,14 +15,9 @@ namespace DFMS.WebApi.Controllers
     [Authorize]
     [ApiController]
     [ApiRoute("form-template/field-validation")]
-    public class FormTemplateFieldValidationController : ResponseController
+    public class FormTemplateFieldValidationController(IMapper mapper, IFormFieldValidationService formFieldValidationService) : ResponseController(mapper)
     {
-        private IFormFieldValidationService FormFieldValidationService { get; }
-
-        public FormTemplateFieldValidationController(IMapper mapper, IFormFieldValidationService formFieldValidationService) : base(mapper)
-        {
-            FormFieldValidationService = formFieldValidationService;
-        }
+        private IFormFieldValidationService FormFieldValidationService { get; } = formFieldValidationService;
 
         [HttpGet]
         public async Task<ICollection<FormFieldValidationRuleDefinition>> GetValidationDefinitions()

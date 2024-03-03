@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using DFMS.Database.Dto.FormTemplate;
 using DFMS.Database.Services.FormTemplate;
-using DFMS.WebApi.Authorization;
-using DFMS.WebApi.Core.Attributes;
-using DFMS.WebApi.Core.Controllers;
-using DFMS.WebApi.Core.Exceptions;
+using DFMS.WebApi.Common.Attributes;
+using DFMS.WebApi.Common.Controllers;
+using DFMS.WebApi.Common.Exceptions;
+using DFMS.WebApi.Common.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -15,14 +15,9 @@ namespace DFMS.WebApi.Controllers
     [Authorize]
     [ApiController]
     [ApiRoute("form-template/field-definitions")]
-    public class FormTemplateFieldsController : ResponseController
+    public class FormTemplateFieldsController(IMapper mapper, IFormFieldService formFieldService) : ResponseController(mapper)
     {
-        private IFormFieldService FormFieldService { get; }
-
-        public FormTemplateFieldsController(IMapper mapper, IFormFieldService formFieldService) : base(mapper)
-        {
-            FormFieldService = formFieldService;
-        }
+        private IFormFieldService FormFieldService { get; } = formFieldService;
 
         [HttpGet]
         public async Task<ICollection<FormFieldDefinition>> GetFieldsDefinitions()

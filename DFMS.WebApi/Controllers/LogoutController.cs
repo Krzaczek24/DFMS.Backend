@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Core.WebApi.Extensions;
 using DFMS.Database.Services;
-using DFMS.WebApi.Authorization;
-using DFMS.WebApi.Core.Attributes;
-using DFMS.WebApi.Core.Controllers;
+using DFMS.WebApi.Common.Attributes;
+using DFMS.WebApi.Common.Controllers;
+using DFMS.WebApi.Common.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -13,14 +13,9 @@ namespace DFMS.WebApi.Controllers
     [Authorize]
     [ApiController]
     [ApiRoute]
-    public class LogoutController : ResponseController
+    public class LogoutController(IMapper mapper, IUserService userService) : ResponseController(mapper)
     {
-        private IUserService UserService { get; }
-
-        public LogoutController(IMapper mapper, IUserService userService) : base(mapper)
-        {
-            UserService = userService;
-        }
+        private IUserService UserService { get; } = userService;
 
         [HttpPost("logout")]
         public async Task Logout() => await Logout(HttpContext.GetClientIp());

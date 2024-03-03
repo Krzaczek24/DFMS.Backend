@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFMS.Database", "DFMS.Datab
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFMS.Shared", "DFMS.Shared\DFMS.Shared.csproj", "{D26B90DC-219B-413B-A564-3A9C3EFD35FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DFMS.WebApi.Common", "DFMS.WebApi.Common\DFMS.WebApi.Common.csproj", "{24682857-C2A2-4E6E-BF51-DA325E1DF5E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DFMS.WebApi.Authorization", "DFMS.WebApi.Authorization\DFMS.WebApi.Authorization.csproj", "{5949B323-C002-462B-A950-6FC22748A527}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{D26B90DC-219B-413B-A564-3A9C3EFD35FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D26B90DC-219B-413B-A564-3A9C3EFD35FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D26B90DC-219B-413B-A564-3A9C3EFD35FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24682857-C2A2-4E6E-BF51-DA325E1DF5E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24682857-C2A2-4E6E-BF51-DA325E1DF5E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24682857-C2A2-4E6E-BF51-DA325E1DF5E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24682857-C2A2-4E6E-BF51-DA325E1DF5E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5949B323-C002-462B-A950-6FC22748A527}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5949B323-C002-462B-A950-6FC22748A527}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5949B323-C002-462B-A950-6FC22748A527}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5949B323-C002-462B-A950-6FC22748A527}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

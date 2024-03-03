@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using DFMS.WebApi.Core.Attributes;
-using DFMS.WebApi.Core.Controllers;
+using DFMS.WebApi.Common.Attributes;
+using DFMS.WebApi.Common.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,8 +9,7 @@ namespace DFMS.WebApi.Controllers
     [Authorize]
     [ApiController]
     [ApiRoute("form-template/visibility-rules")]
-    public class FormTemplateFieldVisibilityController : ResponseController
+    public class FormTemplateFieldVisibilityController(IMapper mapper) : ResponseController(mapper)
     {
-        public FormTemplateFieldVisibilityController(IMapper mapper) : base(mapper) { }
     }
 }

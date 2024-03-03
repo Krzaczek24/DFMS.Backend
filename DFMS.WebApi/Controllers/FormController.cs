@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using DFMS.WebApi.Core.Attributes;
-using DFMS.WebApi.Core.Controllers;
+using DFMS.WebApi.Common.Attributes;
+using DFMS.WebApi.Common.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,8 +9,7 @@ namespace DFMS.WebApi.Controllers
     [Authorize]
     [ApiController]
     [ApiRoute("form")]
-    public class FormController : ResponseController
+    public class FormController(IMapper mapper) : ResponseController(mapper)
     {
-        public FormController(IMapper mapper) : base(mapper) { }
     }
 }
