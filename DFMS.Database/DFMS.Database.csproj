@@ -8,7 +8,7 @@
 	
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="12.0.1" />
-		<PackageReference Include="Core.Database.EntityFrameworkCore" Version="1.1.0" />
+		<PackageReference Include="Core.Database.EntityFrameworkCore" Version="1.2.0" />
 		<PackageReference Include="Krzaq.Extensions.NullableBoolean" Version="1.0.0" />
 		<PackageReference Include="Krzaq.Extensions.ReadOnlyDictionary" Version="1.0.0" />
 		<PackageReference Include="Krzaq.ReflectionToolbox" Version="1.0.0" />
