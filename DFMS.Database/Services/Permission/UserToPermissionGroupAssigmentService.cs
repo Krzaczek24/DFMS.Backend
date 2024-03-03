@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DFMS.Database.Services.Permissions
 {
-    public interface IUserToGroupAssigmentService
+    public interface IUserToPermissionGroupAssigmentService
     {
         Task AssignUserToPermissionGroup(string creatorLogin, int permissionGroupId, int userId, DateTime? validUntil = null);
         Task<bool> UpdateUserPermissionGroupAssignment(string updaterLogin, int permissionGroupId, int userId, Specifiable<DateTime?> validUntil);
@@ -19,7 +19,7 @@ namespace DFMS.Database.Services.Permissions
     }
 
     public class UserToPermissionGroupAssigmentService(DfmsDbContext database, IMapper mapper)
-        : DbService<DfmsDbContext>(database, mapper), IUserToGroupAssigmentService
+        : DbService<DfmsDbContext>(database, mapper), IUserToPermissionGroupAssigmentService
     {
         /// <summary>
         /// 

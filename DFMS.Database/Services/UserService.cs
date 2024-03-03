@@ -15,16 +15,16 @@ namespace DFMS.Database.Services
     public interface IUserService
     {
         public Task UpdateLastLoginDate(string login);
-        public Task RemoveRefreshTokens(string login, string clientIp);
-        public Task SaveNewRefreshToken(string login, string clientIp, string refreshToken, DateTime? validUntil);
-        public Task<bool> UpdateRefreshToken(string login, string clientIp, string newRefreshToken, DateTime? validUntil);
+        public Task RemoveRefreshTokens(string login, string? clientIp);
+        public Task SaveNewRefreshToken(string login, string? clientIp, string refreshToken, DateTime? validUntil);
+        public Task<bool> UpdateRefreshToken(string login, string? clientIp, string newRefreshToken, DateTime? validUntil);
         public Task<bool> AuthenticateUser(string login, string passwordHash);
         public Task<UserDto> GetUser(int id);
         public Task<UserDto> GetUser(string login);
-        public Task<UserDto> GetUser(string refreshToken, string clientIp);
+        public Task<UserDto> GetUser(string refreshToken, string? clientIp);
         public Task<int> GetUsersCount(string phraseFilter, DateTime? onlineAfter = null, bool? isActive = true);
         public Task<IEnumerable<UserDto>> SearchUsers(string phraseFilter = null, DateTime? onlineAfter = null, bool? isActive = true, int page = 0, int pageSize = 10);
-        public Task<UserDto> CreateUser(string addLogin, string login, string passwordHash, string email = null, string firstName = null, string lastName = null);
+        public Task<UserDto> CreateUser(string addLogin, string login, string passwordHash, string? email = null, string? firstName = null, string? lastName = null);
         public Task<RoleDto[]> GetRoles();
     }
 
@@ -39,7 +39,7 @@ namespace DFMS.Database.Services
                 .ExecuteUpdateAsync(q => q.SetProperty(p => p.LastLoginDate, DateTime.Now));
         }
 
-        public async Task RemoveRefreshTokens(string login, string clientIp)
+        public async Task RemoveRefreshTokens(string login, string? clientIp)
         {
             var sessions = await (from us in Database.UserSessions
                                   join u in Database.Users on us.User.Id equals u.Id
@@ -53,7 +53,7 @@ namespace DFMS.Database.Services
             await Database.SaveChangesAsync();
         }
 
-        public async Task SaveNewRefreshToken(string login, string clientIp, string refreshToken, DateTime? validUntil)
+        public async Task SaveNewRefreshToken(string login, string? clientIp, string refreshToken, DateTime? validUntil)
         {
             if (await UpdateRefreshToken(login, clientIp, refreshToken, validUntil))
                 return;
@@ -78,7 +78,7 @@ namespace DFMS.Database.Services
             }
         }
 
-        public async Task<bool> UpdateRefreshToken(string login, string clientIp, string newRefreshToken, DateTime? validUntil)
+        public async Task<bool> UpdateRefreshToken(string login, string? clientIp, string newRefreshToken, DateTime? validUntil)
         {
             var sessions = await (from us in Database.UserSessions
                                   join u in Database.Users on us.User.Id equals u.Id
@@ -160,7 +160,7 @@ namespace DFMS.Database.Services
             return user;
         }
 
-        public async Task<UserDto> GetUser(string refreshToken, string clientIp)
+        public async Task<UserDto> GetUser(string refreshToken, string? clientIp)
         {
             var query = from u in Database.Users
                         join s in Database.UserSessions on u.Id equals s.User.Id
@@ -202,7 +202,7 @@ namespace DFMS.Database.Services
             return Mapper.Map<IEnumerable<UserDto>>(result);
         }
 
-        public async Task<UserDto> CreateUser(string addLogin, string login, string passwordHash, string email = null, string firstName = null, string lastName = null)
+        public async Task<UserDto> CreateUser(string addLogin, string login, string passwordHash, string? email = null, string? firstName = null, string? lastName = null)
         {
             var newUser = new DbUser()
             {

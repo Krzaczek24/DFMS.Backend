@@ -7,17 +7,19 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Core.WebApi" Version="1.4.5" />
+		<!--<PackageReference Include="Core.WebApi" Version="1.4.5" />-->
 		<PackageReference Include="Krzaq.Extensions.Enum" Version="1.0.0" />
 		<PackageReference Include="Krzaq.Extensions.IEnumerable" Version="1.3.0" />
 		<PackageReference Include="Krzaq.Extensions.StringNotation" Version="1.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.2" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="NLog.Extensions.Logging" Version="5.3.8" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\..\..\WebAppCore\Core.WebApi\Core.WebApi.csproj" />
 		<ProjectReference Include="..\DFMS.Database\DFMS.Database.csproj" />
 		<ProjectReference Include="..\DFMS.Shared\DFMS.Shared.csproj" />
 	</ItemGroup>

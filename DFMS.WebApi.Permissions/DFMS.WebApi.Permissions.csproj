@@ -12,7 +12,6 @@
 		<PackageReference Include="NLog.Web.AspNetCore" Version="5.3.8" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\DFMS.Database.Permissions\DFMS.Database.Permissions.csproj" />
 		<ProjectReference Include="..\DFMS.WebApi.Common\DFMS.WebApi.Common.csproj" />
 	</ItemGroup>
 	<ItemGroup>

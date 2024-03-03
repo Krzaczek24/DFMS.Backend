@@ -5,10 +5,10 @@ namespace DFMS.WebApi.Authorization.Models.DataContracts
     public class RegisterInput
     {
         [Required]
-        public string? Username { get; set; }
+        public string Username { get; set; } = string.Empty;
 
         [Required]
-        public string? PasswordHash { get; set; }
+        public string PasswordHash { get; set; } = string.Empty;
 
         public string? FirstName { get; set; }
 

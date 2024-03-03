@@ -79,7 +79,7 @@ namespace DFMS.WebApi.Controllers
 
         private async Task<AuthenticateOutput> GenerateTokens(UserDto user, Func<string, string?, string, DateTime?, Task> refreshTokenFunc)
         {
-            var tokenBuilder = new TokenBuilder(Configuration[Common.Constants.ConfigurationKeys.ApiKey]!);
+            var tokenBuilder = new TokenBuilder(Configuration[ConfigurationKeys.ApiKey]!);
             string refreshToken = tokenBuilder.GenerateRefreshToken(out DateTime? validUntil);
             var saveRefreshTokenTask = refreshTokenFunc(user.Login, HttpContext.GetClientIp(), refreshToken, validUntil);
             string accessToken = tokenBuilder.GenerateAccessToken(user);

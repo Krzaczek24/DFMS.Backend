@@ -16,9 +16,9 @@ namespace DFMS.WebApi.Permissions.Controllers
     [Authorize]
     [ApiController]
     [ApiRoute("permission/group/{group-id}/user/{user-id}")]
-    public class PermissionUserAssigmentController(IMapper mapper, IUserToGroupAssigmentService service) : ResponseController(mapper)
+    public class PermissionUserAssigmentController(IMapper mapper, IUserToPermissionGroupAssigmentService service) : ResponseController(mapper)
     {
-        private IUserToGroupAssigmentService Service { get; } = service;
+        private IUserToPermissionGroupAssigmentService Service { get; } = service;
 
         [HttpPost]
         public async Task AssignUserToPermissionGroup(

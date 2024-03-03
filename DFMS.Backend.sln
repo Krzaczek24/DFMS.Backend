@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFMS.WebApi.Permissions", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DFMS.WebApi.Workspaces", "DFMS.WebApi.Workspaces\DFMS.WebApi.Workspaces.csproj", "{AE464791-784D-4D98-84A6-4A8DFD7A5E37}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.WebApi", "..\..\WebAppCore\Core.WebApi\Core.WebApi.csproj", "{EB996799-D666-4048-BF38-E378F40DCA17}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{AE464791-784D-4D98-84A6-4A8DFD7A5E37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE464791-784D-4D98-84A6-4A8DFD7A5E37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE464791-784D-4D98-84A6-4A8DFD7A5E37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB996799-D666-4048-BF38-E378F40DCA17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB996799-D666-4048-BF38-E378F40DCA17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB996799-D666-4048-BF38-E378F40DCA17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB996799-D666-4048-BF38-E378F40DCA17}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

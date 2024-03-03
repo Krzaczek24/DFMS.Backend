@@ -43,7 +43,7 @@ namespace DFMS.WebApi.Authorization
                 webBuilder.UseNLog();
                 webBuilder.UseStartup(builder => new Startup(builder.Configuration, new StartupSettings()
                 {
-                    Swagger = new SwaggerSettings(ControllerGroup.Api, $"DFMS.{ModuleName}")
+                    Swagger = new SwaggerSettings(ControllerGroup.Auth, $"DFMS.{ModuleName}")
                 }));
             });
     }
