@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
+#nullable enable
 namespace DFMS.Database.Services.Permissions
 {
     public interface IPermissionService
@@ -106,7 +107,7 @@ namespace DFMS.Database.Services.Permissions
                             Id = upg.Id,
                             Name = upg.Name,
                             Description = upg.Description,
-                            Active = upg.Active.Value,
+                            Active = upg.IsActive(),
                             Permissions = (from upa in Database.UserPermissionAssignments
                                            join up in Database.UserPermissions on upa.Permission.Id equals up.Id
                                            where upa.PermissionGroup.Id == upg.Id
@@ -115,7 +116,7 @@ namespace DFMS.Database.Services.Permissions
                                                Id = up.Id,
                                                Name = up.Name,
                                                Description = up.Description,
-                                               Active = up.Active.Value
+                                               Active = up.IsActive()
                                            }).AsEnumerable().ToArray()
                         };
 

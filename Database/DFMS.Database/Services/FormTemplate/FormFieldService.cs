@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+#nullable enable
 namespace DFMS.Database.Services.FormTemplate
 {
     public interface IFormFieldService
@@ -18,7 +19,7 @@ namespace DFMS.Database.Services.FormTemplate
 
     public class FormFieldService : DbService<DfmsDbContext>, IFormFieldService
     {
-        private static IReadOnlyDictionary<string, IReadOnlyCollection<string>> _fieldValueTypes;
+        private static IReadOnlyDictionary<string, IReadOnlyCollection<string>>? _fieldValueTypes;
         private IReadOnlyDictionary<string, IReadOnlyCollection<string>> FieldValueTypes => _fieldValueTypes ??= GetFieldValueTypes().Result;
 
         public FormFieldService(DfmsDbContext database, IMapper mapper) : base(database, mapper) { }

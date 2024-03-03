@@ -43,7 +43,7 @@ namespace DFMS.WebApi.Controllers
 
             try
             {
-                return await GenerateTokens(user, UserService.SaveNewRefreshToken);
+                return await GenerateTokens(user!, UserService.SaveNewRefreshToken);
             }
             catch (DuplicatedEntryException)
             {

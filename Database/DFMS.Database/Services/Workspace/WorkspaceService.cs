@@ -2,6 +2,7 @@
 using Core.Database.Services;
 using System.Threading.Tasks;
 
+#nullable enable
 namespace DFMS.Database.Services.Workspace
 {
     public interface IWorkspaceService

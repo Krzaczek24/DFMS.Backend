@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+#nullable enable
 namespace DFMS.Database.Services
 {
     public interface IUserService
@@ -19,11 +20,11 @@ namespace DFMS.Database.Services
         public Task SaveNewRefreshToken(string login, string? clientIp, string refreshToken, DateTime? validUntil);
         public Task<bool> UpdateRefreshToken(string login, string? clientIp, string newRefreshToken, DateTime? validUntil);
         public Task<bool> AuthenticateUser(string login, string passwordHash);
-        public Task<UserDto> GetUser(int id);
-        public Task<UserDto> GetUser(string login);
-        public Task<UserDto> GetUser(string refreshToken, string? clientIp);
-        public Task<int> GetUsersCount(string phraseFilter, DateTime? onlineAfter = null, bool? isActive = true);
-        public Task<IEnumerable<UserDto>> SearchUsers(string phraseFilter = null, DateTime? onlineAfter = null, bool? isActive = true, int page = 0, int pageSize = 10);
+        public Task<UserDto?> GetUser(int id);
+        public Task<UserDto?> GetUser(string login);
+        public Task<UserDto?> GetUser(string refreshToken, string? clientIp);
+        public Task<int> GetUsersCount(string? phraseFilter = null, DateTime? onlineAfter = null, bool? isActive = true);
+        public Task<IEnumerable<UserDto>> SearchUsers(string? phraseFilter = null, DateTime? onlineAfter = null, bool? isActive = true, int page = 0, int pageSize = 10);
         public Task<UserDto> CreateUser(string addLogin, string login, string passwordHash, string? email = null, string? firstName = null, string? lastName = null);
         public Task<RoleDto[]> GetRoles();
     }
@@ -43,7 +44,7 @@ namespace DFMS.Database.Services
         {
             var sessions = await (from us in Database.UserSessions
                                   join u in Database.Users on us.User.Id equals u.Id
-                                  where u.Login == login && u.Active.Value
+                                  where u.Login == login && u.IsActive()
                                   select us).ToListAsync();
 
             if (!string.IsNullOrEmpty(clientIp))
@@ -61,7 +62,7 @@ namespace DFMS.Database.Services
             var newRefreshToken = new DbUserSession()
             {
                 AddLogin = login,
-                User = await Database.Users.Where(u => u.Login == login && u.Active.Value).SingleAsync(),
+                User = await Database.Users.Where(u => u.Login == login && u.IsActive()).SingleAsync(),
                 RefreshToken = refreshToken,
                 ClientIp = clientIp,
                 ValidUntil = validUntil
@@ -82,7 +83,7 @@ namespace DFMS.Database.Services
         {
             var sessions = await (from us in Database.UserSessions
                                   join u in Database.Users on us.User.Id equals u.Id
-                                  where u.Login == login && u.Active.Value
+                                  where u.Login == login && u.IsActive()
                                   && us.ClientIp == clientIp
                                   select us).ToListAsync();
 
@@ -104,7 +105,7 @@ namespace DFMS.Database.Services
             return await count > 0;
         }
 
-        public async Task<UserDto> GetUser(int id)
+        public async Task<UserDto?> GetUser(int id)
         {
             var query = from u in Database.Users
                         where u.Id == id
@@ -119,7 +120,7 @@ namespace DFMS.Database.Services
                                            join upa in Database.UserPermissionAssignments on upg.Id equals upa.PermissionGroup.Id
                                            join up in Database.UserPermissions on upa.Permission.Id equals up.Id
                                            where upga.User.Id == u.Id
-                                           && upga.Active.Value && upg.Active.Value && upa.Active.Value && up.Active.Value
+                                           && upga.IsActive() && upg.IsActive() && upa.IsActive() && up.IsActive()
                                            && (upga.ValidUntil == null || upga.ValidUntil > DateTime.Now)
                                            select up.Name).AsEnumerable().ToArray(),
                             FirstName = u.FirstName,
@@ -132,7 +133,7 @@ namespace DFMS.Database.Services
             return user;
         }
 
-        public async Task<UserDto> GetUser(string login)
+        public async Task<UserDto?> GetUser(string login)
         {
             var query = from u in Database.Users
                         where u.Login == login
@@ -147,7 +148,7 @@ namespace DFMS.Database.Services
                                            join upa in Database.UserPermissionAssignments on upg.Id equals upa.PermissionGroup.Id
                                            join up in Database.UserPermissions on upa.Permission.Id equals up.Id
                                            where upga.User.Id == u.Id
-                                           && upga.Active.Value && upg.Active.Value && upa.Active.Value && up.Active.Value
+                                           && upga.IsActive() && upg.IsActive() && upa.IsActive() && up.IsActive()
                                            && (upga.ValidUntil == null || upga.ValidUntil > DateTime.Now)
                                            select up.Name).AsEnumerable().ToArray(),
                             FirstName = u.FirstName,
@@ -160,7 +161,7 @@ namespace DFMS.Database.Services
             return user;
         }
 
-        public async Task<UserDto> GetUser(string refreshToken, string? clientIp)
+        public async Task<UserDto?> GetUser(string refreshToken, string? clientIp)
         {
             var query = from u in Database.Users
                         join s in Database.UserSessions on u.Id equals s.User.Id
@@ -176,7 +177,7 @@ namespace DFMS.Database.Services
                                            join upa in Database.UserPermissionAssignments on upg.Id equals upa.PermissionGroup.Id
                                            join up in Database.UserPermissions on upa.Permission.Id equals up.Id
                                            where upga.User.Id == u.Id
-                                           && upga.Active.Value && upg.Active.Value && upa.Active.Value && up.Active.Value
+                                           && upga.IsActive() && upg.IsActive() && upa.IsActive() && up.IsActive()
                                            && (upga.ValidUntil == null || upga.ValidUntil > DateTime.Now)
                                            select up.Name).AsEnumerable().ToArray(),
                             FirstName = u.FirstName,
@@ -189,12 +190,12 @@ namespace DFMS.Database.Services
             return user;
         }
 
-        public async Task<int> GetUsersCount(string phraseFilter, DateTime? onlineAfter = null, bool? isActive = true)
+        public async Task<int> GetUsersCount(string? phraseFilter = null, DateTime? onlineAfter = null, bool? isActive = true)
         {
             return await GetUserSearchQuery(phraseFilter, onlineAfter, isActive).CountAsync();
         }
 
-        public async Task<IEnumerable<UserDto>> SearchUsers(string phraseFilter = null, DateTime? onlineAfter = null, bool? isActive = true, int page = 0, int pageSize = 10)
+        public async Task<IEnumerable<UserDto>> SearchUsers(string? phraseFilter = null, DateTime? onlineAfter = null, bool? isActive = true, int page = 0, int pageSize = 10)
         {
             var result = await GetUserSearchQuery(phraseFilter, onlineAfter, isActive)
                 .Skip(page * pageSize).Take(pageSize).ToListAsync();
@@ -244,7 +245,7 @@ namespace DFMS.Database.Services
             return roles;
         }
 
-        private IQueryable<DbUser> GetUserSearchQuery(string phraseFilter, DateTime? onlineAfter = null, bool? isActive = true)
+        private IQueryable<DbUser> GetUserSearchQuery(string? phraseFilter = null, DateTime? onlineAfter = null, bool? isActive = true)
         {
             const StringComparison comparison = StringComparison.InvariantCultureIgnoreCase;
 
@@ -254,7 +255,7 @@ namespace DFMS.Database.Services
                 query = query.Where(u => u.LastLoginDate != null && u.LastLoginDate > onlineAfter.Value);
 
             if (isActive.HasValue)
-                query = query.Where(u => u.Active.Value == isActive.Value);
+                query = query.Where(u => u.IsActive() == isActive.Value);
 
             if (!string.IsNullOrEmpty(phraseFilter))
                 query = query.Where(u => u.Login.Contains(phraseFilter, comparison)

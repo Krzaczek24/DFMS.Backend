@@ -90,7 +90,7 @@ namespace DFMS.Database
                 if (mapType == null)
                     throw new NotImplementedException($"There is missing [{mapTypeFullName.Split('.').Last()}] for [{tableType.Name}]");
                 var builder = method.MakeGenericMethod(tableType).Invoke(modelBuilder, null);
-                dynamic? configurtionInstance = Activator.CreateInstance(mapType, builder);
+                dynamic configurtionInstance = Activator.CreateInstance(mapType, builder);
                 configurations.Add(configurtionInstance);
             }
 
