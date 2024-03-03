@@ -7,11 +7,11 @@ using NLog;
 using NLog.Web;
 using System;
 
-namespace DFMS.WebApi.Authorization
+namespace DFMS.WebApi.Workspaces
 {
     public class Program
     {
-        private const string ModuleName = "Authorization";
+        private const string ModuleName = "Workspaces";
         private static Logger? Logger { get; set; }
 
         public static void Main(string[] args)

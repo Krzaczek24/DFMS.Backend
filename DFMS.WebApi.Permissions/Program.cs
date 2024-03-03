@@ -6,14 +6,12 @@ using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Web;
 using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
 
 namespace DFMS.WebApi.Permissions
 {
     public class Program
     {
+        private const string ModuleName = "Permissions";
         private static Logger? Logger { get; set; }
 
         public static void Main(string[] args)
@@ -22,7 +20,7 @@ namespace DFMS.WebApi.Permissions
 
             try
             {
-                Logger.Info("> Starting WebApi.Permissions");
+                Logger.Info($"> Starting WebApi.{ModuleName}");
                 CreateHostBuilder(args).UseNLog().Build().Run();
             }
             catch (Exception ex)
@@ -37,16 +35,16 @@ namespace DFMS.WebApi.Permissions
             }
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
+        public static IHostBuilder CreateHostBuilder(string[] args) => Host
+            .CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.ConfigureLogging(config => config.ClearProviders());
+                webBuilder.UseNLog();
+                webBuilder.UseStartup(builder => new Startup(builder.Configuration, new StartupSettings()
                 {
-                    webBuilder.ConfigureLogging(config => config.ClearProviders());
-                    webBuilder.UseNLog();
-                    webBuilder.UseStartup(builder => new Startup(builder.Configuration, new StartupSettings()
-                    {
-                        Swagger = new SwaggerSettings(ControllerGroup.Api, "DFMS.WebApi.Permissions")
-                    }));
-                });
+                    Swagger = new SwaggerSettings(ControllerGroup.Api, $"DFMS.{ModuleName}")
+                }));
+            });
     }
 }
