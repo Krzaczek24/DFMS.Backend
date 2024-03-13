@@ -44,7 +44,7 @@ namespace DFMS.Database.Services
         {
             var sessions = await (from us in Database.UserSessions
                                   join u in Database.Users on us.User.Id equals u.Id
-                                  where u.Login == login && u.IsActive()
+                                  where u.Login == login && u.Active!.Value
                                   select us).ToListAsync();
 
             if (!string.IsNullOrEmpty(clientIp))
@@ -62,7 +62,7 @@ namespace DFMS.Database.Services
             var newRefreshToken = new DbUserSession()
             {
                 AddLogin = login,
-                User = await Database.Users.Where(u => u.Login == login && u.IsActive()).SingleAsync(),
+                User = await Database.Users.Where(u => u.Login == login && u.Active!.Value).SingleAsync(),
                 RefreshToken = refreshToken,
                 ClientIp = clientIp,
                 ValidUntil = validUntil
@@ -83,7 +83,7 @@ namespace DFMS.Database.Services
         {
             var sessions = await (from us in Database.UserSessions
                                   join u in Database.Users on us.User.Id equals u.Id
-                                  where u.Login == login && u.IsActive()
+                                  where u.Login == login && u.Active!.Value
                                   && us.ClientIp == clientIp
                                   select us).ToListAsync();
 
@@ -120,7 +120,7 @@ namespace DFMS.Database.Services
                                            join upa in Database.UserPermissionAssignments on upg.Id equals upa.PermissionGroup.Id
                                            join up in Database.UserPermissions on upa.Permission.Id equals up.Id
                                            where upga.User.Id == u.Id
-                                           && upga.IsActive() && upg.IsActive() && upa.IsActive() && up.IsActive()
+                                           && upga.Active!.Value && upg.Active!.Value && upa.Active!.Value && up.Active!.Value
                                            && (upga.ValidUntil == null || upga.ValidUntil > DateTime.Now)
                                            select up.Name).AsEnumerable().ToArray(),
                             FirstName = u.FirstName,
@@ -148,7 +148,7 @@ namespace DFMS.Database.Services
                                            join upa in Database.UserPermissionAssignments on upg.Id equals upa.PermissionGroup.Id
                                            join up in Database.UserPermissions on upa.Permission.Id equals up.Id
                                            where upga.User.Id == u.Id
-                                           && upga.IsActive() && upg.IsActive() && upa.IsActive() && up.IsActive()
+                                           && upga.Active!.Value && upg.Active!.Value && upa.Active!.Value && up.Active!.Value
                                            && (upga.ValidUntil == null || upga.ValidUntil > DateTime.Now)
                                            select up.Name).AsEnumerable().ToArray(),
                             FirstName = u.FirstName,
@@ -177,7 +177,7 @@ namespace DFMS.Database.Services
                                            join upa in Database.UserPermissionAssignments on upg.Id equals upa.PermissionGroup.Id
                                            join up in Database.UserPermissions on upa.Permission.Id equals up.Id
                                            where upga.User.Id == u.Id
-                                           && upga.IsActive() && upg.IsActive() && upa.IsActive() && up.IsActive()
+                                           && upga.Active!.Value && upg.Active!.Value && upa.Active!.Value && up.Active!.Value
                                            && (upga.ValidUntil == null || upga.ValidUntil > DateTime.Now)
                                            select up.Name).AsEnumerable().ToArray(),
                             FirstName = u.FirstName,
@@ -255,7 +255,7 @@ namespace DFMS.Database.Services
                 query = query.Where(u => u.LastLoginDate != null && u.LastLoginDate > onlineAfter.Value);
 
             if (isActive.HasValue)
-                query = query.Where(u => u.IsActive() == isActive.Value);
+                query = query.Where(u => u.Active!.Value == isActive.Value);
 
             if (!string.IsNullOrEmpty(phraseFilter))
                 query = query.Where(u => u.Login.Contains(phraseFilter, comparison)

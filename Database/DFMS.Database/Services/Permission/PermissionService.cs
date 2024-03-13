@@ -107,7 +107,7 @@ namespace DFMS.Database.Services.Permissions
                             Id = upg.Id,
                             Name = upg.Name,
                             Description = upg.Description,
-                            Active = upg.IsActive(),
+                            Active = upg.Active!.Value,
                             Permissions = (from upa in Database.UserPermissionAssignments
                                            join up in Database.UserPermissions on upa.Permission.Id equals up.Id
                                            where upa.PermissionGroup.Id == upg.Id
@@ -116,7 +116,7 @@ namespace DFMS.Database.Services.Permissions
                                                Id = up.Id,
                                                Name = up.Name,
                                                Description = up.Description,
-                                               Active = up.IsActive()
+                                               Active = up.Active!.Value
                                            }).AsEnumerable().ToArray()
                         };
 
