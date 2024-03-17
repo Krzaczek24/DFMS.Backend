@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using Core.Database.Extensions;
 using Core.Database.Services;
 using DFMS.Database.Dto.FormTemplate;
+using DFMS.Database.Extensions;
 using DFMS.Database.Models;
 using KrzaqTools.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -57,13 +57,11 @@ namespace DFMS.Database.Services.FormTemplate
                 await Database.SaveChangesAsync();
                 return true;
             }
-            else
-            {
-                Mapper.Map(validationDefinition, dbDefinition);
-                Database.Update(dbDefinition);
-                await Database.SaveChangesAsync();
-                return false;
-            }
+
+            Mapper.Map(validationDefinition, dbDefinition);
+            Database.Update(dbDefinition);
+            await Database.SaveChangesAsync();
+            return false;
         }
 
         /// <returns><see langword="true"/> if object was found and removed, otherwise returns <see langword="false"/></returns>
@@ -74,14 +72,12 @@ namespace DFMS.Database.Services.FormTemplate
                 .Where(x => x.Global.IsNotTrue())
                 .SingleOrDefaultAsync();
 
-            if (dbDefinition != null)
-            {
-                Database.Remove(dbDefinition);
-                await Database.SaveChangesAsync();
-                return true;
-            }
+            if (dbDefinition == null)
+                return false;
 
-            return false;
+            Database.Remove(dbDefinition);
+            await Database.SaveChangesAsync();
+            return true;
         }
     }
 }

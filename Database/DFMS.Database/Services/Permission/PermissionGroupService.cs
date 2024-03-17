@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.Database.Extensions;
 using Core.Database.Services;
+using DFMS.Database.Extensions;
 using DFMS.Database.Models;
 using DFMS.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
@@ -19,16 +20,6 @@ namespace DFMS.Database.Services.Permissions
     public class PermissionGroupService(DfmsDbContext database, IMapper mapper)
         : DbService<DfmsDbContext>(database, mapper), IPermissionGroupService
     {
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="creatorLogin"></param>
-        /// <param name="name"></param>
-        /// <param name="description"></param>
-        /// <param name="active"></param>
-        /// <returns></returns>
-        /// <exception cref="DuplicatedEntryException"></exception>
         public async Task<int> CreatePermissionGroup(string creatorLogin, string name, string description, bool? active = null)
         {
             try
@@ -52,26 +43,21 @@ namespace DFMS.Database.Services.Permissions
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="updaterLogin"></param>
-        /// <param name="name"></param>
-        /// <param name="description"></param>
-        /// <param name="active"></param>
-        /// <returns></returns>
-        /// <exception cref="DuplicatedEntryException"></exception>
         public async Task<bool> UpdatePermissionGroup(int id, string updaterLogin, string? name = null, string? description = null, bool? active = null)
         {
             try
             {
-                return await Database
-                    .Update<DbUserPermission>(id)
+                if (!await Database.UserPermissions.ActiveExists(id))
+                    return false;
+
+                Database
+                    .UpdateBuilder<DbUserPermission>(id)
                     .SetIfNotNullOrDefault(x => x.Name, name)
                     .SetIfNotNullOrDefault(x => x.Description, description)
                     .SetIfNotNullOrDefault(x => x.Active, active)
-                    .Execute(updaterLogin) > 0;
+                    .Execute(updaterLogin);
+                await Database.SaveChangesAsync();
+                return true;
             }
             catch (DbUpdateException ex) when (ex.IsDuplicateEntryException())
             {
@@ -79,19 +65,18 @@ namespace DFMS.Database.Services.Permissions
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        /// <exception cref="CannotDeleteOrUpdateException"></exception>
         public async Task<bool> RemovePermissionGroup(int id)
         {
             try
             {
-                return await Database.Remove<DbUserPermissionGroup>(id) > 0;
+                if (!await Database.UserPermissionGroups.ActiveExists(id))
+                    return false;
+
+                Database.Delete<DbUserPermissionGroup>(id);
+                await Database.SaveChangesAsync();
+                return true;
             }
-            catch (DbUpdateException ex) when (ex.IsCannotDeleteOrUpdateExcpetion())
+            catch (DbUpdateException ex) when (ex.IsCannotDeleteOrUpdateException())
             {
                 throw new CannotDeleteOrUpdateException(ex.GetInnerExceptionMessage());
             }

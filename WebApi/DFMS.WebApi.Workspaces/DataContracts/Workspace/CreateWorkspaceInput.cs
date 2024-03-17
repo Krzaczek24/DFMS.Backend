@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace DFMS.WebApi.Workspaces.DataContracts
+namespace DFMS.WebApi.Workspaces.DataContracts.Workspace
 {
     public class CreateWorkspaceInput
     {
@@ -8,6 +8,6 @@ namespace DFMS.WebApi.Workspaces.DataContracts
         public string Name { get; set; } = string.Empty;
 
         [Required]
-        public bool IsPublic { get; set; }
+        public bool Public { get; set; }
     }
 }

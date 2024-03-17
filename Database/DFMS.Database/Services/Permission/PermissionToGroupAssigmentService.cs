@@ -19,14 +19,6 @@ namespace DFMS.Database.Services.Permissions
     public class PermissionToGroupAssigmentService(DfmsDbContext database, IMapper mapper)
         : DbService<DfmsDbContext>(database, mapper), IPermissionToGroupAssigmentService
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="creatorLogin"></param>
-        /// <param name="permissionGroupId"></param>
-        /// <param name="permissionId"></param>
-        /// <returns></returns>
-        /// <exception cref="DuplicatedEntryException"></exception>
         public async Task AddPermissionToGroup(string creatorLogin, int permissionGroupId, int permissionId)
         {
             try
@@ -47,13 +39,6 @@ namespace DFMS.Database.Services.Permissions
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="groupId"></param>
-        /// <param name="permissionId"></param>
-        /// <returns></returns>
-        /// <exception cref="CannotDeleteOrUpdateException"></exception>
         public async Task<bool> RemovePermissionFromGroup(int groupId, int permissionId)
         {
             try
@@ -70,7 +55,7 @@ namespace DFMS.Database.Services.Permissions
 
                 return true;
             }
-            catch (DbUpdateException ex) when (ex.IsCannotDeleteOrUpdateExcpetion())
+            catch (DbUpdateException ex) when (ex.IsCannotDeleteOrUpdateException())
             {
                 throw new CannotDeleteOrUpdateException(ex.GetInnerExceptionMessage());
             }

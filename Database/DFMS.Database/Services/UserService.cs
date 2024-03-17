@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.Database.Services;
 using DFMS.Database.Dto.Users;
+using DFMS.Database.Extensions;
 using DFMS.Database.Models;
 using DFMS.Shared.Enums;
 using DFMS.Shared.Exceptions;
@@ -20,6 +21,7 @@ namespace DFMS.Database.Services
         public Task SaveNewRefreshToken(string login, string? clientIp, string refreshToken, DateTime? validUntil);
         public Task<bool> UpdateRefreshToken(string login, string? clientIp, string newRefreshToken, DateTime? validUntil);
         public Task<bool> AuthenticateUser(string login, string passwordHash);
+        public Task<bool> DoesUserExist(int id);
         public Task<UserDto?> GetUser(int id);
         public Task<UserDto?> GetUser(string login);
         public Task<UserDto?> GetUser(string refreshToken, string? clientIp);
@@ -98,12 +100,14 @@ namespace DFMS.Database.Services
 
         public async Task<bool> AuthenticateUser(string login, string passwordHash)
         {
-            var count = Database.Users
+            bool found = await Database.Users
                 .Where(u => u.Login == login && u.PasswordHash == passwordHash)
-                .CountAsync();
+                .AnyAsync();
 
-            return await count > 0;
+            return found;
         }
+
+        public async Task<bool> DoesUserExist(int id) => await Database.Users.ActiveExists(id);
 
         public async Task<UserDto?> GetUser(int id)
         {
